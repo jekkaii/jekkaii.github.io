@@ -7,37 +7,11 @@
 </div>
 
 <h1 align="center">
-ATTENDANCE MONITORING SYSTEM (MACHINE LEARNING)
+Client
 </h1>
 
-<div align="center">
-<h2>Members</h2>
-<p style="font-size:0.5em;">
-Angway, Gerald Kyle - <small>Systems Architech</small><br>
-Belen, Odeneil - Program Lead Programmer<br>
-Ducat, Christian Keith - IT Project Manager<br>
-Hufalar, Jekka Menna - QA Tester/Front-end Developer<br>
-Lacorte, Abby Gaile - QA Tester/Front-end Developer<br>
-Mayangao, Mike Gandrie - Back-end Developer<br>
-Ramat, Nelle Angela - Lead Front-end Developer<br>
-Timpac, Joshua - Full Stack Developer<br>
-</p>
-</div>
-
-<br>
-
-## Overview
-
-> The FACE Project automates attendance-taking with a web-based system using facial recognition and machine learning. Designed for Saint Louis University's School of Accountancy, Management, Computing, and Information Studies, it lets faculty record attendance by capturing a class photo, which the system processes to identify present and absent students. <br><br>Developed with an Iterative Software Development approach, FACE emphasizes continuous improvement and secure, accurate student identification through biometrics.
-
-<br>
 
 ## Installation/Setup
-
-In setting up the project, run these commands on your local terminal or the terminal of your IDE.
-<br><br>
-
-### Client
 
 _Step 1: Go to the **project directory** of the client_
 
@@ -56,31 +30,4 @@ Your terminal should look like this
 
 ![Client Terminal Screeshot](https://github.com/user-attachments/assets/e8350c04-b394-4769-ad22-7f4cc62d2c01)
 <br><br>
-### Server
 
-Pre-requisite is to make sure your IP address is added in the MongoDB Cloud Atlas server.
-You can access this by going to your MongoDB dashboard and navigating to the Network access tab. There you will see a + button which enables you to add your own IP Address.
-
-![MongoDB Atlast Network Tab Screenshot](https://github.com/user-attachments/assets/9521f71d-ea47-4353-882a-64816d4ede9e)
-
-_Step 1: Go to the **project directory** of the client_
-
-    -- cd cogito-creatio/server/
-
-_Step 2: Install the needed **dependencies**_
-
-    -- npm install or npm i
-    -- npm ci
-
-_Step 3: Run the Application_
-
-    -- npm start
-
-Your terminal should look like this
-
-![Server Terminal Screenshot](https://github.com/user-attachments/assets/b3598437-0674-40d6-8a6f-56347264f19e)
-<br><br>
-## Technologies
-Languages used: Python, Javascript, HTML, CSS<br>
-CSS Frameworks: Bootstrap, MBD, Materialize<br>
-Frontend Library: React + Vite<br>
