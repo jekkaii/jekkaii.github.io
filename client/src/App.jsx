@@ -33,14 +33,14 @@ function App() {
   }, []);
   return (
     <>
-      <div>
+      {/* <div>
         <Header />
         <Test />
         <Footer />
-      </div>
+      </div> */}
       {/* <AddStudent></AddStudent>
       <UploadClassPicture></UploadClassPicture> */}
-      {/* <IsLoggedInContext.Provider value={isLoggedIn}>
+      <IsLoggedInContext.Provider value={isLoggedIn}>
         <SetIsLoggedInContext.Provider value={setIsLoggedIn}>
           <Router>
             <Routes>
@@ -59,7 +59,7 @@ function App() {
             </Routes>
           </Router>
         </SetIsLoggedInContext.Provider>
-      </IsLoggedInContext.Provider> */}
+      </IsLoggedInContext.Provider>
     </>
   );
 }

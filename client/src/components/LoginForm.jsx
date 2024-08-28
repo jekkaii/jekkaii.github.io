@@ -13,7 +13,7 @@ const LoginForm = () => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:3001/",
+        "http://localhost:3001/api/auth/",
         { email, password },
         { withCredentials: true }
       )

@@ -21,7 +21,7 @@ const SignUp = () => {
   const handleSignup = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3001/signup", { name, email, password })
+      .post("http://localhost:3001/api/auth/signup", { name, email, password })
       .then((result) => {
         if (result.status === 201) {
           navigate("/");
