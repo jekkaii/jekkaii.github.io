@@ -16,25 +16,8 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Helps in navigating different routes inside application
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    axios
-      .post("http://localhost:3001/api/auth/signup", { name, email, password })
-      .then((result) => {
-        if (result.status === 201) {
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 400) {
-          window.alert("Email already exists. Please use a different email");
-        } else {
-          console.log(err);
-        }
-      });
-  };
+  const handleSignup = (e) => {};
 
   return (
     <MDBContainer fluid>

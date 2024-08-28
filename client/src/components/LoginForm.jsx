@@ -1,41 +1,19 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { SetIsLoggedInContext } from "../App";
+import { useState } from "react";
+import { useAuthStore } from "../authentication/authStore";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const setIsLoggedIn = useContext(SetIsLoggedInContext);
-  const handleLogin = (e) => {
+
+  // Initialize authStore
+  const { login } = useAuthStore();
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    axios
-      .post(
-        "http://localhost:3001/api/auth/",
-        { email, password },
-        { withCredentials: true }
-      )
-      .then((result) => {
-        if (result.status === 200) {
-          axios
-            .get("http://localhost:3001/user", { withCredentials: true })
-            .then((response) => {
-              if (response.data.user) {
-                setIsLoggedIn(true);
-                navigate("/home", { state: { user: response.data.user } });
-              }
-            });
-        }
-      })
-      .catch((err) => {
-        if (err.status === 404) {
-          window.alert("Login failed: User does not exist");
-        } else {
-          window.alert("Login failed: Password is incorrect");
-        }
-      });
+    await login(email, password);
   };
   return (
     <>
@@ -62,6 +40,25 @@ const LoginForm = () => {
             id="form2"
             type="password"
           />
+          <div className="row mb-4">
+            <div className="col-md-6 d-flex justify-content-center">
+              <div className="form-check mb-3 mb-md-0">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="loginCheck"
+                />
+                <label className="form-check-label" htmlFor="loginCheck">
+                  Remember me
+                </label>
+              </div>
+            </div>
+
+            <div className="col-md-6 d-flex justify-content-center">
+              <a href="#!">Forgot password?</a>
+            </div>
+          </div>
           <MDBBtn type="submit" className="mb-4">
             Sign in
           </MDBBtn>

@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-no-undef */
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import {
   BrowserRouter as Router,
@@ -18,19 +18,33 @@ import Header from "./components/admin/Header";
 import Footer from "./components/admin/Footer";
 import Test from "./components/Test";
 
-export const IsLoggedInContext = createContext();
-export const SetIsLoggedInContext = createContext();
+import { useAuthStore } from "./authentication/authStore";
+
+const ProtectedRoute = ({ children }) => {
+  const { authenticated } = useAuthStore();
+  if (!authenticated) {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
+const RedirectToHome = ({ children }) => {
+  const { authenticated } = useAuthStore();
+
+  if (authenticated) {
+    return <Navigate to="/home" />;
+  }
+  return children;
+};
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState();
+  const { checkAuthentication } = useAuthStore();
+
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/user", { withCredentials: true })
-      .then((response) => {
-        console.log(response.data.user);
-      })
-      .catch(() => setIsLoggedIn(false));
-  }, []);
+    checkAuthentication();
+    return () => {};
+  }, [checkAuthentication]);
+
   return (
     <>
       {/* <div>
@@ -40,26 +54,34 @@ function App() {
       </div> */}
       {/* <AddStudent></AddStudent>
       <UploadClassPicture></UploadClassPicture> */}
-      <IsLoggedInContext.Provider value={isLoggedIn}>
-        <SetIsLoggedInContext.Provider value={setIsLoggedIn}>
-          <Router>
-            <Routes>
-              <Route
-                path="/"
-                element={isLoggedIn ? <Navigate to="/home" /> : <LoginForm />}
-              ></Route>
-              <Route
-                path="/signup"
-                element={isLoggedIn ? <Navigate to="/home" /> : <SignUp />}
-              ></Route>
-              <Route
-                path="/home"
-                element={isLoggedIn ? <Home /> : <Navigate to="/" />}
-              ></Route>
-            </Routes>
-          </Router>
-        </SetIsLoggedInContext.Provider>
-      </IsLoggedInContext.Provider>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <RedirectToHome>
+                <LoginForm />
+              </RedirectToHome>
+            }
+          ></Route>
+          <Route
+            path="/signup"
+            element={
+              <RedirectToHome>
+                <SignUp />
+              </RedirectToHome>
+            }
+          ></Route>
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          ></Route>
+        </Routes>
+      </Router>
     </>
   );
 }

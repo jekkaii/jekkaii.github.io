@@ -1,27 +1,14 @@
-const express = require("express");
-const cors = require("cors"); // For cross platform compatability
-const dotenv = require("dotenv"); // Used to manage environment variables like URL front and back and mongodb
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
-const { dbConnection } = require("./database/dbConnection");
-const authRouter = require("./routes/authRoutes");
+import express from "express";
+import cors from "cors"; //For cross platform compatability
+import dotenv from "dotenv"; // Used to manage environment variables like URL front and back and mongodb
+import { connectToDatabase } from "./database/dbConnection.js";
+import authRoutes from "./routes/authRoutes.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
-
-app.use(
-  // Session Middleware
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-    }),
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
-  })
-);
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -30,19 +17,9 @@ app.use(
   })
 );
 
-app.use("/api/auth", authRouter);
+app.use("/api/auth", authRoutes);
 
 app.listen(process.env.PORT, () => {
-  dbConnection();
+  connectToDatabase();
   console.log(`Server is running on port ${process.env.PORT}!`);
-});
-
-app.get("/user", (req, res) => {
-  //get user details
-
-  if (req.session.user) {
-    res.json({ user: req.session.user });
-  } else {
-    res.status(401).json("User is not Authenticated");
-  }
 });
