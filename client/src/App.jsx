@@ -19,7 +19,6 @@ import axios from "axios";
 import CreateClass from "./components/CreateClass";
 import Header from "./components/admin/Header";
 import Footer from "./components/admin/Footer";
-import Test from "./components/Test";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -49,7 +48,6 @@ function App() {
     <>
       {/* <div>
         <Header />
-        <Test />
         <Footer />
       </div> */}
       {/* <AddStudent></AddStudent>
@@ -77,7 +75,9 @@ function App() {
             path="/home"
             element={
               <ProtectedRoute>
+                <Header />
                 <Home />
+                <Footer />
               </ProtectedRoute>
             }
           ></Route>
