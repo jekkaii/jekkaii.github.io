@@ -11,13 +11,19 @@ import {
   MDBIcon,
   MDBCheckbox,
 } from "mdb-react-ui-kit";
+import { useAuthStore } from "../authentication/authStore";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = (e) => {};
+  const { signup } = useAuthStore();
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    await signup(name, email, password);
+  };
 
   return (
     <MDBContainer fluid>

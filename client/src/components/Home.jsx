@@ -2,9 +2,15 @@
 import React, { useContext } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../authentication/authStore";
 
 const Home = () => {
-  const handleLogout = async () => {};
+  const { logout } = useAuthStore();
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await logout();
+  };
   const location = useLocation();
   const user = location.state?.user;
   return (

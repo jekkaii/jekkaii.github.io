@@ -1,11 +1,14 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
+
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
 } from "react-router-dom";
+import { useAuthStore } from "./authentication/authStore";
+
 import LoginForm from "./components/LoginForm";
 import SignUp from "./components/SignUp";
 import Home from "./components/Home";
@@ -17,8 +20,6 @@ import CreateClass from "./components/CreateClass";
 import Header from "./components/admin/Header";
 import Footer from "./components/admin/Footer";
 import Test from "./components/Test";
-
-import { useAuthStore } from "./authentication/authStore";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -42,7 +43,6 @@ function App() {
 
   useEffect(() => {
     checkAuthentication();
-    return () => {};
   }, [checkAuthentication]);
 
   return (
@@ -54,6 +54,7 @@ function App() {
       </div> */}
       {/* <AddStudent></AddStudent>
       <UploadClassPicture></UploadClassPicture> */}
+
       <Router>
         <Routes>
           <Route

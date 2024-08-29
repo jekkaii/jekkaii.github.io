@@ -20,7 +20,7 @@ export const signup = async (req, res) => {
         .json({ success: false, message: "Email already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bycrpt.hash(password, 12);
     const newUser = new UserModel({ name, email, password: hashedPassword });
 
     await newUser.save();
@@ -76,25 +76,13 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  //   req.session.destroy((err) => {
-  //     if (err) {
-  //       res.status(500)({ error: "Failed to logout" });
-  //     } else {
-  //       // res.clearCookie('sid')
-  //       console.log("Logged Out");
-  //       res.status(200).json("Logout Success");
-  //     }
-  //   });
   res.clearCookie("authToken");
-  res.clearCookie("connect.sid");
   res.status(200).json({ success: true, message: "Logout Success" });
 };
 
 export const checkAuth = async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId).select("-password");
-    console.log(user);
-
     if (!user) {
       return res
         .status(404)

@@ -54,7 +54,6 @@ const LoginForm = () => {
                 </label>
               </div>
             </div>
-
             <div className="col-md-6 d-flex justify-content-center">
               <a href="#!">Forgot password?</a>
             </div>
