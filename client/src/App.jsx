@@ -16,7 +16,9 @@ import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 // import AddStudent from "./components/AddStudent";
 // import UploadClassPicture from "./components/UploadClassPicture";
-import CreateClass from "./components/CreateClass";
+// import CreateClass from "./components/CreateClass";
+// import AttendanceHistory from "./components/teacher/AttendanceHistory";
+// import ManageUsers from "./components/admin/ManageUsers";
 import Header from "./components/admin/Header";
 import Footer from "./components/admin/Footer";
 
@@ -46,13 +48,16 @@ function App() {
 
   return (
     <>
-      {/* <div>
+      <div>
         <Header />
         <Footer />
-      </div> */}
-      {/* <AddStudent></AddStudent>
-      <UploadClassPicture></UploadClassPicture> */}
-
+      </div>
+      {/* <AddStudent></AddStudent>*/}
+      {/* <CreateClass> </CreateClass> */}
+      {/*<UploadClassPicture></UploadClassPicture> */}
+      {/*<CreateClass> </CreateClass>*/}
+      {/*<AttendanceHistory></AttendanceHistory>*/}
+      {/*<ManageUsers></ManageUsers>**/}
       <Router>
         <Routes>
           <Route
