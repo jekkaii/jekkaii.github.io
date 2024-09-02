@@ -1,239 +1,230 @@
 /* Manage Users */
 /* src/styles/style.css */
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f2f2f2;
-  }
-  
-  .container {
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    margin: 20px auto;
-    max-width: 1000px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    align-items: center;
-  }
-  
-  .search-input {
-    width: 300px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .add-user-btn {
-    background-color: #0d223d;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    
-  }
-  
-  .add-user-btn:hover {
-    background-color: #1a3965;
-  }
-  
-  /* Table Styles */
-  .user-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .user-table th,
-  .user-table td {
-    text-align: center;
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .user-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  .user-table tr:hover {
-    background-color: #f9f9f9;
-  }
-  
-  .user-table td input[type="checkbox"] {
-    cursor: pointer;
-  }
-  
-  .status-btn {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-  }
-  
-  .status-activated {
-    background-color: #00c853;
-  }
-  
-  .status-deactivated {
-    background-color: #ffab00;
-  }
-  
-  .delete-btn {
-    background-color: #ff5252;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .delete-btn:hover {
-    background-color: #e53935;
-  }
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+}
 
+.container {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 1000px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
- /* Attendance History */
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  align-items: center;
+}
 
+.search-input {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.add-user-btn {
+  background-color: #0d223d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add-user-btn:hover {
+  background-color: #1a3965;
+}
+
+/* Table Styles */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.user-table th,
+.user-table td {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.user-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.user-table td input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.status-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.status-activated {
+  background-color: #00c853;
+}
+
+.status-deactivated {
+  background-color: #ffab00;
+}
+
+.delete-btn {
+  background-color: #ff5252;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.delete-btn:hover {
+  background-color: #e53935;
+}
+
+/* Attendance History */
 
 .attendance-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px;
-    background-color: #f5f5f5;
-    font-family: Arial, sans-serif;
-  }
-  
-  
-  .attendance-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center; 
-    margin-bottom: 20px;
-  }
-  
-  .attendance-h1,
-  .attendance-h2,
-  .attendance-h3 {
-    margin: 0;
-  }
-  
-  
-  .attendance-h1 {
-    padding-top: 2 em;
-    font-size: 28px;
-    color: #2a2a72;
-    margin-bottom: 10px;
-  }
-  
-  .attendance-h2 {
-    font-size: 24px;
-    color: #2a2a72;
-    margin-bottom: 5px;
-  }
-  
-  .attendance-h3 {
-    font-size: 14px;
-    color: #555;
-  }
-  
-  
-  .button-container {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .button {
-    background-color: #131374;
-    color: rgb(66, 15, 132);
-    border: none;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-  }
-  
-  .button:hover {
-    background-color:  #131374;
-  }
-  
-  .date-dropdown {
-    padding: 5px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+  background-color: #f5f5f5;
+  font-family: Arial, sans-serif;
+}
 
-  .attendance-table {
-    width: 100%;
-    max-width: 1000px;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .attendance-table th {
-    background-color:  #131374;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-    position: relative;
-  }
-  
-  .attendance-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    font-size: 14px;
-    color: #333;
-  }
-  
-  .attendance-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
+.attendance-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  .filter-dropdown {
-    position: relative;
-    top: 0;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    z-index: 1;
-  }
-  
-  
-  .back-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .back-button img {
-    width: 20px;
-    height: 20px;
-  }
-  
-  /* Create Class */ 
- 
+.attendance-h1,
+.attendance-h2,
+.attendance-h3 {
+  margin: 0;
+}
+
+.attendance-h1 {
+  padding-top: 2 em;
+  font-size: 28px;
+  color: #2a2a72;
+  margin-bottom: 10px;
+}
+
+.attendance-h2 {
+  font-size: 24px;
+  color: #2a2a72;
+  margin-bottom: 5px;
+}
+
+.attendance-h3 {
+  font-size: 14px;
+  color: #555;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.button {
+  background-color: #131374;
+  color: rgb(66, 15, 132);
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #131374;
+}
+
+.date-dropdown {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.attendance-table {
+  width: 100%;
+  max-width: 1000px;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.attendance-table th {
+  background-color: #131374;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  position: relative;
+}
+
+.attendance-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  color: #333;
+}
+
+.attendance-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.filter-dropdown {
+  position: relative;
+  top: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.back-button img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Create Class */
+
 .attendance-container {
   display: flex;
   flex-direction: column;
@@ -241,7 +232,7 @@ body {
   justify-content: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: #fff; 
+  background-color: #fff;
   position: relative;
 }
 
@@ -256,7 +247,7 @@ body {
 
 /* Form field labels */
 .form-label {
-  color: #2d007a; 
+  color: #2d007a;
   font-weight: bold;
 }
 
@@ -264,7 +255,7 @@ body {
 .form-control,
 .form-select {
   border-radius: 5px;
-  border-color: #e0e0e0; 
+  border-color: #e0e0e0;
   padding: 8px;
   font-size: 14px;
 }
@@ -279,7 +270,7 @@ body {
 }
 
 .upload-button {
-  background-color: #28a745; 
+  background-color: #28a745;
 }
 
 .create-button {
@@ -287,7 +278,7 @@ body {
 }
 
 .cancel-button {
-  background-color: #c82333; 
+  background-color: #c82333;
   border: none;
 }
 
@@ -302,129 +293,132 @@ body {
   background-color: #fff;
   padding: 8px;
   border-radius: 5px;
-  border: 1px solid #e0e0e0; 
+  border: 1px solid #e0e0e0;
 
-.back-button {
-  left: 20px;
+  .back-button {
+    left: 20px;
+  }
+
+  .menu-button {
+    right: 20px;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    src: local("Inter-Regular"),
+      url("../resources/Inter-Regular.ttf") format("truetype");
+
+    font-family: "Source-Serif-Pro";
+    src: local("Inter-Regular"),
+      url("../resources/source-serif-pro-regular.ttf") format("truetype");
+  }
+
+  :root {
+    --blue: #2a1f7e;
+    --green: #277326;
+    --lightgray: #f1f0f2;
+    --yellow: #f0c751;
+  }
+
+  /* Add Student */
+  #formInput::placeholder {
+    color: var(--blue);
+  }
+
+  #formInput {
+    background: var(--lightgray);
+  }
+
+  #formBody {
+    padding: 0 40px 0 40px;
+    font-family: "Inter", sans-serif;
+    color: var(--blue);
+  }
+
+  #addButton {
+    background-color: var(--green);
+    padding: 10px 45px 10px 45px;
+    border-color: var(--green);
+  }
+
+  #buttondiv {
+    padding: 20px 0 50px 0;
+  }
+
+  #addTitle {
+    font-family: "Inter", sans-serif;
+    color: var(--blue);
+  }
+
+  /* Upload Class Picture */
+  #uploadIcon {
+    width: 200px;
+    height: auto;
+  }
+
+  #uploadCard {
+    width: 750px;
+    max-width: 100%;
+    border-style: dashed;
+    background-color: var(--lightgray);
+    font-family: "Inter", sans-serif;
+    color: #a6a6a6;
+    border-radius: 8px;
+    border-width: 2px;
+  }
+
+  #uploadCard p {
+    color: var(--blue);
+  }
+
+  #uploadContainer {
+    font-family: "Inter", sans-serif;
+    color: var(--blue);
+  }
+
+  #supports {
+    font-style: italic;
+    font-size: small;
+  }
+
+  #drag {
+    font-size: medium;
+  }
+
+  #submitButton {
+    background-color: var(--blue);
+    padding: 10px 55px 10px 55px;
+  }
+
+  #cancelButton,
+  #viewLinkButton,
+  #downloadButton {
+    padding: 10px 55px 10px 55px;
+  }
+
+  /* View Attendance Link */
+  #viewLinkButton {
+    background-color: var(--green);
+  }
+
+  #downloadButton {
+    background-color: var(--blue);
+  }
+
+  /* Profile */
+  #profile-image {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    margin-right: 20px;
+  }
+
+  #saveButton {
+    background-color: var(--blue);
+    padding: 10px 55px 10px 55px;
+  }
+
+  #cancelProfile {
+    padding: 10px 82px 10px 82px;
+  }
 }
-
-.menu-button {
-  right: 20px;
-}
-
-=======
-@font-face {
-  font-family: "Inter"; 
-  src: local("Inter-Regular"),
-    url("../resources/Inter-Regular.ttf") format("truetype");
-
-  font-family: "Source-Serif-Pro";
-  src: local("Inter-Regular"),
-  url("../resources/source-serif-pro-regular.ttf") format("truetype");
-}
-
-:root {
-  --blue: #2a1f7e;
-  --green: #277326;
-  --lightgray: #f1f0f2;
-  --yellow: #f0c751;
-}
-
-/* Add Student */
-#formInput::placeholder {
-  color: var(--blue);
-}
-
-#formInput {
-  background: var(--lightgray);
-}
-
-#formBody {
-  padding: 0 40px 0 40px;
-  font-family: "Inter", sans-serif;
-  color: var(--blue);
-}
-
-#addButton {
-  background-color: var(--green);
-  padding: 10px 45px 10px 45px;
-  border-color: var(--green);
-}
-
-#buttondiv {
-  padding: 20px 0 50px 0;
-}
-
-#addTitle {
-  font-family: "Inter", sans-serif;
-  color: var(--blue);
-}
-
-/* Upload Class Picture */
-#uploadIcon {
-  width:200px; 
-  height: auto;
-}
-
-#uploadCard {
-  width: 750px; 
-  max-width: 100%; 
-  border-style: dashed;
-  background-color: var(--lightgray);
-  font-family: "Inter", sans-serif;
-  color: #a6a6a6;
-  border-radius: 8px;
-  border-width: 2px;
-}
-
-#uploadCard p {
-  color: var(--blue);
-}
-
-#uploadContainer {
-  font-family: "Inter", sans-serif;
-  color: var(--blue);
-}
-
-#supports {
-  font-style: italic;
-  font-size: small;
-}
-
-#drag {
-  font-size: medium;
-}
- 
-#submitButton {
-  background-color: var(--blue);
-  padding: 10px 55px 10px 55px;
-}
-
-#cancelButton, #viewLinkButton, #downloadButton {
-  padding: 10px 55px 10px 55px;
-}
-
-/* View Attendance Link */
-#viewLinkButton {
-  background-color: var(--green);
-}
-
-#downloadButton {
-  background-color: var(--blue);
-}
-
-/* Profile */
-#profile-image {
-  width: 250px; 
-  height: 250px;
-  object-fit: cover;
-  margin-right: 20px;
-}
-
-#saveButton {
-  background-color: var(--blue);
-  padding: 10px 55px 10px 55px;
-}
-
-#cancelProfile {
-  padding: 10px 82px 10px 82px;

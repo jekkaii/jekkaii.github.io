@@ -23,7 +23,7 @@ import UploadClassPicture from "./components/teacher/UploadClassPicture";
 import ViewAttendanceLink from "./components/teacher/ViewAttendanceLink";
 import Profile from "./components/teacher/Profile";
 import AttendanceHistory from "./components/teacher/AttendanceHistory";
-import AddUser from "./components/admin/AddUser"
+import AddUser from "./components/admin/AddUser";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -54,7 +54,7 @@ function App() {
       <div>
         <Header />
         <Footer />
-      </div> */}
+      </div>
       {/*<CreateClass> </CreateClass>*/}
       {/*<AttendanceHistory></AttendanceHistory>*/}
       {/*<ManageUsers></ManageUsers>**/}
