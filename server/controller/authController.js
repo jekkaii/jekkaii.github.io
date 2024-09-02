@@ -32,10 +32,10 @@ export const signup = async (req, res) => {
       user: { ...newUser._doc, password: undefined },
     };
 
-    res.status(201).json(responseData);
+    return res.status(201).json(responseData);
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(400).json({ success: false, message: error.message });
+    return res.status(400).json({ success: false, message: error.message });
   }
 };
 
@@ -48,7 +48,7 @@ export const login = async (req, res) => {
     const user = await UserModel.findOne({ email });
     // Check if user exists
     if (!user) {
-      res
+      return res
         .status(404)
         .json({ success: false, message: "User credentials invalid" });
     }
@@ -56,7 +56,7 @@ export const login = async (req, res) => {
 
     // Check if password matches
     if (!checkPasswordMatch) {
-      res
+      return res
         .status(401)
         .json({ success: false, message: "Password is Incorrect" });
     }
@@ -64,20 +64,25 @@ export const login = async (req, res) => {
     generateTokenAndSetCookie(res, user._id);
     user.lastLogin = new Date();
     await user.save();
-    res.status(200).json({
+    console.log(`User ${user.name} logged in`);
+    return res.status(200).json({
       success: true,
       message: "Login Success",
       user: { ...user._doc, password: undefined },
     });
   } catch (error) {
     console.log("Post request failed", error);
-    res.status(400).json({ success: false, message: error.message });
+    return res.status(400).json({ success: false, message: error.message });
   }
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("authToken");
-  res.status(200).json({ success: true, message: "Logout Success" });
+  try {
+    res.clearCookie("authToken");
+    return res.status(200).json({ success: true, message: "Logout Success" });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
 };
 
 export const checkAuth = async (req, res) => {
@@ -88,11 +93,11 @@ export const checkAuth = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    res
+    return res
       .status(200)
       .json({ success: true, user: { ...user._doc, password: undefined } });
   } catch (error) {
     console.log("Post request failed", error);
-    res.status(400).json({ success: false, message: error.message });
+    return res.status(400).json({ success: false, message: error.message });
   }
 };
