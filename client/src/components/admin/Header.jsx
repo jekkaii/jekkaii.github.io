@@ -6,13 +6,13 @@ export default class Header extends Component {
     return (
       <header>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="colcontainer-fluid m-4 w-100">
+          <div className="m-3 w-100">
             <div className="row">
               <div className="col d-flex">
-                <h1 className="">Logo</h1>
+                <h2 className="">Logo</h2>
               </div>
               <div className="col d-flex justify-content-end">
-                <h4>My Account Dropdown</h4>
+                <p>My Account Dropdown</p>
               </div>
             </div>
           </div>

@@ -16,21 +16,20 @@ const Home = () => {
   const user = location.state?.user;
   return (
     <>
-      <container className="d-flex row h-100">
-        <div className="d-flex col-3 h-max bg-info">
+      <div className="d-flex row h-100 w-100 overflow-hidden">
+        <div className="d-flex col-2 text-white bg-dark">
           <Sidebar />
         </div>
-        <div className="col-9">
+        <div className="col-10">
           <div className="flex text-center p-4">
             <h1>Welcome, this is the homepage</h1>
             <br />
-
             <button onClick={handleLogout} className="btn btn-primary btn-lg">
               Logout
             </button>
           </div>
         </div>
-      </container>
+      </div>
     </>
   );
 };
