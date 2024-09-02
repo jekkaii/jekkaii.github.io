@@ -1,0 +1,116 @@
+@font-face {
+  font-family: "Inter"; 
+  src: local("Inter-Regular"),
+    url("../resources/Inter-Regular.ttf") format("truetype");
+
+  font-family: "Source-Serif-Pro";
+  src: local("Inter-Regular"),
+  url("../resources/source-serif-pro-regular.ttf") format("truetype");
+}
+
+:root {
+  --blue: #2a1f7e;
+  --green: #277326;
+  --lightgray: #f1f0f2;
+  --yellow: #f0c751;
+}
+
+/* Add Student */
+#formInput::placeholder {
+  color: var(--blue);
+}
+
+#formInput {
+  background: var(--lightgray);
+}
+
+#formBody {
+  padding: 0 40px 0 40px;
+  font-family: "Inter", sans-serif;
+  color: var(--blue);
+}
+
+#addButton {
+  background-color: var(--green);
+  padding: 10px 45px 10px 45px;
+  border-color: var(--green);
+}
+
+#buttondiv {
+  padding: 20px 0 50px 0;
+}
+
+#addTitle {
+  font-family: "Inter", sans-serif;
+  color: var(--blue);
+}
+
+/* Upload Class Picture */
+#uploadIcon {
+  width:200px; 
+  height: auto;
+}
+
+#uploadCard {
+  width: 750px; 
+  max-width: 100%; 
+  border-style: dashed;
+  background-color: var(--lightgray);
+  font-family: "Inter", sans-serif;
+  color: #a6a6a6;
+  border-radius: 8px;
+  border-width: 2px;
+}
+
+#uploadCard p {
+  color: var(--blue);
+}
+
+#uploadContainer {
+  font-family: "Inter", sans-serif;
+  color: var(--blue);
+}
+
+#supports {
+  font-style: italic;
+  font-size: small;
+}
+
+#drag {
+  font-size: medium;
+}
+ 
+#submitButton {
+  background-color: var(--blue);
+  padding: 10px 55px 10px 55px;
+}
+
+#cancelButton, #viewLinkButton, #downloadButton {
+  padding: 10px 55px 10px 55px;
+}
+
+/* View Attendance Link */
+#viewLinkButton {
+  background-color: var(--green);
+}
+
+#downloadButton {
+  background-color: var(--blue);
+}
+
+/* Profile */
+#profile-image {
+  width: 250px; 
+  height: 250px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+#saveButton {
+  background-color: var(--blue);
+  padding: 10px 55px 10px 55px;
+}
+
+#cancelProfile {
+  padding: 10px 82px 10px 82px;
+}

@@ -14,11 +14,14 @@ import SignUp from "./components/SignUp";
 import Home from "./components/Home";
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
-// import AddStudent from "./components/AddStudent";
-// import UploadClassPicture from "./components/UploadClassPicture";
 import CreateClass from "./components/CreateClass";
 import Header from "./components/admin/Header";
 import Footer from "./components/admin/Footer";
+import AddStudent from "./components/teacher/AddStudent";
+import UploadClassPicture from "./components/teacher/UploadClassPicture";
+import ViewAttendanceLink from "./components/teacher/ViewAttendanceLink";
+import Profile from "./components/teacher/Profile";
+import AddUser from "./components/admin/AddUser"
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -50,8 +53,11 @@ function App() {
         <Header />
         <Footer />
       </div> */}
-      {/* <AddStudent></AddStudent>
-      <UploadClassPicture></UploadClassPicture> */}
+      {/* <AddStudent></AddStudent> */}
+      {/* <UploadClassPicture></UploadClassPicture> */}
+      {/* <ViewAttendanceLink></ViewAttendanceLink> */}
+      {/* <Profile></Profile> */}
+      <AddUser></AddUser>
 
       <Router>
         <Routes>
