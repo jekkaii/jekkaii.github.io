@@ -15,12 +15,14 @@ import Home from "./components/Home";
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import CreateClass from "./components/CreateClass";
+import ManageUsers from "./components/admin/ManageUsers";
 import Header from "./components/admin/Header";
 import Footer from "./components/admin/Footer";
 import AddStudent from "./components/teacher/AddStudent";
 import UploadClassPicture from "./components/teacher/UploadClassPicture";
 import ViewAttendanceLink from "./components/teacher/ViewAttendanceLink";
 import Profile from "./components/teacher/Profile";
+import AttendanceHistory from "./components/teacher/AttendanceHistory";
 import AddUser from "./components/admin/AddUser"
 
 const ProtectedRoute = ({ children }) => {
@@ -49,16 +51,18 @@ function App() {
 
   return (
     <>
-      {/* <div>
+      <div>
         <Header />
         <Footer />
       </div> */}
+      {/*<CreateClass> </CreateClass>*/}
+      {/*<AttendanceHistory></AttendanceHistory>*/}
+      {/*<ManageUsers></ManageUsers>**/}
       {/* <AddStudent></AddStudent> */}
       {/* <UploadClassPicture></UploadClassPicture> */}
       {/* <ViewAttendanceLink></ViewAttendanceLink> */}
       {/* <Profile></Profile> */}
       <AddUser></AddUser>
-
       <Router>
         <Routes>
           <Route
