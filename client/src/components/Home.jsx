@@ -12,8 +12,8 @@ const Home = () => {
     e.preventDefault();
     await logout();
   };
-  const location = useLocation();
-  const user = location.state?.user;
+  // const location = useLocation();
+  // const user = location.state?.user;
   return (
     <>
       <div className="d-flex row h-100 w-100 overflow-hidden">

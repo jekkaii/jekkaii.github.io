@@ -24,6 +24,7 @@ import ViewAttendanceLink from "./components/teacher/ViewAttendanceLink";
 import Profile from "./components/teacher/Profile";
 import AttendanceHistory from "./components/teacher/AttendanceHistory";
 import AddUser from "./components/admin/AddUser";
+import Sidebar from "./components/Sidebar";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -53,17 +54,27 @@ function App() {
     <>
       <div>
         <Header />
+        <div className="d-flex row h-100 w-100 overflow-hidden">
+          <div className="d-flex col-2 text-white bg-dark">
+            <Sidebar />
+          </div>
+          <div className="col-10">
+            {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
+
+            {/* <CreateClass> </CreateClass> */}
+            <AttendanceHistory></AttendanceHistory>
+            {/* <ManageUsers></ManageUsers>* */}
+            {/* <AddStudent></AddStudent> */}
+            {/* <UploadClassPicture></UploadClassPicture> */}
+            {/* <ViewAttendanceLink></ViewAttendanceLink> */}
+            {/* <Profile></Profile> */}
+            {/* <AddUser></AddUser> */}
+          </div>
+        </div>
         <Footer />
       </div>
-      {/*<CreateClass> </CreateClass>*/}
-      {/*<AttendanceHistory></AttendanceHistory>*/}
-      {/*<ManageUsers></ManageUsers>**/}
-      {/* <AddStudent></AddStudent> */}
-      {/* <UploadClassPicture></UploadClassPicture> */}
-      {/* <ViewAttendanceLink></ViewAttendanceLink> */}
-      {/* <Profile></Profile> */}
-      <AddUser></AddUser>
-      <Router>
+
+      {/* <Router>
         <Routes>
           <Route
             path="/"
@@ -92,7 +103,7 @@ function App() {
             }
           ></Route>
         </Routes>
-      </Router>
+      </Router> */}
     </>
   );
 }
