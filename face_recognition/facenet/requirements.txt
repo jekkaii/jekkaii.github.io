@@ -1,0 +1,7 @@
+opencv-python-headless
+tensorflow
+matplotlib
+numpy
+keras-facenet
+scikit-learn
+mtcnn
