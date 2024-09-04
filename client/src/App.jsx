@@ -61,14 +61,15 @@ function App() {
           <div className="col-10">
             {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
 
+            {/* <Home /> }
             {/* <CreateClass> </CreateClass> */}
-            <AttendanceHistory></AttendanceHistory>
+            {/* <AttendanceHistory></AttendanceHistory> */}
             {/* <ManageUsers></ManageUsers>* */}
-            {/* <AddStudent></AddStudent> */}
+            {<AddStudent></AddStudent>}
             {/* <UploadClassPicture></UploadClassPicture> */}
             {/* <ViewAttendanceLink></ViewAttendanceLink> */}
             {/* <Profile></Profile> */}
-            {/* <AddUser></AddUser> */}
+            <AddUser></AddUser>
           </div>
         </div>
         <Footer />
