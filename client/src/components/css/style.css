@@ -1,11 +1,28 @@
+@font-face {
+  font-family: "Inter";
+  src: local("Inter-Regular"),
+    url("../resources/Inter-Regular.ttf") format("truetype");
+
+  font-family: "Source-Serif-Pro";
+  src: local("Inter-Regular"),
+    url("../resources/source-serif-pro-regular.ttf") format("truetype");
+}
+
+:root {
+  --blue: #2a1f7e;
+  --green: #277326;
+  --lightgray: #f1f0f2;
+  --yellow: #f0c751;
+}
+
 /* Manage Users */
 /* src/styles/style.css */
-body {
+/* body {
   font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f2f2f2;
-}
+} */
 
 .container {
   padding: 20px;
@@ -285,140 +302,114 @@ body {
 /* Back and menu buttons */
 .back-button,
 .menu-button {
-  position: absolute;
-  top: 20px;
-  font-size: 24px;
-  text-decoration: none;
-  color: #2d007a;
-  background-color: #fff;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #e0e0e0;
+position: absolute;
+top: 20px;
+font-size: 24px;
+text-decoration: none;
+color: #2d007a;
+background-color: #fff;
+padding: 8px;
+border-radius: 5px;
+border: 1px solid #e0e0e0;
+}
 
-  .back-button {
-    left: 20px;
-  }
+.back-button {
+  left: 20px;
+}
 
-  .menu-button {
-    right: 20px;
-  }
+.menu-button {
+  right: 20px;
+}
 
-  @font-face {
-    font-family: "Inter";
-    src: local("Inter-Regular"),
-      url("../resources/Inter-Regular.ttf") format("truetype");
+/* Add Student, Add User, and Edit User */
+#formInput::placeholder {
+  color: var(--blue);
+}
 
-    font-family: "Source-Serif-Pro";
-    src: local("Inter-Regular"),
-      url("../resources/source-serif-pro-regular.ttf") format("truetype");
-  }
+#formInput {
+  background: var(--lightgray);
+}
 
-  :root {
-    --blue: #2a1f7e;
-    --green: #277326;
-    --lightgray: #f1f0f2;
-    --yellow: #f0c751;
-  }
+#formBody {
+  padding: 0 55px 0 55px;
+  font-family: "Inter", sans-serif;
+  color: var(--blue);
+}
 
-  /* Add Student */
-  #formInput::placeholder {
-    color: var(--blue);
-  }
+#addButton, #editButton {
+  background-color: var(--green);
+  padding: 10px 45px 10px 45px;
+  border-color: var(--green);
+}
 
-  #formInput {
-    background: var(--lightgray);
-  }
+#buttondiv {
+  padding: 20px 0 50px 0;
+}
 
-  #formBody {
-    padding: 0 40px 0 40px;
-    font-family: "Inter", sans-serif;
-    color: var(--blue);
-  }
+#addTitle, #editTitle {
+  font-family: "Inter", sans-serif;
+  color: var(--blue);
+}
 
-  #addButton {
-    background-color: var(--green);
-    padding: 10px 45px 10px 45px;
-    border-color: var(--green);
-  }
+/* Upload Class Picture */
+#uploadIcon {
+  width: 200px;
+  height: auto;
+}
 
-  #buttondiv {
-    padding: 20px 0 50px 0;
-  }
+#uploadCard {
+  width: 750px;
+  max-width: 100%;
+  border-style: dashed;
+  background-color: var(--lightgray);
+  font-family: "Inter", sans-serif;
+  color: #a6a6a6;
+  border-radius: 8px;
+  border-width: 2px;
+}
 
-  #addTitle {
-    font-family: "Inter", sans-serif;
-    color: var(--blue);
-  }
+#uploadCard p {
+  color: var(--blue);
+}
 
-  /* Upload Class Picture */
-  #uploadIcon {
-    width: 200px;
-    height: auto;
-  }
+#uploadContainer {
+  font-family: "Inter", sans-serif;
+  color: var(--blue);
+}
 
-  #uploadCard {
-    width: 750px;
-    max-width: 100%;
-    border-style: dashed;
-    background-color: var(--lightgray);
-    font-family: "Inter", sans-serif;
-    color: #a6a6a6;
-    border-radius: 8px;
-    border-width: 2px;
-  }
+#supports {
+  font-style: italic;
+  font-size: small;
+}
 
-  #uploadCard p {
-    color: var(--blue);
-  }
+#drag {
+  font-size: medium;
+}
 
-  #uploadContainer {
-    font-family: "Inter", sans-serif;
-    color: var(--blue);
-  }
+#submitButton {
+  background-color: var(--blue);
+  padding: 10px 55px 10px 55px;
+}
 
-  #supports {
-    font-style: italic;
-    font-size: small;
-  }
+#cancelButton,
+#viewLinkButton,
+#downloadButton {
+  padding: 10px 55px 10px 55px;
+}
 
-  #drag {
-    font-size: medium;
-  }
+/* Profile */
+#profile-image {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  margin-right: 20px;
+}
 
-  #submitButton {
-    background-color: var(--blue);
-    padding: 10px 55px 10px 55px;
-  }
+#saveButton {
+  background-color: var(--blue);
+  padding: 10px 55px 10px 55px;
+}
 
-  #cancelButton,
-  #viewLinkButton,
-  #downloadButton {
-    padding: 10px 55px 10px 55px;
-  }
-
-  /* View Attendance Link */
-  #viewLinkButton {
-    background-color: var(--green);
-  }
-
-  #downloadButton {
-    background-color: var(--blue);
-  }
-
-  /* Profile */
-  #profile-image {
-    width: 250px;
-    height: 250px;
-    object-fit: cover;
-    margin-right: 20px;
-  }
-
-  #saveButton {
-    background-color: var(--blue);
-    padding: 10px 55px 10px 55px;
-  }
-
-  #cancelProfile {
-    padding: 10px 82px 10px 82px;
-  }
+#cancelProfile {
+  padding: 10px 82px 10px 82px;
 }

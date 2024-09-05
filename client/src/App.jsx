@@ -20,11 +20,11 @@ import Header from "./components/admin/Header";
 import Footer from "./components/admin/Footer";
 import AddStudent from "./components/teacher/AddStudent";
 import UploadClassPicture from "./components/teacher/UploadClassPicture";
-import ViewAttendanceLink from "./components/teacher/ViewAttendanceLink";
 import Profile from "./components/teacher/Profile";
 import AttendanceHistory from "./components/teacher/AttendanceHistory";
 import AddUser from "./components/admin/AddUser";
 import Sidebar from "./components/Sidebar";
+import EditUser from "./components/admin/EditUser";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -65,11 +65,11 @@ function App() {
             {/* <CreateClass> </CreateClass> */}
             {/* <AttendanceHistory></AttendanceHistory> */}
             {/* <ManageUsers></ManageUsers>* */}
-            {<AddStudent></AddStudent>}
+            {/* {<AddStudent></AddStudent>} */}
             {/* <UploadClassPicture></UploadClassPicture> */}
-            {/* <ViewAttendanceLink></ViewAttendanceLink> */}
-            {/* <Profile></Profile> */}
-            <AddUser></AddUser>
+            <Profile></Profile>
+            {/* <AddUser></AddUser> */}
+            {/* <EditUser></EditUser> */}
           </div>
         </div>
         <Footer />

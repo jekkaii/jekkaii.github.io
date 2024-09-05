@@ -45,46 +45,14 @@ const AddStudent = () => {
               <Form.Group as={Row} className="mb-4" controlId="formHorizontalIDNum">
                 <Form.Label className="fw-bold fs-5" column sm={4}>ID Number:</Form.Label>
                 <Col sm={8}>
-                  <Form.Control placeholder="Enter ID Number" id="formInput"/>
+                  <Form.Control placeholder="Enter ID Number" id="formInput" required/>
                 </Col>
               </Form.Group>
 
               <Form.Group as={Row} className="mb-4" controlId="formHorizontalName">
                 <Form.Label className="fw-bold fs-5" column sm={4}>Name:</Form.Label>
                 <Col sm={8}>
-                  <Form.Control placeholder="Enter Name" id="formInput"/>
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} className="mb-4" controlId="formHorizontalCourseYear">
-                <Form.Label className="fw-bold fs-5" column sm={4}>Course and Year:</Form.Label>
-                <Col sm={8}>
-                  <Form.Control placeholder="Enter Course and Year" id="formInput"/>
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} className="mb-4" controlId="formHorizontalEmail">
-                <Form.Label className="fw-bold fs-5" column sm={4}>Email:</Form.Label>
-                <Col sm={8}>
-                  <Form.Control type="email" placeholder="Enter Email Address" id="formInput"/>
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} className="mb-4">
-                <Form.Label className="fw-bold fs-5" as="legend" column sm={4}>Status:</Form.Label>
-                <Col sm={8}>
-                <Form.Check
-                  type="radio"
-                  label="Enrolled"
-                  className="formHorizontalRadios"
-                  id="formHorizontalStatus1"
-                />
-                <Form.Check
-                  type="radio"
-                  label="Reserved"
-                  className="formHorizontalRadios"
-                  id="formHorizontalStatus2"
-                />
+                  <Form.Control placeholder="Enter Name" id="formInput" required/>
                 </Col>
               </Form.Group>
             </Form>

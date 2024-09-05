@@ -27,35 +27,35 @@ const Profile = () => {
             <Form.Group as={Row} className="mb-4" controlId="formHorizontalName">
               <Form.Label className="fw-bold fs-5" column sm={4}>Name:</Form.Label>
               <Col sm={6}>
-                <Form.Control placeholder={name} id="formInput"/>
+                <Form.Control placeholder={name} id="formInput" disabled/>
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-4" controlId="formHorizontalEmail">
               <Form.Label className="fw-bold fs-5" column sm={4}>Email:</Form.Label>
               <Col sm={6}>
-                <Form.Control type="email" placeholder={email} id="formInput"/>
+                <Form.Control type="email" placeholder={email} id="formInput" disabled/>
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-4" controlId="formHorizontalCurrent">
               <Form.Label className="fw-bold fs-5" column sm={4}>Current Password:</Form.Label>
               <Col sm={6}>
-                <Form.Control type="password" placeholder={current} id="formInput"/>
+                <Form.Control type="password" placeholder={current} id="formInput" required/>
               </Col>
             </Form.Group>
            
             <Form.Group as={Row} className="mb-4" controlId="formHorizontalNew">
               <Form.Label className="fw-bold fs-5" column sm={4}>New Password:</Form.Label>
               <Col sm={6}>
-                <Form.Control type="password" placeholder={newPassword} id="formInput"/>
+                <Form.Control type="password" placeholder={newPassword} id="formInput" required/>
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-4" controlId="formHorizontalConfirm">
               <Form.Label className="fw-bold fs-5" column sm={4}>Confirm Password:</Form.Label>
               <Col sm={6}>
-                <Form.Control type="password" placeholder={confirm} id="formInput"/>
+                <Form.Control type="password" placeholder={confirm} id="formInput" required/>
               </Col>
             </Form.Group>
           </Form>

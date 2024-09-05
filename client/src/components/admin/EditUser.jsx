@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import '../css/style.css';
 
-const AddUser = () => {
+const EditUser = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -15,7 +15,7 @@ const AddUser = () => {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Add User
+        Edit User
       </Button>
 
       <Modal
@@ -35,43 +35,42 @@ const AddUser = () => {
               justifyContent: "center",
             }}
             className="fs-1 m-4 fw-bold"
-            id="addTitle"
+            id="editTitle"
         >
-          Add User
+          Edit User
         </Modal.Title>
 
         <Modal.Body>
             <Form id="formBody">
               <Form.Group as={Row} className="mb-4" controlId="formHorizontalFirstName">
-                <Form.Label className="fw-bold fs-5" column sm={3}>First Name:</Form.Label>
-                <Col sm={9}>
+                <Form.Label className="fw-bold fs-5" column sm={4}>First Name:</Form.Label>
+                <Col sm={8}>
                   <Form.Control placeholder="Enter First Name" id="formInput" required/>
                 </Col>
               </Form.Group>
 
               <Form.Group as={Row} className="mb-4" controlId="formHorizontalLastName">
-                <Form.Label className="fw-bold fs-5" column sm={3}>Last Name:</Form.Label>
-                <Col sm={9}>
+                <Form.Label className="fw-bold fs-5" column sm={4}>Last Name:</Form.Label>
+                <Col sm={8}>
                   <Form.Control placeholder="Enter Last Name" id="formInput" required/>
                 </Col>
               </Form.Group>
 
               <Form.Group as={Row} className="mb-4" controlId="formHorizontalEmail">
-                <Form.Label className="fw-bold fs-5" column sm={3}>Email:</Form.Label>
-                <Col sm={9}>
+                <Form.Label className="fw-bold fs-5" column sm={4}>Email:</Form.Label>
+                <Col sm={8}>
                   <Form.Control type="email" placeholder="Enter Email Address" id="formInput" required/>
                 </Col>
               </Form.Group>
 
               <Form.Group as={Row} className="mb-4">
-                <Form.Label className="fw-bold fs-5" as="legend" column sm={3} required>Role:</Form.Label>
-                <Col sm={9}>
+                <Form.Label className="fw-bold fs-5" as="legend" column sm={4}>Role:</Form.Label>
+                <Col sm={8}>
                 <Form.Check
                   type="radio"
                   label="Admin"
                   className="formHorizontalRadios"
                   id="formHorizontalRole1"
-                  required
                 />
                 <Form.Check
                   type="radio"
@@ -82,15 +81,34 @@ const AddUser = () => {
                 />
                 </Col>
               </Form.Group>
+
+              <Form.Group as={Row} className="mb-4">
+                <Form.Label className="fw-bold fs-5" as="legend" column sm={4}>Account Status:</Form.Label>
+                <Col sm={8}>
+                <Form.Check
+                  type="radio"
+                  label="Active"
+                  className="formHorizontalRadios"
+                  id="formHorizontalStatus1"
+                  required
+                />
+                <Form.Check
+                  type="radio"
+                  label="Deactivated"
+                  className="formHorizontalRadios"
+                  id="formHorizontalStatus2"
+                />
+                </Col>
+              </Form.Group>
             </Form>
 
           <div id="buttondiv" className="text-center">
             <Button 
               className="text-white fw-bold fs-5"
-              id="addButton"
+              id="editButton"
               onClick={handleClose}
               >
-                Add User
+                Edit User
             </Button>
           </div>
         </Modal.Body>
@@ -99,4 +117,4 @@ const AddUser = () => {
   );
 }
 
-export default AddUser;
+export default EditUser;
