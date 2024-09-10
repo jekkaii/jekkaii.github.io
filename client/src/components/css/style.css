@@ -4,7 +4,7 @@
     url("../resources/Inter-Regular.ttf") format("truetype");
 
   font-family: "Source-Serif-Pro";
-  src: local("Inter-Regular"),
+  src: local("Source-Serif-Pro"),
     url("../resources/source-serif-pro-regular.ttf") format("truetype");
 }
 
@@ -13,6 +13,7 @@
   --green: #277326;
   --lightgray: #f1f0f2;
   --yellow: #f0c751;
+  --red: #b53f3f;
 }
 
 /* Manage Users */
@@ -391,10 +392,9 @@ border: 1px solid #e0e0e0;
   padding: 10px 55px 10px 55px;
 }
 
-#cancelButton,
-#viewLinkButton,
-#downloadButton {
+#cancelButton {
   padding: 10px 55px 10px 55px;
+  background-color: var(--red);
 }
 
 /* Profile */
@@ -412,4 +412,49 @@ border: 1px solid #e0e0e0;
 
 #cancelProfile {
   padding: 10px 82px 10px 82px;
+  background-color: var(--red);
+}
+
+/* Daily Attendance */
+#statusButton {
+  padding: 5px 20px;
+  background-color: var(--green);
+  border: none;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-weight: bold;
+}
+
+#statusButton.absent {
+  background-color: var(--red); /* color when absent */
+  padding: 5px 20px;
+  font-family: "Inter", sans-serif;
+  font-weight: bold;
+}
+
+#tabsTitle {
+  color: var(--blue);
+}
+
+#dailyTable th {
+  background-color: var(--blue);
+  color: white;
+  font-size: large;
+  padding: 13px 0 13px 0;
+}
+
+#dailyTable td {
+  font-family: "Source-Serif-Pro", serif;
+  vertical-align: middle;
+  font-size: medium;
+}
+
+#fiUpload, #camera, #saveDaily {
+  background-color: var(--blue);
+}
+
+#saveDaily {
+  font-family: "Inter", sans-serif;
+  padding: 5px 29px;
+  border-radius: 10px;
 }

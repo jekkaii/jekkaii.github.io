@@ -25,6 +25,8 @@ import AttendanceHistory from "./components/teacher/AttendanceHistory";
 import AddUser from "./components/admin/AddUser";
 import Sidebar from "./components/Sidebar";
 import EditUser from "./components/admin/EditUser";
+import Attendance from "./components/teacher/AttendanceTabs";
+import AttendanceTabs from "./components/teacher/AttendanceTabs";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -67,15 +69,16 @@ function App() {
             {/* <ManageUsers></ManageUsers>* */}
             {/* {<AddStudent></AddStudent>} */}
             {/* <UploadClassPicture></UploadClassPicture> */}
-            <Profile></Profile>
+            {/* <Profile></Profile> */}
             {/* <AddUser></AddUser> */}
             {/* <EditUser></EditUser> */}
+            {/* <AttendanceTabs></AttendanceTabs> */}
           </div>
         </div>
         <Footer />
       </div>
 
-      {/* <Router>
+      <Router>
         <Routes>
           <Route
             path="/"
@@ -104,7 +107,7 @@ function App() {
             }
           ></Route>
         </Routes>
-      </Router> */}
+      </Router>
     </>
   );
 }

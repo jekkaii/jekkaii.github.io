@@ -6,7 +6,7 @@ import uploadIcon from '../resources/Upload.png';
 
 const UploadClassPicture = () => {
   const subjectAndCode = " IT 222  -  9451";
-  const sched = "7:30 -9:00 AM - TThS";
+  const sched = "TThS (7:30 - 9:00 AM)";
   const date = "April 22, 2024";
 
    // const [file, setFile] = useState();
