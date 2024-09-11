@@ -21,7 +21,6 @@ import Footer from "./components/admin/Footer";
 import AddStudent from "./components/teacher/AddStudent";
 import UploadClassPicture from "./components/teacher/UploadClassPicture";
 import Profile from "./components/teacher/Profile";
-import AttendanceHistory from "./components/teacher/AttendanceHistory";
 import AddUser from "./components/admin/AddUser";
 import Sidebar from "./components/Sidebar";
 import EditUser from "./components/admin/EditUser";
@@ -63,16 +62,15 @@ function App() {
           <div className="col-10">
             {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
 
-            {/* <Home /> }
-            {/* <CreateClass> </CreateClass> */}
-            {/* <AttendanceHistory></AttendanceHistory> */}
-            {/* <ManageUsers></ManageUsers>* */}
+            {/*<Home></Home>*/}
+            {/*<CreateClass> </CreateClass>*/}
+            {/*<ManageUsers></ManageUsers>*/}
             {/* {<AddStudent></AddStudent>} */}
             {/* <UploadClassPicture></UploadClassPicture> */}
             {/* <Profile></Profile> */}
             {/* <AddUser></AddUser> */}
             {/* <EditUser></EditUser> */}
-            {/* <AttendanceTabs></AttendanceTabs> */}
+            {/*<AttendanceTabs></AttendanceTabs>*/}
           </div>
         </div>
         <Footer />

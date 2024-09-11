@@ -9,21 +9,32 @@ import Modal from "react-bootstrap/Modal";
 const CreateClass = () => {
   const [classCode, setClassCode] = useState("");
   const [subject, setSubject] = useState("");
-  const [file, setFile] = useState(null);
+  const [time, setTime] = useState("");
+  const [academicYear, setAcademicYear] = useState("");
+  const [term, setTerm] = useState("");
+  const [room, setRoom] = useState("");
+  const [schedule, setSchedule] = useState([]);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const handleClassCodeChange = (e) => setClassCode(e.target.value);
   const handleSubjectChange = (e) => setSubject(e.target.value);
-  const handleFileChange = (e) => setFile(e.target.files[0]);
+  const handleTimeChange = (e) => setTime(e.target.value);
+  const handleAcademicYearChange = (e) => setAcademicYear(e.target.value);
+  const handleTermChange = (e) => setTerm(e.target.value);
+  const handleRoomChange = (e) => setRoom(e.target.value);
+
+  const handleScheduleChange = (day) => {
+    if (schedule.includes(day)) {
+      setSchedule(schedule.filter((d) => d !== day));
+    } else {
+      setSchedule([...schedule, day]);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Class Code:", classCode);
-    console.log("Subject:", subject);
-    if (file) {
-      console.log("File:", file.name);
-    }
     setShowConfirmation(true);
   };
 
@@ -34,28 +45,33 @@ const CreateClass = () => {
   const handleConfirmCancel = () => {
     setClassCode("");
     setSubject("");
-    setFile(null);
+    setTime("");
+    setAcademicYear("");
+    setTerm("");
+    setRoom("");
+    setSchedule([]);
     setShowCancelConfirmation(false);
-  };
-
-  const handleBackClick = () => {
-    console.log("Back clicked");
-  };
-
-  const handleMenuClick = () => {
-    console.log("Menu clicked");
   };
 
   const handleCloseConfirmation = () => setShowConfirmation(false);
   const handleCloseCancelConfirmation = () => setShowCancelConfirmation(false);
+
+  const handleConfirmDetails = () => {
+    setShowConfirmation(false); // Close confirmation modal
+    setShowSuccessModal(true); // Show success modal
+  };
+
+  const handleCloseSuccessModal = () => setShowSuccessModal(false);
+
   return (
     <Container
-      className="d-flex justify-content-center align-items-center"
+      className="attendance-container"
       style={{ height: "100vh", position: "relative" }}
     >
+      {/* Navigation Buttons */}
       <Button
         variant="link"
-        onClick={handleBackClick}
+        onClick={() => console.log("Back clicked")}
         style={{
           position: "absolute",
           top: "20px",
@@ -73,7 +89,7 @@ const CreateClass = () => {
 
       <Button
         variant="link"
-        onClick={handleMenuClick}
+        onClick={() => console.log("Menu clicked")}
         style={{
           position: "absolute",
           top: "20px",
@@ -89,10 +105,12 @@ const CreateClass = () => {
         ☰
       </Button>
 
-      <Form onSubmit={handleSubmit} className="text-center">
-        <h2 style={{ marginBottom: "20px" }}>Create Class</h2>
+      {/* Create Class Form */}
+      <Form onSubmit={handleSubmit} className="attendance-form">
+        <h2 className="attendance-header">Create Class</h2>
+
         <Form.Group as={Row} className="mb-3" controlId="formClassCode">
-          <Form.Label column sm="3">
+          <Form.Label column sm="3" className="form-label">
             Class Code:
           </Form.Label>
           <Col sm="9">
@@ -101,65 +119,233 @@ const CreateClass = () => {
               value={classCode}
               onChange={handleClassCodeChange}
               placeholder="Enter Class Code"
+              className="form-control"
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="formSubject">
-          <Form.Label column sm="3">
+
+        <Form.Group as={Row} controlId="formSubject">
+          <Form.Label column sm="3" className="form-label">
             Subject:
           </Form.Label>
           <Col sm="9">
-            <Form.Select value={subject} onChange={handleSubjectChange}>
-              <option value="">Select Subject</option>
-              <option value="ICLEC">INTRODUCTION TO COMPUTING (LEC)</option>
-              <option value="ICLAB">INTRODUCTION TO COMPUTING (LAB)</option>
-              <option value="COMPROG 1 LEC">
-                COMPUTER PROGRAMMING 1 (LEC)
-              </option>
-              <option value="COMPROG 2 LEC">
-                COMPUTER PROGRAMMING 1 (LAB)
-              </option>
+            <Form.Control
+              value={subject}
+              onChange={handleSubjectChange}
+              placeholder="Enter Subject"
+              className="form-control"
+            />
+          </Col>
+        </Form.Group>
+
+        <Form.Group as={Row} controlId="formTime">
+          <Form.Label column sm="3" className="form-label">
+            Time:
+          </Form.Label>
+          <Col sm="9">
+            <Form.Control
+              type="text"
+              value={time}
+              onChange={handleTimeChange}
+              placeholder="Enter Time"
+              className="form-control"
+            />
+          </Col>
+        </Form.Group>
+
+        <Form.Group as={Row} controlId="formAcademicYear">
+          <Form.Label column sm="3" className="form-label">
+            Academic Year:
+          </Form.Label>
+          <Col sm="9">
+            <Form.Select
+              value={academicYear}
+              onChange={handleAcademicYearChange}
+              className="form-select"
+            >
+              <option value="">Select Academic Year</option>
+              <option value="2022-2023">2022-2023</option>
+              <option value="2023-2024">2023-2024</option>
+              <option value="2025-2026">2025-2026</option>
             </Form.Select>
           </Col>
         </Form.Group>
-        <div style={{ marginBottom: "30px" }}>
+
+        <Form.Group as={Row} controlId="formTerm">
+          <Form.Label column sm="3" className="form-label">
+            Term:
+          </Form.Label>
+          <Col sm="9">
+            <Form.Select
+              value={term}
+              onChange={handleTermChange}
+              className="form-select"
+            >
+              <option value="">Select Term</option>
+              <option value="Prelims">Prelims</option>
+              <option value="Midterms">Midterms</option>
+              <option value="Finals">Finals</option>
+            </Form.Select>
+          </Col>
+        </Form.Group>
+
+        <Form.Group as={Row} controlId="formRoom">
+          <Form.Label column sm="3" className="form-label">
+            Room:
+          </Form.Label>
+          <Col sm="9">
+            <Form.Control
+              type="text"
+              value={room}
+              onChange={handleRoomChange}
+              placeholder="Enter Room"
+              className="form-control"
+            />
+          </Col>
+        </Form.Group>
+
+        <Form.Group as={Row} controlId="formSchedule">
+          <Form.Label column sm="3" className="form-label">
+            Schedule:
+          </Form.Label>
+          <Col sm="9">
+            <Button
+              variant="secondary"
+              onClick={() => setShowScheduleModal(true)}
+              className="custom-button schedule-button"
+            >
+              Select Schedule
+            </Button>
+          </Col>
+        </Form.Group>
+
+        <div className="button-container">
           <Button
-            variant="success"
-            className="me-2"
-            onClick={() => document.getElementById("fileInput").click()}
+            variant="primary"
+            type="submit"
+            className="custom-button create-button"
           >
-            Upload Excel
-          </Button>
-          <input
-            type="file"
-            id="fileInput"
-            accept=".xls,.xlsx"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <Button variant="primary" type="submit" className="me-4">
             Create Class
           </Button>
-          <Button variant="danger" onClick={handleCancel}>
+          <Button
+            variant="danger"
+            onClick={handleCancel}
+            className="custom-button cancel-button"
+          >
             Cancel
           </Button>
         </div>
       </Form>
 
-      <Modal show={showConfirmation} onHide={handleCloseConfirmation} centered>
+      {/* Schedule Modal */}
+      <Modal
+        show={showScheduleModal}
+        onHide={() => setShowScheduleModal(false)}
+        centered
+      >
         <Modal.Header closeButton>
-          <Modal.Title>Class Created</Modal.Title>
+          <Modal.Title>Select Schedule</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Your class has been successfully created!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleCloseConfirmation}>
+        <Modal.Body>
+          <div className="schedule-picker">
+            {["M", "T", "W", "TH", "F", "S"].map((day) => (
+              <Button
+                key={day}
+                variant={schedule.includes(day) ? "primary" : "outline-primary"}
+                className={`m-1 ${
+                  schedule.includes(day) ? "selected" : "unselected"
+                }`}
+                onClick={() => handleScheduleChange(day)}
+              >
+                {day}
+              </Button>
+            ))}
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="modal-footer">
+          <Button
+            variant="danger"
+            onClick={() => setShowScheduleModal(false)}
+            className="custom-button"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="success"
+            onClick={() => setShowScheduleModal(false)}
+            className="custom-button"
+          >
             OK
           </Button>
         </Modal.Footer>
       </Modal>
 
+      {/* Confirmation Modal */}
+      <Modal show={showConfirmation} onHide={handleCloseConfirmation} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Class Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            <strong>Class Code:</strong> {classCode}
+          </p>
+          <p>
+            <strong>Subject:</strong> {subject}
+          </p>
+          <p>
+            <strong>Time:</strong> {time}
+          </p>
+          <p>
+            <strong>Academic Year:</strong> {academicYear}
+          </p>
+          <p>
+            <strong>Term:</strong> {term}
+          </p>
+          <p>
+            <strong>Room:</strong> {room}
+          </p>
+          <p>
+            <strong>Schedule:</strong> {schedule.join(", ")}
+          </p>
+        </Modal.Body>
+        <Modal.Footer className="modal-footer">
+          <Button
+            variant="secondary"
+            onClick={handleCloseConfirmation}
+            className="custom-button"
+          >
+            Edit
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleConfirmDetails} // Show success modal on confirmation
+            className="custom-button"
+          >
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Success Modal */}
+      <Modal show={showSuccessModal} onHide={handleCloseSuccessModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Your class has been successfully created!</p>
+        </Modal.Body>
+        <Modal.Footer className="modal-footer">
+          <Button
+            variant="primary"
+            onClick={handleCloseSuccessModal}
+            className="custom-button"
+          >
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Cancel Confirmation Modal */}
       <Modal
         show={showCancelConfirmation}
         onHide={handleCloseCancelConfirmation}

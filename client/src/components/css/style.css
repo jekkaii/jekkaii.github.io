@@ -120,129 +120,7 @@
   background-color: #e53935;
 }
 
-/* Attendance History */
-
-.attendance-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 50px;
-  background-color: #f5f5f5;
-  font-family: Arial, sans-serif;
-}
-
-.attendance-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.attendance-h1,
-.attendance-h2,
-.attendance-h3 {
-  margin: 0;
-}
-
-.attendance-h1 {
-  padding-top: 2 em;
-  font-size: 28px;
-  color: #2a2a72;
-  margin-bottom: 10px;
-}
-
-.attendance-h2 {
-  font-size: 24px;
-  color: #2a2a72;
-  margin-bottom: 5px;
-}
-
-.attendance-h3 {
-  font-size: 14px;
-  color: #555;
-}
-
-.button-container {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.button {
-  background-color: #131374;
-  color: rgb(66, 15, 132);
-  border: none;
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.button:hover {
-  background-color: #131374;
-}
-
-.date-dropdown {
-  padding: 5px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.attendance-table {
-  width: 100%;
-  max-width: 1000px;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.attendance-table th {
-  background-color: #131374;
-  color: white;
-  padding: 10px;
-  text-align: center;
-  font-size: 14px;
-  position: relative;
-}
-
-.attendance-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
-  color: #333;
-}
-
-.attendance-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.filter-dropdown {
-  position: relative;
-  top: 0;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  z-index: 1;
-}
-
-.back-button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.back-button img {
-  width: 20px;
-  height: 20px;
-}
-
-/* Create Class */
-
+/* Create Class*/
 .attendance-container {
   display: flex;
   flex-direction: column;
@@ -250,68 +128,106 @@
   justify-content: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: #fff;
+  background-color: #f8f9fa;
   position: relative;
+  width: 100vw; 
+  max-width: 1200px;
+  box-sizing: border-box; 
+  font-family: "Inter", sans-serif;
+
 }
 
-/* Header styles */
+.attendance-form {
+  background-color: #f9f8f8;
+  padding: 40px;
+  max-width: 1000px; 
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  
+
+}
+
 .attendance-header {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   color: #2d007a;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   text-align: center;
+  font-family: "Inter", sans-serif;
 }
 
-/* Form field labels */
 .form-label {
   color: #2d007a;
   font-weight: bold;
+  margin-bottom: 10px;
+  font-family: "Inter", sans-serif;
 }
 
-/* Input and select fields */
 .form-control,
 .form-select {
-  border-radius: 5px;
-  border-color: #e0e0e0;
-  padding: 8px;
-  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-family: "Inter", sans-serif;
+
 }
 
-/* Button styles */
 .custom-button {
-  margin-right: 10px;
-  border-radius: 5px;
-  font-size: 14px;
-  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 12px 24px;
   color: #fff;
+  transition: background-color 0.3s ease;
+  font-family: "Inter", sans-serif;
+
 }
 
-.upload-button {
-  background-color: #28a745;
+.custom-button:hover {
+  opacity: 0.9;
 }
 
 .create-button {
-  background-color: #2d007a;
+  background-color: #28a745;
+  margin-right: 15px;
+  font-family: "Inter", sans-serif;
 }
 
 .cancel-button {
   background-color: #c82333;
   border: none;
+  font-family: "Inter", sans-serif;
 }
 
-/* Back and menu buttons */
+.schedule-button {
+  background-color: #6c757d;
+  border: none;
+  font-family: "Inter", sans-serif;
+}
+
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  font-family: "Inter", sans-serif;
+}
+
 .back-button,
 .menu-button {
-position: absolute;
-top: 20px;
-font-size: 24px;
-text-decoration: none;
-color: #2d007a;
-background-color: #fff;
-padding: 8px;
-border-radius: 5px;
-border: 1px solid #e0e0e0;
+  position: absolute;
+  top: 20px;
+  font-size: 24px;
+  text-decoration: none;
+  color: #2d007a;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
 }
 
 .back-button {
@@ -322,35 +238,87 @@ border: 1px solid #e0e0e0;
   right: 20px;
 }
 
-/* Add Student, Add User, and Edit User */
-#formInput::placeholder {
-  color: var(--blue);
+/* Modal Styles */
+.modal-body {
+  text-align: center;
+  padding: 20px; 
 }
 
-#formInput {
-  background: var(--lightgray);
+.modal-footer {
+  justify-content: center;
+  display: flex;
+  gap: 10px; 
 }
 
-#formBody {
-  padding: 0 55px 0 55px;
-  font-family: "Inter", sans-serif;
-  color: var(--blue);
+
+.schedule-picker {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-#addButton, #editButton {
-  background-color: var(--green);
-  padding: 10px 45px 10px 45px;
-  border-color: var(--green);
+.schedule-picker button {
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px; 
+  transition: background-color 0.3s ease;
 }
 
-#buttondiv {
-  padding: 20px 0 50px 0;
+.schedule-picker .selected {
+  background-color: #2d007a;
+  color: #fff;
 }
 
-#addTitle, #editTitle {
-  font-family: "Inter", sans-serif;
-  color: var(--blue);
+.schedule-picker .unselected {
+  background-color: #f8f9fa;
+  color: #2d007a;
+  border: 1px solid #2d007a;
 }
+
+
+.modal-footer .btn-danger {
+  background-color: #c82333;
+  border: none;
+}
+
+.modal-footer .btn-success {
+  background-color: #28a745;
+  border: none;
+}
+.modal-body{
+  text-align: left;
+  padding: 20px;
+}
+/* Media Queries */
+@media (max-width: 768px) {
+  .attendance-container {
+    padding: 10px;
+  }
+
+  .attendance-form {
+    padding: 20px;
+  }
+
+  .back-button,
+  .menu-button {
+    font-size: 20px;
+    padding: 6px;
+  }
+
+  .custom-button {
+    font-size: 14px;
+    padding: 10px 20px;
+    font-family: "Inter", sans-serif;
+
+  }
+
+  .schedule-picker button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
 
 /* Upload Class Picture */
 #uploadIcon {
@@ -457,4 +425,120 @@ border: 1px solid #e0e0e0;
   font-family: "Inter", sans-serif;
   padding: 5px 29px;
   border-radius: 10px;
+}
+/*Manage Students*/ 
+
+#tabsTitle {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#tabsTitle p {
+  margin: 0;
+}
+
+/* Table styling */
+.attendance-table {
+  width: 80%;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.attendance-table th, .attendance-table td {
+  padding: 10px;
+  text-align: center;
+}
+
+.attendance-table th {
+  background-color: #3c3c8a;
+  color: white;
+}
+
+.attendance-table td {
+  background-color: #f5f5f5;
+}
+
+.attendance-table tr:hover {
+  background-color: #e0e0e0;
+}
+
+
+.attendance-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* Select All checkbox */
+.search-bar .form-check-label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Dropdown and Search */
+.search-bar {
+  width: 10%;
+}
+
+#filterDropdown {
+  margin-right: 10px;
+}
+
+.search-bar input[type="text"] {
+  width: 10%;
+  border: 1px solid #ced4da;
+  padding: 5px 10px;
+  border-radius: 0;
+}
+
+/* file upload, add user, and delete user buttons */
+#fiUpload, #camera {
+  margin-right: 10px;
+}
+
+button i {
+  font-size: 18px;
+}
+
+/* Action button */
+.search-bar button {
+  background-color: #f5f5f5;
+  border: none;
+  color: #6c757d;
+  padding: 5px 10px;
+}
+
+.search-bar button i {
+  font-size: 16px;
+}
+
+/* Save button styling */
+#saveDaily, .save-btn {
+  font-weight: bold;
+  padding: 5px 10px;
+  background-color: #3c3c8a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#saveDaily:hover {
+  background-color: #28285e;
+}
+
+/* Icon buttons */
+button.upload-btn, button.add-user-btn, button.delete-user-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+button.upload-btn i, button.add-user-btn i, button.delete-user-btn i {
+  font-size: 24px;
+  color: #3c3c8a;
+}
+
+button.upload-btn i:hover, button.add-user-btn i:hover, button.delete-user-btn i:hover {
+  color: #28285e;
 }
