@@ -394,7 +394,7 @@
 }
 
 #statusButton.absent {
-  background-color: var(--red); /* color when absent */
+  background-color: var(--red); 
   padding: 5px 20px;
   font-family: "Inter", sans-serif;
   font-weight: bold;
@@ -426,119 +426,79 @@
   padding: 5px 29px;
   border-radius: 10px;
 }
+
 /*Manage Students*/ 
-
-#tabsTitle {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-#tabsTitle p {
-  margin: 0;
+.tabsTitle {
+  color: var(--blue);
 }
 
 /* Table styling */
-.attendance-table {
-  width: 80%;
-  margin: 0 auto;
-  border-collapse: collapse;
-}
-
-.attendance-table th, .attendance-table td {
-  padding: 10px;
-  text-align: center;
-}
-
-.attendance-table th {
-  background-color: #3c3c8a;
+#dailyTable th {
+  background-color: var(--blue);
   color: white;
+  font-size: large;
+  padding: 13px 0;
 }
 
-.attendance-table td {
-  background-color: #f5f5f5;
+#dailyTable td {
+  font-family: "Source-Serif-Pro", serif;
+  vertical-align: middle;
+  font-size: medium;
 }
 
-.attendance-table tr:hover {
-  background-color: #e0e0e0;
-}
-
-
-.attendance-table input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-}
-
-/* Select All checkbox */
-.search-bar .form-check-label {
-  font-weight: bold;
-  font-size: 14px;
-}
-
-/* Dropdown and Search */
+/* Input and search bar styles */
+.custom-search-input,
 .search-bar {
-  width: 10%;
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#filterDropdown {
-  margin-right: 10px;
+.custom-search-input {
+  max-width: 200px; 
 }
 
-.search-bar input[type="text"] {
-  width: 10%;
-  border: 1px solid #ced4da;
-  padding: 5px 10px;
-  border-radius: 0;
+/* Form label styling */
+.form-check-label {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
-/* file upload, add user, and delete user buttons */
-#fiUpload, #camera {
-  margin-right: 10px;
-}
-
-button i {
-  font-size: 18px;
-}
-
-/* Action button */
-.search-bar button {
-  background-color: #f5f5f5;
-  border: none;
-  color: #6c757d;
-  padding: 5px 10px;
-}
-
-.search-bar button i {
-  font-size: 16px;
-}
-
-/* Save button styling */
-#saveDaily, .save-btn {
-  font-weight: bold;
-  padding: 5px 10px;
-  background-color: #3c3c8a;
+/* Button styling */
+.upload-btn,
+.add-student-btn,
+.delete-student-btn {
+  display: flex;
   color: white;
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-#saveDaily:hover {
-  background-color: #28285e;
+.upload-btn,
+.add-student-btn {
+  background-color: #28a745; 
 }
 
-/* Icon buttons */
-button.upload-btn, button.add-user-btn, button.delete-user-btn {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  padding: 5px 10px;
+.delete-student-btn {
+  background-color: #dc3545; 
 }
 
-button.upload-btn i, button.add-user-btn i, button.delete-user-btn i {
-  font-size: 24px;
-  color: #3c3c8a;
+.saveButton {
+  font-weight: bold;
+  background-color: #c82333;
 }
 
-button.upload-btn i:hover, button.add-user-btn i:hover, button.delete-user-btn i:hover {
-  color: #28285e;
+
+.upload-btn:hover,
+.add-student-btn:hover,
+.delete-student-btn:hover {
+  opacity: 0.8;
 }
+
