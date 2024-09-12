@@ -1,74 +1,90 @@
-/* eslint-disable no-unused-vars */
-import axios from "axios";
-import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import { useState } from "react";
+import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import { useAuthStore } from "../authentication/authStore";
+import logo from "client\src\components\resources\SLU Logo.png"; // Update the path to your logo image
+import "D:/Users/Lenovo/Desktop/Cogito-creatio-cc-face/cc-face-app/client/src/components/css/style.css"; // Import the CSS file
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
+  const [idNumber, setIdNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   // Initialize authStore
   const { login } = useAuthStore();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await login(email, password);
+    await login(idNumber, password);
   };
+
   return (
-    <>
-      <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
-        <h1 className="d-flex justify-content-center">Temporary Login</h1>
-        <br />
-        <form onSubmit={handleLogin}>
-          <MDBInput
-            required
-            onChange={(e) => setEmail(e.target.value)}
-            wrapperClass="mb-4"
-            autoComplete="email"
-            name="email"
-            label="Email"
-            id="form1"
-            type="email"
-          />
-          <MDBInput
-            required
-            onChange={(e) => setPassword(e.target.value)}
-            wrapperClass="mb-4"
-            name="password"
-            label="Password"
-            id="form2"
-            type="password"
-          />
-          <div className="row mb-4">
-            <div className="col-md-6 d-flex justify-content-center">
-              <div className="form-check mb-3 mb-md-0">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="loginCheck"
-                />
-                <label className="form-check-label" htmlFor="loginCheck">
-                  Remember me
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6 d-flex justify-content-center">
-              <a href="#!">Forgot password?</a>
-            </div>
+    <MDBContainer className="login-contain">
+      {!userType ? (
+        // Selection screen
+        <div className="selection-screen text-center">
+          <img src={logo} alt="University Logo" className="logo" />
+          <h4>Please select your role</h4>
+          <div className="role-selection">
+            <MDBBtn className="select-btn role-card" onClick={() => setUserType("Teacher")}>
+              Teacher
+            </MDBBtn>
+            <MDBBtn className="select-btn role-card" onClick={() => setUserType("Admin")}>
+              Admin
+            </MDBBtn>
           </div>
-          <MDBBtn type="submit" className="mb-4">
-            Sign in
-          </MDBBtn>
-        </form>
-        <div className="text-center">
-          <p>
-            Not a member? <a href="/signup">Register</a>
-          </p>
         </div>
-      </MDBContainer>
-    </>
+      ) : (
+        // Login form
+        <>
+          <div className="text-center mb-4">
+            <img src={logo} alt="University Logo" className="logo" />
+          </div>
+          <h4 className="text-center mb-4">Login to your account</h4>
+          <form onSubmit={handleLogin}>
+            <MDBInput
+              required
+              onChange={(e) => setIdNumber(e.target.value)}
+              wrapperClass="mb-4"
+              autoComplete="username"
+              name="idNumber"
+              label="ID Number"
+              id="idNumber"
+              type="text"
+              value={idNumber}
+              labelClass="input-label" // Add custom label class
+            />
+            <div className="input-wrapper mb-4">
+              <MDBInput
+                required
+                onChange={(e) => setPassword(e.target.value)}
+                wrapperClass="mb-4"
+                name="password"
+                label="Password"
+                id="password"
+                type={showPassword ? "text" : "password"} // Toggle password visibility
+                value={password}
+                labelClass="input-label" // Add custom label class
+              />
+              <span
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "👁️" : "👁️‍🗨️"}
+              </span>
+            </div>
+            <div className="text-end mb-4">
+              <a href="#!" className="small">
+                Forgot Password?
+              </a>
+            </div>
+            <MDBBtn type="submit" className="mb-4 w-100">
+              Login
+            </MDBBtn>
+          </form>
+        </>
+      )}
+    </MDBContainer>
   );
 };
 
