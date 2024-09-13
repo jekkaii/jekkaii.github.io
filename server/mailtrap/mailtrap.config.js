@@ -15,7 +15,7 @@ const sender = {
 };
 const recipients = [
   {
-    email: "triddle.beast@gmail.com",
+    email: "joshua.timpac27@gmail.com",
   },
 ];
 

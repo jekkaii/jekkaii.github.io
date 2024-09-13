@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import { useAuthStore } from "../authentication/authStore";
-import logo from "client\src\components\resources\SLU Logo.png"; // Update the path to your logo image
-import "D:/Users/Lenovo/Desktop/Cogito-creatio-cc-face/cc-face-app/client/src/components/css/style.css"; // Import the CSS file
+import logo from "../components/resources/SLU Logo.png"; // Update the path to your logo image
+import "../components/css/style.css"; // Import the CSS file
 
 const LoginForm = () => {
   const [idNumber, setIdNumber] = useState("");
@@ -26,10 +26,16 @@ const LoginForm = () => {
           <img src={logo} alt="University Logo" className="logo" />
           <h4>Please select your role</h4>
           <div className="role-selection">
-            <MDBBtn className="select-btn role-card" onClick={() => setUserType("Teacher")}>
+            <MDBBtn
+              className="select-btn role-card"
+              onClick={() => setUserType("Teacher")}
+            >
               Teacher
             </MDBBtn>
-            <MDBBtn className="select-btn role-card" onClick={() => setUserType("Admin")}>
+            <MDBBtn
+              className="select-btn role-card"
+              onClick={() => setUserType("Admin")}
+            >
               Admin
             </MDBBtn>
           </div>
