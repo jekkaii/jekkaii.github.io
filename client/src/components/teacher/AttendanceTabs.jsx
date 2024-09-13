@@ -1,19 +1,29 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Table,
-  Tabs,
-  Tab,
-  Form,
-  InputGroup,
-  Modal,
-} from "react-bootstrap";
+import { useState } from 'react';
+import { Button, Table, Tabs, Tab, Form, InputGroup, Modal, } from "react-bootstrap";
 import { FiUpload } from "react-icons/fi";
 import { FaCamera } from "react-icons/fa6";
 import { TbFileUpload } from "react-icons/tb";
 import { RiUserAddLine } from "react-icons/ri";
 import { TiUserDeleteOutline } from "react-icons/ti";
+import AttendanceSummaryTable from "./AttendanceSummaryTable";
+import DailyAttendanceTable from './DailyAttendanceTable';
 import "../css/style.css"; 
+
+const TabsTitle = ({ subjectAndCode, sched, date }) => {
+  return (
+    <div id="tabsTitle">
+      <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
+      <p className="mb-0 text-center">
+        <b>Schedule: </b>
+        {sched}
+      </p>
+      <p className="mb-3 text-center">
+        <b>Date: </b>
+        {date}
+      </p>
+    </div>
+  );
+};
 
 const AttendanceTabs = () => {
   const [key, setKey] = useState("daily");
@@ -166,18 +176,8 @@ const AttendanceTabs = () => {
     >
       {/* Daily Attendance Tab */}
       <Tab eventKey="daily" title="Daily Attendance">
-        <div id="tabsTitle">
-          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-          <p className="mb-0 text-center">
-            <b>Schedule: </b>
-            {sched}
-          </p>
-          <p className="mb-3 text-center">
-            <b>Date: </b>
-            {date}
-          </p>
-        </div>
-        <div className="d-flex justify-content-center mb-4">
+        <TabsTitle subjectAndCode={subjectAndCode} sched={sched} date={date} />
+        <div className="d-flex justify-content-center mb-5">
           <Button className="me-4" id="camera">
             <FaCamera className="fs-4" />
           </Button>
@@ -186,111 +186,24 @@ const AttendanceTabs = () => {
           </Button>
         </div>
         <div className="d-flex justify-content-center">
-          <Table
-            striped
-            bordered
-            hover
-            className="attendance-table text-center"
-            id="dailyTable"
-          >
-            <thead>
-              <tr>
-                <th>ID Number</th>
-                <th>Name</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((entry) => (
-                <tr key={entry.id}>
-                  <td>{entry.idNumber}</td>
-                  <td>{entry.name}</td>
-                  <td>
-                    <Button
-                      onClick={() => handleClick(entry.id)}
-                      className={`button ${
-                        entry.status === "Absent" ? "absent" : ""
-                      }`}
-                      id="statusButton"
-                    >
-                      {entry.status}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-              <tr>
-                <td colSpan={2}></td>
-                <td>
-                  <Button
-                    id="saveDaily"
-                    className="text-end fw-bold"
-                    variant="primary"
-                  >
-                    Save
-                  </Button>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
+            <DailyAttendanceTable 
+              filteredData={filteredData} 
+              handleClick={handleClick} 
+            />
         </div>
       </Tab>
 
       {/* Attendance Summary Tab */}
       <Tab eventKey="summary" title="Attendance Summary">
-        <div id="tabsTitle">
-          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-          <p className="mb-0 text-center">
-            <b>Schedule: </b>
-            {sched}
-          </p>
-          <p className="mb-3 text-center">
-            <b>Date: </b>
-            {date}
-          </p>
-        </div>
+        <TabsTitle subjectAndCode={subjectAndCode} sched={sched} date={date} />
         <div className="d-flex justify-content-center">
-          <Table
-            striped
-            bordered
-            hover
-            className="attendance-table text-center"
-            id="dailyTable"
-          >
-            <thead>
-              <tr>
-                <th>ID Number</th>
-                <th>Name</th>
-                <th>Number of Absences</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((entry) => (
-                <tr key={entry.id}>
-                  <td>{entry.idNumber}</td>
-                  <td>{entry.name}</td>
-                  <td>{entry.absencesDates.length}</td>
-                  <td>V</td> {/* Edit to be an expandable button */}
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <AttendanceSummaryTable info={filteredData}></AttendanceSummaryTable>
         </div>
       </Tab>
 
       {/* Manage Students Tab */}
       <Tab eventKey="manage" title="Manage Students">
-        <div id="tabsTitle">
-          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-          <p className="mb-0 text-center">
-            <b>Schedule: </b>
-            {sched}
-          </p>
-          <p className="mb-3 text-center">
-            <b>Date: </b>
-            {date}
-          </p>
-        </div>
+        <TabsTitle subjectAndCode={subjectAndCode} sched={sched} date={date} />
 
         {/* Search, Add, Delete and File Upload buttons */}
         <div className="form-check-label">

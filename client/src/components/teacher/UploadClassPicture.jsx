@@ -25,11 +25,12 @@ const UploadClassPicture = () => {
         className="d-flex flex-column justify-content-center align-items-center vh-100"
         id="uploadContainer"
       >
-        <p className="mb-5 fw-bold fs-2">Upload Class Picture</p>
-        <p className="mb-0 text-center fs-5"><b>Subject and Class Code: </b>{subjectAndCode}</p>
-        <p className="mb-0 text-center fs-5"><b>Schedule: </b>{sched}</p>
-        <p className="mb-5 text-center fs-5"><b> Date: </b>{date}</p>
-       
+        <div className="text-center" id="uploadTitle">
+          <p className="mb-4 fw-bold">Upload Class Picture</p>
+          <p className="mb-0"><b>Subject and Class Code: </b>{subjectAndCode}</p>
+          <p className="mb-0"><b>Schedule: </b>{sched}</p>
+          <p className=""><b> Date: </b>{date}</p>
+        </div>
         <div className="text-center" id="uploadCard">
           <div className="d-flex justify-content-center">
             <img className="img-fluid mt-5" variant="top" src={uploadIcon} alt="upload icon" id="uploadIcon"/>
@@ -41,8 +42,8 @@ const UploadClassPicture = () => {
         </div>
 
         <div className="text-center">
-          <Button id="submitButton" className="m-5 fw-bold" variant="primary" onClick={handleClose}>Submit</Button>
-          <Button id="cancelButton" className="m-5 fw-bold" variant="danger" onClick={handleClose}>Cancel</Button>
+          <Button id="submitButton" className="fw-bold" variant="primary" onClick={handleClose}>Submit</Button>
+          <Button id="cancelButton" className="fw-bold" variant="danger" onClick={handleClose}>Cancel</Button>
         </div>
       </Container>
     </>

@@ -67,9 +67,9 @@ function App() {
             {/*<AddStudent></AddStudent>*/}
             {/* <UploadClassPicture></UploadClassPicture> */}
             {/* <Profile></Profile> */}
-            <AddUser></AddUser>
+            {/* <AddUser></AddUser> */}
             {/* <EditUser></EditUser> */}
-            {/*<AttendanceTabs></AttendanceTabs> */}
+            {/* <AttendanceTabs></AttendanceTabs> */}
           </div>
         </div>
         <Footer />

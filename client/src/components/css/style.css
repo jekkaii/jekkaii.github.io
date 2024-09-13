@@ -857,6 +857,18 @@
   color: var(--blue);
 }
 
+#uploadTitle p:first-child {
+  font-size: 28px;
+}
+
+#uploadTitle p:last-child {
+  margin-bottom: 45px;
+}
+
+#uploadTitle p {
+  font-size: 20px;
+}
+
 #supports {
   font-style: italic;
   font-size: small;
@@ -869,17 +881,19 @@
 #submitButton {
   background-color: var(--blue);
   padding: 10px 55px 10px 55px;
+  margin: 45px 35px;
 }
 
 #cancelButton {
   padding: 10px 55px 10px 55px;
   background-color: var(--red);
+  margin: 45px 35px;
 }
 
 /* Profile */
 #profile-image {
-  width: 250px;
-  height: 250px;
+  max-width: 250px;
+  max-height: 250px;
   object-fit: cover;
   margin-right: 20px;
 }
@@ -887,11 +901,13 @@
 #saveButton {
   background-color: var(--blue);
   padding: 10px 55px 10px 55px;
+  margin: 15px 30px;
 }
 
 #cancelProfile {
   padding: 10px 82px 10px 82px;
   background-color: var(--red);
+  margin: 15px 30px;
 }
 
 /* Daily Attendance */
@@ -915,14 +931,22 @@
   color: var(--blue);
 }
 
-#dailyTable th {
+#saveDaily {
+  font-family: "Inter", sans-serif;
+  padding: 5px 29px;
+  border-radius: 10px;
+}
+
+/* Daily Attendance and Attendance Summary Table Style */
+#dailyTable th, #summaryTable th {
   background-color: var(--blue);
   color: white;
   font-size: large;
   padding: 13px 0 13px 0;
+  vertical-align: middle;
 }
 
-#dailyTable td {
+#dailyTable td, #summaryTable td {
   font-family: "Source-Serif-Pro", serif;
   vertical-align: middle;
   font-size: medium;
@@ -932,29 +956,9 @@
   background-color: var(--blue);
 }
 
-#saveDaily {
-  font-family: "Inter", sans-serif;
-  padding: 5px 29px;
-  border-radius: 10px;
-}
-
 /*Manage Students*/ 
 .tabsTitle {
   color: var(--blue);
-}
-
-/* Table styling */
-#dailyTable th {
-  background-color: var(--blue);
-  color: white;
-  font-size: large;
-  padding: 13px 0;
-}
-
-#dailyTable td {
-  font-family: "Source-Serif-Pro", serif;
-  vertical-align: middle;
-  font-size: medium;
 }
 
 /* Input and search bar styles */
@@ -1012,4 +1016,137 @@
 .delete-student-btn:hover {
   opacity: 0.8;
 }
+/* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+@media (max-width:320px) {
+  /* Daily Attendance */
+  #statusButton, #statusButton.absent {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  #saveDaily {
+    padding: 5px 18px;
+    font-size: 12px;
+  }
+
+  /* Daily Attendance and Attendance Summary Table Style */
+  #dailyTable th, #summaryTable th {
+    font-size: 12px;
+    padding: 12px 3px;
+  }
+
+  #dailyTable td, #summaryTable td {
+    font-size: small;
+  }
+
+  #fiUpload, #camera {
+    font-size: smaller;
+  }
+
+  #tabsTitle {
+  font-size: small;
+  }
+}
+
+/* smartphones, Android phones, landscape iPhone */ 
+@media (max-width:480px) { 
+  /* Daily Attendance */
+  #statusButton, #statusButton.absent {
+    padding: 5px 13px;
+    font-size: 13px;
+  }
+
+  #saveDaily {
+    padding: 5px 19px;
+    font-size: 13px;
+  }
+
+  /* Daily Attendance and Attendance Summary Table Style */
+  #dailyTable th, #summaryTable th {
+    font-size: 15px;
+    padding: 8px 8px;
+  }
+
+  #dailyTable td, #summaryTable td {
+    font-size: 14px;
+  } 
+}
+
+@media (max-width:511px) { 
+  /* Upload Class Picture */
+  #submitButton, #cancelButton {
+    padding: 10px 35px;
+  }
+
+  #uploadTitle p:first-child {
+    font-size: 24px;
+  }
+
+  #uploadTitle p {
+    font-size: 18px;
+  }
+}
+
+@media (max-width:432px) { 
+  /* Upload Class Picture */
+  #submitButton, #cancelButton {
+    margin: 40px 20px;
+  }
+
+  #uploadTitle p:first-child {
+    font-size: 22px;
+  }
+
+  #uploadTitle p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width:370px) { 
+  /* Upload Class Picture */
+  #submitButton, #cancelButton {
+    padding: 10px 25px;
+  }
+}
+
+@media (max-width:432px) { 
+  /* Upload Class Picture */
+  #submitButton, #cancelButton {
+    margin: 40px 10px;
+  }
+
+  #uploadTitle p:first-child {
+    font-size: 20px;
+  }
+
+  #uploadTitle p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width:991px) { 
+  /* Profile */
+  #profile-image {
+    max-width: 200px;
+    max-height: 200px;
+  }
+}
+
+@media (max-width:991px) { 
+  /* Profile */
+  #profile-image {
+    margin: 50px 0px;
+  }
+
+  #saveButton {
+    padding: 10px 30px;
+    margin: 10px 20px;
+  }
+
+  #cancelProfile {
+    padding: 10px 57px;
+    margin: 10px 20px;
+  }
+}
+
 
