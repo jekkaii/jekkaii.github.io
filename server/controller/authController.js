@@ -4,9 +4,9 @@ import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { firstName, lastName, email, role, password } = req.body;
 
-    if (!name || !email || !password) {
+    if (!firstName || !lastName || !email || !password || !role) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
@@ -19,9 +19,16 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Email already exists" });
     }
-
+    const username = email.substring(0, email.indexOf("@"));
     const hashedPassword = await bycrpt.hash(password, 12);
-    const newUser = new UserModel({ name, email, password: hashedPassword });
+    const newUser = new UserModel({
+      firstName,
+      lastName,
+      username,
+      email,
+      role,
+      password: hashedPassword,
+    });
 
     await newUser.save();
     generateTokenAndSetCookie(res, newUser._id);
