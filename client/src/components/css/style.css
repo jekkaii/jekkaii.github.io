@@ -833,12 +833,11 @@
 
 /* Upload Class Picture */
 #uploadIcon {
-  width: 200px;
+  width: 250px;
   height: auto;
 }
 
 #uploadCard {
-  width: 750px;
   max-width: 100%;
   border-style: dashed;
   background-color: var(--lightgray);
@@ -857,16 +856,14 @@
   color: var(--blue);
 }
 
-#uploadTitle p:first-child {
-  font-size: 28px;
+#uploadDescription p {
+  font-size: 17px;
+  color: var(--blue);
 }
 
-#uploadTitle p:last-child {
-  margin-bottom: 45px;
-}
-
-#uploadTitle p {
-  font-size: 20px;
+#uploadDescription p:first-child {
+  font-size: 26px;
+  color: var(--blue);
 }
 
 #supports {
@@ -881,13 +878,11 @@
 #submitButton {
   background-color: var(--blue);
   padding: 10px 55px 10px 55px;
-  margin: 45px 35px;
 }
 
 #cancelButton {
   padding: 10px 55px 10px 55px;
   background-color: var(--red);
-  margin: 45px 35px;
 }
 
 /* Profile */
@@ -956,6 +951,15 @@
   background-color: var(--blue);
 }
 
+/* Date Picker in Daily Attendance */
+#datePickerDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px;
+}
+
 /*Manage Students*/ 
 .tabsTitle {
   color: var(--blue);
@@ -1016,6 +1020,7 @@
 .delete-student-btn:hover {
   opacity: 0.8;
 }
+
 /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
 @media (max-width:320px) {
   /* Daily Attendance */
@@ -1070,83 +1075,6 @@
   #dailyTable td, #summaryTable td {
     font-size: 14px;
   } 
-}
-
-@media (max-width:511px) { 
-  /* Upload Class Picture */
-  #submitButton, #cancelButton {
-    padding: 10px 35px;
-  }
-
-  #uploadTitle p:first-child {
-    font-size: 24px;
-  }
-
-  #uploadTitle p {
-    font-size: 18px;
-  }
-}
-
-@media (max-width:432px) { 
-  /* Upload Class Picture */
-  #submitButton, #cancelButton {
-    margin: 40px 20px;
-  }
-
-  #uploadTitle p:first-child {
-    font-size: 22px;
-  }
-
-  #uploadTitle p {
-    font-size: 16px;
-  }
-}
-
-@media (max-width:370px) { 
-  /* Upload Class Picture */
-  #submitButton, #cancelButton {
-    padding: 10px 25px;
-  }
-}
-
-@media (max-width:432px) { 
-  /* Upload Class Picture */
-  #submitButton, #cancelButton {
-    margin: 40px 10px;
-  }
-
-  #uploadTitle p:first-child {
-    font-size: 20px;
-  }
-
-  #uploadTitle p {
-    font-size: 14px;
-  }
-}
-
-@media (max-width:991px) { 
-  /* Profile */
-  #profile-image {
-    max-width: 200px;
-    max-height: 200px;
-  }
-}
-
-@media (max-width:991px) { 
-  /* Profile */
-  #profile-image {
-    margin: 50px 0px;
-  }
-
-  #saveButton {
-    padding: 10px 30px;
-    margin: 10px 20px;
-  }
-
-  #cancelProfile {
-    padding: 10px 57px;
-    margin: 10px 20px;
-  }
 }
 
 

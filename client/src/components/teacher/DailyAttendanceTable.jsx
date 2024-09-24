@@ -1,5 +1,4 @@
 import { Button, Table } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 
 const DailyAttendanceTable = ({ filteredData, handleClick }) => {
   return (

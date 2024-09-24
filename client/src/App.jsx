@@ -24,7 +24,6 @@ import Profile from "./components/teacher/Profile";
 import AddUser from "./components/admin/AddUser";
 import Sidebar from "./components/Sidebar";
 import EditUser from "./components/admin/EditUser";
-import Attendance from "./components/teacher/AttendanceTabs";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
 
 const ProtectedRoute = ({ children }) => {

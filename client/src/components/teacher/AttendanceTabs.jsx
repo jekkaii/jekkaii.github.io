@@ -1,6 +1,6 @@
+import React from 'react';
 import { useState } from 'react';
 import { Button, Table, Tabs, Tab, Form, InputGroup, Modal, } from "react-bootstrap";
-import { FiUpload } from "react-icons/fi";
 import { FaCamera } from "react-icons/fa6";
 import { TbFileUpload } from "react-icons/tb";
 import { RiUserAddLine } from "react-icons/ri";
@@ -8,22 +8,10 @@ import { TiUserDeleteOutline } from "react-icons/ti";
 import AttendanceSummaryTable from "./AttendanceSummaryTable";
 import DailyAttendanceTable from './DailyAttendanceTable';
 import "../css/style.css"; 
-
-const TabsTitle = ({ subjectAndCode, sched, date }) => {
-  return (
-    <div id="tabsTitle">
-      <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-      <p className="mb-0 text-center">
-        <b>Schedule: </b>
-        {sched}
-      </p>
-      <p className="mb-3 text-center">
-        <b>Date: </b>
-        {date}
-      </p>
-    </div>
-  );
-};
+import UploadClassPicture from './UploadClassPicture';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 const AttendanceTabs = () => {
   const [key, setKey] = useState("daily");
@@ -37,6 +25,16 @@ const AttendanceTabs = () => {
   const subjectAndCode = "IT 222 - 9451";
   const sched = "TThS (7:30 - 9:00 AM)";
   const date = "April 22, 2024";
+
+  /* For the Date Picker */
+  const [dateValue, setDateValue] = useState(dayjs());
+  const [formattedDate, setFormattedDate] = useState(dateValue.format('MMMM D, YYYY'));
+
+  const handleDateChange = (newValue) => {
+    setDateValue(newValue);
+    const dateString = newValue.format('MMMM D, YYYY');
+    setFormattedDate(dateString);
+  };
 
   const [attendanceData, setAttendanceData] = useState([
     // Dummy Data
@@ -89,7 +87,7 @@ const AttendanceTabs = () => {
     },
   ]);
 
-  const handleClick = (id) => {
+  const handleManualAttendance = (id) => {
     setAttendanceData((prevData) =>
       prevData.map((entry) =>
         entry.id === id
@@ -176,26 +174,57 @@ const AttendanceTabs = () => {
     >
       {/* Daily Attendance Tab */}
       <Tab eventKey="daily" title="Daily Attendance">
-        <TabsTitle subjectAndCode={subjectAndCode} sched={sched} date={date} />
+        <div id="tabsTitle">
+          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
+          <p className="mb-0 text-center">
+            <b>Schedule: </b>
+            {sched}
+          </p>
+          <div id="datePickerDiv">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                value={dateValue}
+                onChange={handleDateChange}
+                disableFuture={true}
+                renderInput={(params) => (
+                  <input
+                    {...params.inputProps}
+                  />
+                )}
+              >
+              </DatePicker>
+            </LocalizationProvider>
+          </div>
+        </div>
+
         <div className="d-flex justify-content-center mb-5">
           <Button className="me-4" id="camera">
             <FaCamera className="fs-4" />
           </Button>
-          <Button id="fiUpload">
-            <FiUpload className="fs-4" />
-          </Button>
+          <UploadClassPicture date={formattedDate} subjectAndCode={subjectAndCode} schedule={sched}></UploadClassPicture>
         </div>
         <div className="d-flex justify-content-center">
             <DailyAttendanceTable 
               filteredData={filteredData} 
-              handleClick={handleClick} 
+              handleClick={handleManualAttendance} 
             />
         </div>
       </Tab>
 
       {/* Attendance Summary Tab */}
       <Tab eventKey="summary" title="Attendance Summary">
-        <TabsTitle subjectAndCode={subjectAndCode} sched={sched} date={date} />
+        <div id="tabsTitle">
+          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
+          <p className="mb-0 text-center">
+            <b>Schedule: </b>
+            {sched}
+          </p>
+          <p className="mb-5 text-center">
+            <b>Date: </b>
+            {date}
+          </p>
+        </div>
+
         <div className="d-flex justify-content-center">
           <AttendanceSummaryTable info={filteredData}></AttendanceSummaryTable>
         </div>
@@ -203,8 +232,17 @@ const AttendanceTabs = () => {
 
       {/* Manage Students Tab */}
       <Tab eventKey="manage" title="Manage Students">
-        <TabsTitle subjectAndCode={subjectAndCode} sched={sched} date={date} />
-
+      <div id="tabsTitle">
+        <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
+        <p className="mb-0 text-center">
+          <b>Schedule: </b>
+          {sched}
+        </p>
+        <p className="mb-3 text-center">
+          <b>Date: </b>
+          {date}
+        </p>
+      </div>
         {/* Search, Add, Delete and File Upload buttons */}
         <div className="form-check-label">
           <Form.Check
