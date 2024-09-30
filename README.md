@@ -13,7 +13,7 @@ ATTENDANCE MONITORING SYSTEM (MACHINE LEARNING)
 <div align="center">
 <h2>Members</h2>
 <p style="font-size:0.5em;">
-Angway, Gerald Kyle - <small>Systems Architech</small><br>
+Angway, Gerald Kyle - <small>Systems Architech/Back-end Developer</small><br>
 Belen, Odeneil - Program Lead Programmer<br>
 Ducat, Christian Keith - IT Project Manager<br>
 Hufalar, Jekka Menna - QA Tester/Front-end Developer<br>
@@ -47,6 +47,10 @@ _Step 2: Install the needed **dependencies**_
 
     npm install or npm i
     npm ci
+    npm install @mui/x-date-pickers
+    npm install @mui/material @mui/x-date-pickers dayjs
+    npm install @mui/material @emotion/react @emotion/styled
+    npm install react-router-dom
 
 _Step 3: Run the Application_
 

@@ -25,6 +25,7 @@ import AddUser from "./components/admin/AddUser";
 import Sidebar from "./components/Sidebar";
 import EditUser from "./components/admin/EditUser";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
+import ClassList from "./components/teacher/ClassList";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -69,6 +70,8 @@ function App() {
             {/* <AddUser></AddUser> */}
             {/* <EditUser></EditUser> */}
             {/* <AttendanceTabs></AttendanceTabs> */}
+            <ClassList></ClassList>
+            
           </div>
         </div>
         <Footer />

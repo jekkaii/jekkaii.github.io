@@ -1,5 +1,5 @@
 import React from 'react';
-import 'D:/Users/Lenovo/Desktop/Cogito-creatio-cc-face/cc-face-app/client/src/components/css/style.css'; 
+import '../css/style.css'; 
 
 const Confirmation = ({ isOpen, onClose, onConfirm, message }) => {
   if (!isOpen) return null;

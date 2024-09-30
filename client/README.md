@@ -19,6 +19,9 @@ _Step 2: Install the needed **dependencies**_
 
     npm install or npm i
     npm ci
+    npm install @mui/x-date-pickers
+    npm install @mui/material @mui/x-date-pickers dayjs
+    npm install @mui/material @emotion/react @emotion/styled
 
 _Step 3: Run the Application_
 

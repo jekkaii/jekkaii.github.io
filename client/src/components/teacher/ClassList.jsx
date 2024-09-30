@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import 'D:/Users/Lenovo/Desktop/Cogito-creatio-cc-face/cc-face-app/client/src/components/css/style.css';
+import '../css/style.css';
 import { FaArchive, FaTrash, FaBars } from 'react-icons/fa';
 import Confirmation from './Confirmation'; // Import the Confirmation component
 
