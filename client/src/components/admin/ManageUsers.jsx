@@ -1,6 +1,8 @@
 // src/components/ManageUsers.jsx
 import React, { useState } from "react";
 import "../css/style.css"; // Import the stylesheet
+import AddUser from "./AddUser";
+import EditUser from "./EditUser";
 
 const initialUsers = [
   {
@@ -108,9 +110,9 @@ const ManageUsers = () => {
           onChange={handleSearch}
           className="search-input"
         />
-        <button className="add-user-btn" onClick={addUser}>
-          + ADD USER
-        </button>
+
+      <EditUser></EditUser>
+      <AddUser></AddUser> 
       </div>
 
       <table className="user-table">

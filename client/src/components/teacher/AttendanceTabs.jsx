@@ -1,41 +1,24 @@
 import React from 'react';
 import { useState } from 'react';
-import { Button, Table, Tabs, Tab, Form, InputGroup, Modal, } from "react-bootstrap";
-import { FaCamera } from "react-icons/fa6";
-import { TbFileUpload } from "react-icons/tb";
-import { RiUserAddLine } from "react-icons/ri";
-import { TiUserDeleteOutline } from "react-icons/ti";
-import AttendanceSummaryTable from "./AttendanceSummaryTable";
-import DailyAttendanceTable from './DailyAttendanceTable';
-import "../css/style.css"; 
-import UploadClassPicture from './UploadClassPicture';
+import { Tabs, Tab, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import AttendanceSummaryTable from "./AttendanceSummary";
+import DailyAttendance from './DailyAttendance';
+import "../css/style.css"; 
+import ManageStudents from './ManageStudents';
+import { FaCamera } from "react-icons/fa6";
+import UploadClassPicture from './UploadClassPicture';
 
 const AttendanceTabs = () => {
   const [key, setKey] = useState("daily");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedStudents, setSelectedStudents] = useState([]);
-  const [modalShow, setModalShow] = useState(false);
-  const [newStudentId, setNewStudentId] = useState("");
-  const [newStudentName, setNewStudentName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+
   const subjectAndCode = "IT 222 - 9451";
   const sched = "TThS (7:30 - 9:00 AM)";
   const date = "April 22, 2024";
-
-  /* For the Date Picker */
-  const [dateValue, setDateValue] = useState(dayjs());
-  const [formattedDate, setFormattedDate] = useState(dateValue.format('MMMM D, YYYY'));
-
-  const handleDateChange = (newValue) => {
-    setDateValue(newValue);
-    const dateString = newValue.format('MMMM D, YYYY');
-    setFormattedDate(dateString);
-  };
-
+ 
   const [attendanceData, setAttendanceData] = useState([
     // Dummy Data
     {
@@ -86,6 +69,18 @@ const AttendanceTabs = () => {
       absencesDates: ["August 10, 2024"],
     },
   ]);
+  
+  const sortedData = [...attendanceData].sort((a, b) => a.name.localeCompare(b.name));
+  
+  /* For the Date Picker */
+  const [dateValue, setDateValue] = useState(dayjs());
+  const [formattedDate, setFormattedDate] = useState(dateValue.format('MMMM D, YYYY'));
+
+  const handleDateChange = (newValue) => {
+    setDateValue(newValue);
+    const dateString = newValue.format('MMMM D, YYYY');
+    setFormattedDate(dateString);
+  };
 
   const handleManualAttendance = (id) => {
     setAttendanceData((prevData) =>
@@ -100,70 +95,14 @@ const AttendanceTabs = () => {
     );
   };
 
-  const filteredData = attendanceData.filter(
-    (entry) =>
-      (statusFilter === "All" || entry.status === statusFilter) &&
-      (entry.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        entry.idNumber.includes(searchTerm))
-  );
-
-  const handleSelectAll = () => {
-    const allSelected = !selectAll;
-    setSelectAll(allSelected);
-    setSelectedStudents(
-      allSelected ? attendanceData.map((student) => student.id) : []
+  // Filter the info based on the searchTerm
+  const filteredInfo = sortedData.filter((entry) => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return (
+      entry.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+      entry.idNumber.includes(lowerCaseSearchTerm)
     );
-  };
-
-  const handleStudentSelect = (id) => {
-    setSelectedStudents((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((studentId) => studentId !== id)
-        : [...prevSelected, id]
-    );
-  };
-
-  const handleAddStudent = () => {
-    setModalShow(true);
-  };
-
-  const handleSaveStudent = () => {
-    if (newStudentId && newStudentName) {
-      setAttendanceData((prevData) => [
-        ...prevData,
-        {
-          id: prevData.length + 1,
-          idNumber: newStudentId,
-          name: newStudentName,
-          status: "Present",
-          absencesDates: [],
-        },
-      ]);
-      setModalShow(false);
-      setNewStudentId("");
-      setNewStudentName("");
-    } else {
-      alert("Please enter both ID Number and Name.");
-    }
-  };
-
-  const handleDeleteStudent = () => {
-    setAttendanceData((prevData) =>
-      prevData.filter((student) => !selectedStudents.includes(student.id))
-    );
-    setSelectedStudents([]);
-  };
-
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    console.log("File uploaded:", file);
-    // Implement file upload logic
-  };
-
-  const handleSave = () => {
-    console.log("Save Clicked", attendanceData);
-    //send the data to a backend server or log changes
-  };
+  });
 
   return (
     <Tabs
@@ -197,18 +136,36 @@ const AttendanceTabs = () => {
           </div>
         </div>
 
-        <div className="d-flex justify-content-center mb-5">
-          <Button className="me-4" id="camera">
-            <FaCamera className="fs-4" />
-          </Button>
-          <UploadClassPicture date={formattedDate} subjectAndCode={subjectAndCode} schedule={sched}></UploadClassPicture>
-        </div>
-        <div className="d-flex justify-content-center">
-            <DailyAttendanceTable 
-              filteredData={filteredData} 
-              handleClick={handleManualAttendance} 
-            />
-        </div>
+        <Row className="align-items-end mb-0 mt-5">
+          <Col xs={8} className="p-0"></Col>
+
+          <Col xs={4} className="d-flex justify-content-end p-0">
+            <InputGroup className="search-bar">
+              <Form.Control
+                placeholder="Search by ID Number or Name"
+                className="custom-search-input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </InputGroup>
+          
+            <Button className="me-2" id="camera">
+              <FaCamera className="fs-4" />
+            </Button>
+
+            <UploadClassPicture 
+              date={formattedDate} 
+              subjectAndCode={subjectAndCode} 
+              schedule={sched}
+            >
+            </UploadClassPicture>
+          </Col>
+       </Row>
+
+        <DailyAttendance
+          handleManualAttendance = {handleManualAttendance}
+          filteredInfo={filteredInfo}
+        />
       </Tab>
 
       {/* Attendance Summary Tab */}
@@ -223,149 +180,39 @@ const AttendanceTabs = () => {
             <b>Date: </b>
             {date}
           </p>
+
+          <Row className="mb-0 justify-content-end">
+            <Col xs={3}>
+              <InputGroup>
+                <Form.Control
+                  placeholder="Search by ID Number or Name"
+                  className="custom-search-input"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </InputGroup>
+            </Col>
+          </Row>
         </div>
 
-        <div className="d-flex justify-content-center">
-          <AttendanceSummaryTable info={filteredData}></AttendanceSummaryTable>
-        </div>
+        <AttendanceSummaryTable info={filteredInfo}></AttendanceSummaryTable>
       </Tab>
 
       {/* Manage Students Tab */}
       <Tab eventKey="manage" title="Manage Students">
-      <div id="tabsTitle">
-        <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-        <p className="mb-0 text-center">
-          <b>Schedule: </b>
-          {sched}
-        </p>
-        <p className="mb-3 text-center">
-          <b>Date: </b>
-          {date}
-        </p>
-      </div>
-        {/* Search, Add, Delete and File Upload buttons */}
-        <div className="form-check-label">
-          <Form.Check
-            type="checkbox"
-            label="Select"
-            checked={selectAll}
-            onChange={handleSelectAll}
-          />
-          <InputGroup className="mb-3 search-bar">
-            <Form.Control
-              placeholder="Search by ID or Name"
-              className="custom-search-input"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </InputGroup>
-          <div>
-            <input
-              type="file"
-              accept=".csv, .xlsx"
-              onChange={handleFileUpload}
-              style={{ display: "none" }}
-              id="fileUpload"
-            />
-            <Button
-              variant="success"
-              className="me-2 upload-btn"
-              onClick={() => document.getElementById("fileUpload").click()}
-            >
-              <TbFileUpload className="fs-4" />
-            </Button>
-            <Button
-              variant="success"
-              className="me-2 add-student-btn"
-              onClick={handleAddStudent}
-            >
-              <RiUserAddLine className="fs-4" />
-            </Button>
-            <Button
-              variant="danger"
-              className="me-2 delete-student-btn"
-              onClick={handleDeleteStudent}
-              disabled={selectedStudents.length === 0}
-            >
-              <TiUserDeleteOutline className="fs-4" />
-            </Button>
-          </div>
+        <div id="tabsTitle">
+          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
+          <p className="mb-0 text-center">
+            <b>Schedule: </b>
+            {sched}
+          </p>
+          <p className="mb-0 text-center">
+            <b>Date: </b>
+            {date}
+          </p>
         </div>
 
-        {/* Students Table */}
-        <Table
-          striped
-          bordered
-          hover
-          className="attendance-table text-center"
-          id="dailyTable"
-        >
-          <thead>
-            <tr>
-              <th></th>
-              <th>ID Number</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((student) => (
-              <tr key={student.id}>
-                <td>
-                  <Form.Check
-                    type="checkbox"
-                    checked={selectedStudents.includes(student.id)}
-                    onChange={() => handleStudentSelect(student.id)}
-                  />
-                </td>
-                <td>{student.idNumber}</td>
-                <td>{student.name}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-
-        <div className="button-container">
-          <Button id="saveButton" className="fw-bold" onClick={handleSave}>
-            Save
-          </Button>
-        </div>
-
-        {/* Add Student Modal */}
-        <Modal show={modalShow} onHide={() => setModalShow(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add Student</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group controlId="formStudentId">
-                <Form.Label>ID Number:</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter ID Number"
-                  value={newStudentId}
-                  onChange={(e) => setNewStudentId(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group controlId="formStudentName" className="mt-3">
-                <Form.Label>Name:</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Name"
-                  value={newStudentName}
-                  onChange={(e) => setNewStudentName(e.target.value)}
-                />
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setModalShow(false)}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleSaveStudent}>
-              Add to Class
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <ManageStudents sortedData={sortedData} attendanceData={attendanceData}></ManageStudents>
       </Tab>
     </Tabs>
   );

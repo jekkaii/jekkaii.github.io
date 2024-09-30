@@ -14,8 +14,8 @@ const AddUser = () => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Add User
+      <Button id="addUserButton" onClick={handleShow} >
+       + Add User
       </Button>
 
       <Modal
@@ -34,7 +34,7 @@ const AddUser = () => {
               display: "flex",
               justifyContent: "center",
             }}
-            className="fs-1 m-4 fw-bold"
+            className="fs-2 m-3 fw-bold"
             id="addTitle"
         >
           Add User
@@ -42,34 +42,34 @@ const AddUser = () => {
 
         <Modal.Body>
             <Form id="formBody">
-              <Form.Group as={Row} className="mb-4" controlId="formHorizontalFirstName">
-                <Form.Label className="fw-bold fs-5" column sm={3}>First Name:</Form.Label>
-                <Col sm={9}>
+              <Form.Group as={Row} className="mb-2" controlId="formHorizontalFirstName">
+                <Form.Label className="fw-bold" column sm={2}>First Name:</Form.Label>
+                <Col sm={10}>
                   <Form.Control placeholder="Enter First Name" id="formInput" required/>
                 </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-4" controlId="formHorizontalLastName">
-                <Form.Label className="fw-bold fs-5" column sm={3}>Last Name:</Form.Label>
-                <Col sm={9}>
+              <Form.Group as={Row} className="mb-2" controlId="formHorizontalLastName">
+                <Form.Label className="fw-bold" column sm={2}>Last Name:</Form.Label>
+                <Col sm={10}>
                   <Form.Control placeholder="Enter Last Name" id="formInput" required/>
                 </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-4" controlId="formHorizontalEmail">
-                <Form.Label className="fw-bold fs-5" column sm={3}>Email:</Form.Label>
-                <Col sm={9}>
+              <Form.Group as={Row} className="mb-2" controlId="formHorizontalEmail">
+                <Form.Label className="fw-bold" column sm={2}>Email:</Form.Label>
+                <Col sm={10}>
                   <Form.Control type="email" placeholder="Enter Email Address" id="formInput" required/>
                 </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-4">
-                <Form.Label className="fw-bold fs-5" as="legend" column sm={3} required>Role:</Form.Label>
-                <Col sm={9}>
+              <Form.Group as={Row} className="mb-2">
+                <Form.Label className="fw-bold" as="legend" column sm={2} required>Role:</Form.Label>
+                <Col sm={3}>
                 <Form.Check
                   type="radio"
                   label="Admin"
-                  className="formHorizontalRadios"
+                  className="formHorizontalRadios "
                   id="formHorizontalRole1"
                   required
                 />
@@ -86,7 +86,7 @@ const AddUser = () => {
 
           <div id="buttondiv" className="text-center">
             <Button 
-              className="text-white fw-bold fs-5"
+              className="text-white fw-bold mb-4"
               id="addButton"
               onClick={handleClose}
               >

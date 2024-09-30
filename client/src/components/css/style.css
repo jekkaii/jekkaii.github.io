@@ -90,14 +90,6 @@
 }
 
 /* Manage Users */
-/* src/styles/style.css */
-/* body {
-  font-family: "Arial", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f2f2f2;
-} */
-
 .container {
   padding: 20px;
   background-color: white;
@@ -746,89 +738,23 @@
   background-color: #c82333; 
 }
 
-/* confirmation.css */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+/* Confirmation */
+#confirmationMessage {
+  font-family: "Inter", sans-serif;
 }
 
-.modal-contents { /* Changed to match class name in HTML */
-  background-color: #ffffff; /* Solid white background */
-  padding: 20px;
-  border-radius: 10px; /* More rounded corners */
-  border: 1px solid #ccc;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow */
-  width: 450px; /* Adjust width */
-  height: 170px;
-  max-width: 80%;
-  position: relative;
-  text-align: center;
-}
-
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background-color: #f0f0f0;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 14px;
+#yes-btn, #no-btn {
+  padding: 8px 35px;
   font-weight: bold;
-  color: #333; /* Slightly darker text */
-  transition: background-color 0.2s;
+  font-family: "Inter", sans-serif;
 }
 
-.modal-close:hover {
-  background-color: #e0e0e0;
+#yes-btn {
+  background-color: var(--blue);
 }
 
-.modal-actions {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px; /* Increased spacing */
-}
-
-.confirm-btn, .cancel-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s; /* Added button interaction */
-}
-
-.confirm-btn {
-  background-color: #d9534f;
-  color: white;
-}
-
-.confirm-btn:hover {
-  background-color: #c9302c;
-  transform: scale(1.05); /* Slightly enlarges on hover */
-}
-
-.cancel-btn {
-  background-color: #0275d8;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background-color: #025aa5;
-  transform: scale(1.05); /* Slightly enlarges on hover */
+#no-btn {
+  background-color: var(--red);
 }
 
 /* Upload Class Picture */
@@ -877,11 +803,11 @@
 
 #submitButton {
   background-color: var(--blue);
-  padding: 10px 55px 10px 55px;
+  padding: 10px 55px;
 }
 
 #cancelButton {
-  padding: 10px 55px 10px 55px;
+  padding: 10px 55px;
   background-color: var(--red);
 }
 
@@ -926,10 +852,11 @@
   color: var(--blue);
 }
 
-#saveDaily {
+#saveDaily, #saveManageStudents {
   font-family: "Inter", sans-serif;
   padding: 5px 29px;
   border-radius: 10px;
+  background-color: var(--blue);
 }
 
 /* Daily Attendance and Attendance Summary Table Style */
@@ -948,7 +875,11 @@
 }
 
 #fiUpload, #camera, #saveDaily {
-  background-color: var(--blue);
+  background-color: var(--blue); 
+}
+
+#fiUpload, #camera {
+  height: 40px;
 }
 
 /* Date Picker in Daily Attendance */
@@ -976,7 +907,7 @@
 }
 
 .custom-search-input {
-  max-width: 200px; 
+  max-width: 250px; 
 }
 
 /* Form label styling */
@@ -998,22 +929,20 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  height: 40px;
 }
 
-.upload-btn,
-.add-student-btn {
+.upload-btn {
   background-color: #28a745; 
+}
+
+#add-student-btn {
+  background-color: var(--blue);
 }
 
 .delete-student-btn {
   background-color: #dc3545; 
 }
-
-.saveButton {
-  font-weight: bold;
-  background-color: #c82333;
-}
-
 
 .upload-btn:hover,
 .add-student-btn:hover,
@@ -1021,60 +950,42 @@
   opacity: 0.8;
 }
 
-/* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
-@media (max-width:320px) {
-  /* Daily Attendance */
-  #statusButton, #statusButton.absent {
-    padding: 5px 12px;
-    font-size: 12px;
-  }
-
-  #saveDaily {
-    padding: 5px 18px;
-    font-size: 12px;
-  }
-
-  /* Daily Attendance and Attendance Summary Table Style */
-  #dailyTable th, #summaryTable th {
-    font-size: 12px;
-    padding: 12px 3px;
-  }
-
-  #dailyTable td, #summaryTable td {
-    font-size: small;
-  }
-
-  #fiUpload, #camera {
-    font-size: smaller;
-  }
-
-  #tabsTitle {
-  font-size: small;
-  }
+/* Add Student */
+#formInput::placeholder {
+  color: var(--blue);
 }
 
-/* smartphones, Android phones, landscape iPhone */ 
-@media (max-width:480px) { 
-  /* Daily Attendance */
-  #statusButton, #statusButton.absent {
-    padding: 5px 13px;
-    font-size: 13px;
-  }
-
-  #saveDaily {
-    padding: 5px 19px;
-    font-size: 13px;
-  }
-
-  /* Daily Attendance and Attendance Summary Table Style */
-  #dailyTable th, #summaryTable th {
-    font-size: 15px;
-    padding: 8px 8px;
-  }
-
-  #dailyTable td, #summaryTable td {
-    font-size: 14px;
-  } 
+#formInput {
+  background: var(--lightgray);
 }
 
+#formBody {
+  padding: 0 40px 0 40px;
+  font-family: "Inter", sans-serif;
+  color: var(--blue);
+}
 
+#addButton, #editButton {
+  background-color: var(--green);
+  padding: 9px 35px;
+  border-color: var(--green);
+  font-size: medium;
+}
+
+#addTitle, #editTitle {
+  font-family: "Inter", sans-serif;
+  color: var(--blue);
+}
+
+/* Add User */
+#addUserButton {
+  background-color: var(--blue);
+  padding: 10px 25px;
+  font-weight: bold;
+}
+
+/* Edit User */
+#edit {
+  background-color: transparent;
+  border: none;
+}

@@ -1,20 +1,24 @@
 import React from 'react';
 import '../css/style.css'; 
+import { Modal, Button } from 'react-bootstrap';
 
 const Confirmation = ({ isOpen, onClose, onConfirm, message }) => {
-  if (!isOpen) return null;
-
   return (
-    <div className="modal-overlay">
-      <div className="modal-contents">
-        <button className="modal-close" onClick={onClose}>X</button>
-        <p>{message}</p>
-        <div className="modal-actions">
-          <button className="confirm-btn" onClick={onConfirm}>Yes</button>
-          <button className="cancel-btn" onClick={onClose}>No</button>
-        </div>
+    <Modal show={isOpen} onHide={onClose} centered>
+      <Modal.Header closeButton></Modal.Header>
+      
+      <Modal.Body>
+        <p className='text-center' id="confirmationMessage">{message}</p>
+      </Modal.Body>
+      <div className="text-center mb-4">
+        <Button className="me-4" id="yes-btn" variant="primary" onClick={onConfirm}>
+            Yes
+        </Button>
+        <Button id="no-btn" variant="secondary" onClick={onClose}>
+          No
+        </Button>
       </div>
-    </div>
+    </Modal>
   );
 };
 

@@ -13,21 +13,25 @@ const useOpenController = (initialState = false) => {
 };
 
 // ExpandableButton component
-const ExpandableButton = ({ isOpen, toggle }) => {
+const ExpandableButton = ({ isOpen, toggle, absencesDates }) => {
+   // Disable toggle and rotation if absencesDates is empty
+   const isDisabled = absencesDates.length === 0;
+
   return (
     <Button
       variant="outline-secondary"
-      onClick={toggle}
+      onClick={!isDisabled ? toggle : undefined}
       style={{
         padding: '0.25rem 0.5rem',
         fontSize: '1rem',
         transition: 'all 0.25s',
       }}
+      disabled={isDisabled}
     >
       <span
         style={{
           display: 'inline-block',
-          transform: `rotate(${isOpen ? 180 : 0}deg)`,
+          transform: isDisabled ? 'none' : `rotate(${isOpen ? 180 : 0}deg)`,
         }}
       >
         &#x25BC; {/* Unicode for down arrow */}
@@ -47,7 +51,7 @@ const TableSection = ({ entry }) => {
         <td>{entry.name}</td>
         <td>{entry.absencesDates.length}</td>
         <td>
-          <ExpandableButton isOpen={isOpen} toggle={toggle} />
+          <ExpandableButton isOpen={isOpen} toggle={toggle} absencesDates={entry.absencesDates}/>
         </td>
       </tr>
       {isOpen && entry.absencesDates.length > 0 && (
@@ -88,8 +92,10 @@ const MainTable = ({ info }) => {
 };
 
 // AttendanceSummaryTable component
-const AttendanceSummaryTable = ({ info }) => {
-  return <MainTable info={info} />;
+const AttendanceSummary = ({ info }) => {
+  return (    
+    <MainTable info={info} />
+  ); 
 };
 
-export default AttendanceSummaryTable;
+export default AttendanceSummary;

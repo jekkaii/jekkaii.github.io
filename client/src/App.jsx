@@ -26,6 +26,9 @@ import Sidebar from "./components/Sidebar";
 import EditUser from "./components/admin/EditUser";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
 import ClassList from "./components/teacher/ClassList";
+import ManageStudents from "./components/teacher/ManageStudents";
+import Confirmation from "./components/teacher/Confirmation";
+import ClassList from "./components/teacher/ClassList";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -63,8 +66,8 @@ function App() {
             {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
             {/*<Home></Home>*/}
             {/*<CreateClass> </CreateClass>*/}
-            {/*<ManageUsers></ManageUsers>*/}
-            {/*<AddStudent></AddStudent>*/}
+            <ManageUsers></ManageUsers>
+            {/* <AddStudent></AddStudent> */}
             {/* <UploadClassPicture></UploadClassPicture> */}
             {/* <Profile></Profile> */}
             {/* <AddUser></AddUser> */}
@@ -72,11 +75,15 @@ function App() {
             {/* <AttendanceTabs></AttendanceTabs> */}
             <ClassList></ClassList>
             
+            {/* <Confirmation></Confirmation> */}
+            {/* <AddStudent></AddStudent> */}
+            {/* <ClassList></ClassList> */}
+            {/* <ManageStudents></ManageStudents> */}
           </div>
         </div>
         <Footer />
       </div>
-
+{/* 
       <Router>
         <Routes>
           <Route
@@ -106,7 +113,7 @@ function App() {
             }
           ></Route>
         </Routes>
-      </Router>
+      </Router> */}
     </>
   );
 }
