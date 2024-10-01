@@ -16,10 +16,10 @@ export const useAuthStore = create((set) => ({
   //   setToken: (token) => set({ token }),
   //   setError: (error) => set({ error }),
   //   setLoading: (loading) => set({ loading }),
-  login: async (email, password) => {
+  login: async (username, password) => {
     try {
       const response = await axios.post(`${API_URL}/`, {
-        email,
+        username,
         password,
       });
       if (response.status === 200) {

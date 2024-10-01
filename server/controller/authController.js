@@ -48,11 +48,11 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
+    const { username, password } = req.body;
+    if (!username || !password) {
       throw new Error("All fields are required");
     }
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ username });
     // Check if user exists
     if (!user) {
       return res
