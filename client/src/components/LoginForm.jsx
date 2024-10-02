@@ -74,7 +74,7 @@ const LoginForm = () => {
         </div>
 
         {/* Login Button */}
-        <MDBBtn type="submit" className="mb-5 w-100">
+        <MDBBtn type="submit" className="mb-5 w-100" id="login-btn">
           Login
         </MDBBtn>
       </form>
