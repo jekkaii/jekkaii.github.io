@@ -28,6 +28,7 @@ import AttendanceTabs from "./components/teacher/AttendanceTabs";
 import ClassList from "./components/teacher/ClassList";
 import ManageStudents from "./components/teacher/ManageStudents";
 import Confirmation from "./components/teacher/Confirmation";
+import ManageModels from "./components/admin/ManageModels";
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -55,7 +56,7 @@ function App() {
 
   return (
     <>
-      {/* <div>
+      <div>
         <Header />
         <div className="d-flex row h-100 w-100 overflow-hidden">
           <div className="d-flex col-2 text-white bg-dark">
@@ -73,17 +74,20 @@ function App() {
       {/* <EditUser></EditUser> */}
       {/* <AttendanceTabs></AttendanceTabs> */}
       {/* <ClassList></ClassList> */}
+      {<><LoginForm></LoginForm></>}
+
+      {/* {<><ManageModels></ManageModels></>} */}
 
       {/* <Confirmation></Confirmation> */}
       {/* <AddStudent></AddStudent> */}
       {/* <ClassList></ClassList> */}
       {/* <ManageStudents></ManageStudents> */}
-      {/* </div> */}
-      {/* </div> */}
-      {/* <Footer /> */}
-      {/* </div>  */}
+      </div>
+      </div>
+      <Footer />
+      </div> 
 
-      <Router>
+      {/* <Router>
         <Routes>
           <Route
             path="/"
@@ -112,7 +116,7 @@ function App() {
             }
           ></Route>
         </Routes>
-      </Router>
+      </Router> */}
     </>
   );
 }

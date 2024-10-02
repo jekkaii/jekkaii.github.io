@@ -409,6 +409,34 @@ button:hover,
   }
 }
 
+/* style.css */
+.toolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.url-box {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.url-label {
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+.url-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 300px;
+}
+
 
 /* Create Class*/
 .attendance-container {
