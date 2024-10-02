@@ -16,21 +16,34 @@
   --red: #b53f3f;
 }
 
+.no-shadow {
+  box-shadow: none !important; /* Remove any shadow */
+  background-color: #fff; /* Ensure background remains white */
+}
+
+
 /* Login */
 .login-contain {
   padding: 2rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  width: 18%; /* Reduced width for the login form */
-  max-width: 350px; /* Optional: Set a maximum width */
+  width: 20%;
+  max-width: 350px;
   margin: 0 auto;
+  box-shadow: none; /* Remove box shadow */
 }
 
 .logo {
-  width: 200px; /* Adjust logo size */
-  height: auto;
+  width: 500px; /* Adjust logo size */
+  height: 500px;
   margin-bottom: 20px;
+}
+
+.text-center {
+  color: #2a1f7e;
+  font: 21px;
+  margin-bottom: 20px; /* Add margin-bottom */
 }
 
 .selection-screen {
@@ -60,7 +73,7 @@
 .input-label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #3f3d56; /* Adjust color as needed */
+  color: #2a1f7e; 
   font-weight: bold;
 }
 
@@ -68,6 +81,7 @@
   position: relative;
 }
 
+/* Password toggle icon */
 .password-toggle {
   position: absolute;
   right: 30px; /* Adjust this value if necessary */
@@ -75,7 +89,26 @@
   font-size: 1.2rem;
   top: 30%;
   transform: translateY(-50%);
-  color: #000; 
+  color: #e07272; 
+}
+
+.mb-5 {
+  margin-top: 20px;
+}
+
+/* Changed button background color */
+button,.MDBBtn {
+  background-color: #2a1f7e !important; /* Change button background color */
+  color: #fff !important; 
+  border: none;
+}
+
+
+/* Button hover state */
+button:hover,
+.MDBBtn:hover {
+  background-color: #191970 !important; /* Slightly darker hover state */
+  color: #fff !important;
 }
 
 /* Media query for smaller screens */
@@ -85,9 +118,16 @@
   }
 
   .login-container {
-    width: 80%;
+    width: 100%;
   }
 }
+
+
+
+
+
+
+
 
 /* Manage Users */
 .container {
@@ -410,6 +450,7 @@
   color: #2d007a;
   font-weight: bold;
   margin-bottom: 10px;
+  margin-top: 25px;
   font-family: "Inter", sans-serif;
 }
 
