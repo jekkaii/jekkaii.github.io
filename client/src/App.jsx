@@ -30,6 +30,22 @@ import ManageStudents from "./components/teacher/ManageStudents";
 import Confirmation from "./components/teacher/Confirmation";
 import ManageModels from "./components/admin/ManageModels";
 
+const TeacherRoute = ({ children }) => {
+  const { authenticated, isAdmin, isTeacher } = useAuthStore();
+  if (!isTeacher || !authenticated || isAdmin) {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
+const AdminRoute = ({ children }) => {
+  const { authenticated, isAdmin, isTeacher } = useAuthStore();
+  if (!isAdmin || !authenticated || isTeacher) {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
   if (!authenticated) {
@@ -37,18 +53,24 @@ const ProtectedRoute = ({ children }) => {
   }
   return children;
 };
-
 const RedirectToHome = ({ children }) => {
-  const { authenticated } = useAuthStore();
+  const { authenticated, isAdmin, isTeacher } = useAuthStore();
 
   if (authenticated) {
-    return <Navigate to="/home" />;
+    if (isAdmin) {
+      return <Navigate to="/admin" />;
+    }
+    if (isTeacher) {
+      return <Navigate to="/teacher" />;
+    }
   }
+
   return children;
 };
 
 function App() {
   const { checkAuthentication } = useAuthStore();
+  const { isAdmin } = useAuthStore();
 
   useEffect(() => {
     checkAuthentication();
@@ -56,14 +78,14 @@ function App() {
 
   return (
     <>
-      <div>
+      {/* <div>
         <Header />
         <div className="d-flex row h-100 w-100 overflow-hidden">
           <div className="d-flex col-2 text-white bg-dark">
             <Sidebar />
           </div>
-          <div className="col-10">
-            {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
+          <div className="col-10"> */}
+      {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
       {/*<Home></Home>*/}
       {/*<CreateClass> </CreateClass>*/}
       {/* <ManageUsers></ManageUsers> */}
@@ -74,7 +96,6 @@ function App() {
       {/* <EditUser></EditUser> */}
       {/* <AttendanceTabs></AttendanceTabs> */}
       {/* <ClassList></ClassList> */}
-      {<><LoginForm></LoginForm></>}
 
       {/* {<><ManageModels></ManageModels></>} */}
 
@@ -82,12 +103,12 @@ function App() {
       {/* <AddStudent></AddStudent> */}
       {/* <ClassList></ClassList> */}
       {/* <ManageStudents></ManageStudents> */}
-      </div>
+      {/* </div>
       </div>
       <Footer />
-      </div> 
+      </div>  */}
 
-      {/* <Router>
+      <Router>
         <Routes>
           <Route
             path="/"
@@ -106,17 +127,33 @@ function App() {
             }
           ></Route>
           <Route
-            path="/home"
+            path="/teacher"
             element={
               <ProtectedRoute>
-                <Header />
-                <Home />
-                <Footer />
+                <TeacherRoute>
+                  <Header />
+                  <Home />
+                  <AttendanceTabs />
+                  <Footer />
+                </TeacherRoute>
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminRoute>
+                  <Header />
+                  <Home />
+                  <ManageUsers />
+                  <Footer />
+                </AdminRoute>
               </ProtectedRoute>
             }
           ></Route>
         </Routes>
-      </Router> */}
+      </Router>
     </>
   );
 }

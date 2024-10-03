@@ -71,7 +71,7 @@ export const login = async (req, res) => {
     generateTokenAndSetCookie(res, user._id);
     user.lastLogin = new Date();
     await user.save();
-    console.log(`User ${user.name} logged in`);
+    console.log(`User ${user.username} logged in`);
     return res.status(200).json({
       success: true,
       message: "Login Success",
@@ -94,7 +94,9 @@ export const logout = async (req, res) => {
 
 export const checkAuth = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.userId).select("-password");
+    const user = await UserModel.findOne({ _id: req.userId }).select(
+      "-password"
+    );
     if (!user) {
       return res
         .status(404)
@@ -102,7 +104,30 @@ export const checkAuth = async (req, res) => {
     }
     return res
       .status(200)
-      .json({ success: true, user: { ...user._doc, password: undefined } });
+      .json({ success: true, message: "Auth Success", user });
+  } catch (error) {
+    console.log("Post request failed", error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+export const checkAdmin = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ _id: req.userId }).select(
+      "-password"
+    );
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    if (user.role !== "admin") {
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized Access" });
+    }
+    return res
+      .status(200)
+      .json({ success: true, message: "Admin Access", user });
   } catch (error) {
     console.log("Post request failed", error);
     return res.status(400).json({ success: false, message: error.message });

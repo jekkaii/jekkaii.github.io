@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Button } from "react";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import { useAuthStore } from "../authentication/authStore";
 import logo from "../components/resources/SLU Logo.png"; // Update the path to your logo image
@@ -20,14 +20,24 @@ const LoginForm = () => {
   return (
     <MDBContainer className="login-container d-flex flex-column justify-content-center align-items-center vh-100 no-shadow">
       <div className="text-center mb-4">
-        <img src={logo} alt="University Logo" className="mb-4" style={{ width: '190px' }} />
+        <img
+          src={logo}
+          alt="University Logo"
+          className="mb-4"
+          style={{ width: "190px" }}
+        />
       </div>
       <h4 className="text-center mb-4">Login to your account</h4>
-      <form onSubmit={handleLogin} className="w-100" style={{ maxWidth: '400px' }}>
-        
+      <form
+        onSubmit={handleLogin}
+        className="w-100"
+        style={{ maxWidth: "400px" }}
+      >
         {/* ID Number Input */}
         <div className="mb-4">
-          <label htmlFor="idNumber" className="form-label">Username</label>
+          <label htmlFor="idNumber" className="form-label">
+            Username
+          </label>
           <MDBInput
             required
             onChange={(e) => setIdNumber(e.target.value)}
@@ -41,7 +51,9 @@ const LoginForm = () => {
 
         {/* Password Input with Toggle */}
         <div className="mb-4 position-relative">
-          <label htmlFor="password" className="form-label">Password</label>
+          <label htmlFor="password" className="form-label">
+            Password
+          </label>
           <MDBInput
             required
             onChange={(e) => setPassword(e.target.value)}
@@ -55,11 +67,11 @@ const LoginForm = () => {
             className="password-toggle position-absolute"
             onClick={() => setShowPassword(!showPassword)}
             style={{
-              top: '78%',
-              right: '10px',
-              cursor: 'pointer',
-              transform: 'translateY(-50%)',
-              color: '#007bff'
+              top: "78%",
+              right: "10px",
+              cursor: "pointer",
+              transform: "translateY(-50%)",
+              color: "#007bff",
             }}
           >
             {showPassword ? "👁️" : "👁️‍🗨️"}
@@ -68,15 +80,22 @@ const LoginForm = () => {
 
         {/* Forgot Password */}
         <div className="text-end mb-4">
-          <a href="#!" className="small" style={{ color: '#007bff' }}>
+          <a href="#!" className="small" style={{ color: "#007bff" }}>
             Forgot Password?
           </a>
         </div>
 
         {/* Login Button */}
-        <MDBBtn type="submit" className="mb-5 w-100" id="login-btn">
-          Login
-        </MDBBtn>
+        <div className="d-grid gap-2">
+          <button
+            className="btn btn-primary"
+            type="submit"
+            data-mdb-ripple-init
+            data-mdb-ripple-color="light"
+          >
+            Login
+          </button>
+        </div>
       </form>
     </MDBContainer>
   );

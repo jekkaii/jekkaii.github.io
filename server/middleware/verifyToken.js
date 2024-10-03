@@ -13,6 +13,8 @@ export const verifyToken = (req, res, next) => {
       return res.status(401).json("Authentication failed - invalid token");
     }
     req.userId = decoded.userId;
+    // console.log(`Site Authenticated`); // For debugging
+    // The number of lines is the number of react html elements there is
     next();
   } catch (error) {
     return res.status(500).json("Server not working");
