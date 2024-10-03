@@ -3,6 +3,10 @@ import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import { useAuthStore } from "../authentication/authStore";
 import logo from "../components/resources/SLU Logo.png"; // Update the path to your logo image
 import "../components/css/style.css"; // Import the CSS file
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+
+
 
 const LoginForm = () => {
   const [idNumber, setIdNumber] = useState("");
@@ -74,13 +78,13 @@ const LoginForm = () => {
               color: "#007bff",
             }}
           >
-            {showPassword ? "👁️" : "👁️‍🗨️"}
+                 {showPassword ? <FaEye color="#191970" /> : <FaEyeSlash color="#191970" />}
           </span>
         </div>
 
         {/* Forgot Password */}
         <div className="text-end mb-4">
-          <a href="#!" className="small" style={{ color: "#007bff" }}>
+          <a href="#!" className="small" style={{ color: "#191970" }}>
             Forgot Password?
           </a>
         </div>
@@ -88,11 +92,9 @@ const LoginForm = () => {
         {/* Login Button */}
         <div className="d-grid gap-2">
           <button
-            className="btn btn-primary"
+            className="login-btn"
             type="submit"
-            data-mdb-ripple-init
-            data-mdb-ripple-color="light"
-          >
+            data-mdb-ripple-init>
             Login
           </button>
         </div>

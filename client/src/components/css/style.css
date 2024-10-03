@@ -96,11 +96,18 @@
   margin-top: 20px;
 }
 
-/* Changed button background color */
-#login-btn {
-  background-color: #2a1f7e; /* Change button background color */
+.login-btn {
+  background-color: #191970; /* Change button background color */
   color: #fff; 
   border: none;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10%;
 }
 
 /* Button hover state */
