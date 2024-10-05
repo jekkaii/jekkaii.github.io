@@ -1,17 +1,34 @@
-/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
+import '../css/style.css';
+import faceImage from '../resources/face.png';
+
 
 export default class Footer extends Component {
   render() {
     return (
-      <footer className="footer fixed-bottom bg-primary">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="colcontainer-fluid m-4 w-100">
-            <h4 className="d-flex justify-content-center">
-              Footer<strong> 2024</strong>
-            </h4>
+      <footer className="footer">
+        {/* Top section of the footer containing logo and nav links */}
+        <div className="footer-top d-flex justify-content-between align-items-center py-3">
+          <div className="footer-logo">
+          <div className="profile-image mb-3 text-center">
+        <img src={faceImage} alt="face" width="160" />
+      </div>
           </div>
-        </nav>
+          <nav className="footer-nav d-flex justify-content-center">
+            <a href="#" className="footer-link mx-2">HOME</a>
+            <a href="#" className="footer-link mx-2">ABOUT US</a>
+            <a href="#" className="footer-link mx-2">CONTACT US</a>
+          </nav>
+        </div>
+
+        {/* Bottom section of the footer containing copyright and contact info */}
+        <div className="footer-bottom d-flex justify-content-between align-items-center py-3 border-top">
+          <p className="mb-0">&copy; 2024 Cogito Creatio. All rights reserved</p>
+          <div className="footer-contact d-flex align-items-center">
+            <i className="headset-icon me-2"></i> 
+            <strong className="ms-2">(+63) 912 3456 789</strong>
+          </div>
+        </div>
       </footer>
     );
   }

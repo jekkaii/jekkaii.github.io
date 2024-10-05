@@ -17,7 +17,7 @@ import axios from "axios";
 import CreateClass from "./components/CreateClass";
 import ManageUsers from "./components/admin/ManageUsers";
 import Header from "./components/admin/Header";
-import Footer from "./components/admin/Footer";
+import Footer from "./components/teacher/Footer";
 import AddStudent from "./components/teacher/AddStudent";
 import UploadClassPicture from "./components/teacher/UploadClassPicture";
 import Profile from "./components/teacher/Profile";
@@ -78,15 +78,15 @@ function App() {
 
   return (
     <>
-      {/* <div>
-        <Header />
+      <div>
+        {/* <Header /> */}
         <div className="d-flex row h-100 w-100 overflow-hidden">
-          <div className="d-flex col-2 text-white bg-dark">
+          <div className="d-flex col-2">
             <Sidebar />
           </div>
-          <div className="col-10"> */}
+          <div className="col-10">
       {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
-      {/*<Home></Home>*/}
+      {/* <Home></Home> */}
       {/*<CreateClass> </CreateClass>*/}
       {/* <ManageUsers></ManageUsers> */}
       {/* <AddStudent></AddStudent> */}
@@ -103,11 +103,11 @@ function App() {
       {/* <AddStudent></AddStudent> */}
       {/* <ClassList></ClassList> */}
       {/* <ManageStudents></ManageStudents> */}
-      {/* </div>
+       </div>
       </div>
       <Footer />
-      </div>  */}
-
+      </div>  
+{/* 
       <Router>
         <Routes>
           <Route
@@ -153,7 +153,7 @@ function App() {
             }
           ></Route>
         </Routes>
-      </Router>
+      </Router> */}
     </>
   );
 }

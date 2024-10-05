@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import axios from "axios";
 import { useAuthStore } from "../authentication/authStore";
-import Sidebar from "./Sidebar";
+import "../components/Sidebar.jsx";
 
 const Home = () => {
   const { logout } = useAuthStore();
