@@ -9,20 +9,19 @@ export const useAuthStore = create((set) => ({
   user: null,
   token: null,
   error: null,
-  loading: false,
+  isLoading: false,
   authenticated: false,
   isAdmin: false,
   isTeacher: false,
-  isLoading: false,
-  isCheckingAuthentication: false,
+  setLoading: (isLoading) => set({ isLoading }),
   // setAuthenticated: () => set((state) => ({ authenticated: true })),
   //   setUser: (user) => set({ user }),
   //   setToken: (token) => set({ token }),
   //   setError: (error) => set({ error }),
-  //   setLoading: (loading) => set({ loading }),
   login: async (username, password) => {
-    set({ loading: true });
+    set({ isLoading: true });
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(`${API_URL}/`, {
         username,
         password,
@@ -36,7 +35,7 @@ export const useAuthStore = create((set) => ({
           isAdmin: true,
           isTeacher: false,
           error: null,
-          loading: false,
+          isLoading: false,
         });
       } else {
         set({
@@ -46,19 +45,21 @@ export const useAuthStore = create((set) => ({
           isAdmin: false,
           isTeacher: true,
           error: null,
-          loading: false,
+          isLoading: false,
         });
       }
     } catch (error) {
       set({
         success: false,
         error: error.response.data.message,
-        loading: false,
+        isLoading: false,
       });
     }
   },
   logout: async () => {
+    set({ isLoading: true });
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(`${API_URL}/logout`);
       if (response.status === 200) {
         set({
@@ -68,21 +69,22 @@ export const useAuthStore = create((set) => ({
           isAdmin: false,
           isTeacher: false,
           error: null,
-          loading: false,
+          isLoading: false,
         });
       }
     } catch (error) {
       set({
         success: false,
         error: error.response.data.message,
-        loading: false,
+        isLoading: false,
       });
     }
   },
 
   checkAuthentication: async () => {
-    set({ isCheckingAuthentication: true });
+    set({ isLoading: true });
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.get(`${API_URL}/check-auth`);
       if (response.status === 200) {
         const { user, token } = response.data;
@@ -94,8 +96,7 @@ export const useAuthStore = create((set) => ({
             isAdmin: true,
             isTeacher: false,
             error: null,
-            loading: false,
-            isCheckingAuthentication: false,
+            isLoading: false,
           });
         } else {
           set({
@@ -105,8 +106,7 @@ export const useAuthStore = create((set) => ({
             isAdmin: false,
             isTeacher: true,
             error: null,
-            loading: false,
-            isCheckingAuthentication: false,
+            isLoading: false,
           });
         }
       }
@@ -114,8 +114,7 @@ export const useAuthStore = create((set) => ({
       set({
         success: false,
         error: error.response.data.message,
-        loading: false,
-        isCheckingAuthentication: false,
+        isLoading: false,
       });
     }
   },

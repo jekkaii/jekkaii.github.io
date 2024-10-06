@@ -1,20 +1,21 @@
-import { useState, Button } from "react";
-import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
+import { useState } from "react";
+import { MDBContainer, MDBInput } from "mdb-react-ui-kit";
 import { useAuthStore } from "../authentication/authStore";
 import logo from "../components/resources/SLU Logo.png"; // Update the path to your logo image
 import "../components/css/style.css"; // Import the CSS file
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import SpinnerLoaderV2 from "../components/SpinnerLoaderV2";
+import "../components/css/style.css";
 
-
-
-const LoginForm = () => {
+export default function LoginForm() {
   const [idNumber, setIdNumber] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   // Initialize authStore
   const { login } = useAuthStore();
+  const { isLoading, error } = useAuthStore();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,18 +33,27 @@ const LoginForm = () => {
         />
       </div>
       <h4 className="text-center mb-4">Login to your account</h4>
+
       <form
         onSubmit={handleLogin}
         className="w-100"
         style={{ maxWidth: "400px" }}
       >
+        {error && (
+          <div
+            className="alert alert-danger p-2 mb-0 d-flex align-items-center animate__animated animate__fadeInDown"
+            role="alert"
+            style={{ animationDuration: "0.5s" }}
+          >
+            <div>{error}</div>
+          </div>
+        )}
         {/* ID Number Input */}
         <div className="mb-4">
           <label htmlFor="idNumber" className="form-label">
             Username
           </label>
           <MDBInput
-            required
             onChange={(e) => setIdNumber(e.target.value)}
             id="idNumber"
             type="text"
@@ -59,7 +69,6 @@ const LoginForm = () => {
             Password
           </label>
           <MDBInput
-            required
             onChange={(e) => setPassword(e.target.value)}
             id="password"
             type={showPassword ? "text" : "password"}
@@ -78,12 +87,16 @@ const LoginForm = () => {
               color: "#007bff",
             }}
           >
-                 {showPassword ? <FaEye color="#191970" /> : <FaEyeSlash color="#191970" />}
+            {showPassword ? (
+              <FaEye color="#191970" />
+            ) : (
+              <FaEyeSlash color="#191970" />
+            )}
           </span>
         </div>
 
         {/* Forgot Password */}
-        <div className="text-end mb-4">
+        <div className="text-end">
           <a href="#!" className="small" style={{ color: "#191970" }}>
             Forgot Password?
           </a>
@@ -91,16 +104,11 @@ const LoginForm = () => {
 
         {/* Login Button */}
         <div className="d-grid gap-2">
-          <button
-            className="login-btn"
-            type="submit"
-            data-mdb-ripple-init>
-            Login
+          <button className="login-btn" type="submit" data-mdb-ripple-init>
+            {isLoading ? <SpinnerLoaderV2 /> : "Login"}
           </button>
         </div>
       </form>
     </MDBContainer>
   );
-};
-
-export default LoginForm;
+}

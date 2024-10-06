@@ -29,6 +29,7 @@ import ClassList from "./components/teacher/ClassList";
 import ManageStudents from "./components/teacher/ManageStudents";
 import Confirmation from "./components/teacher/Confirmation";
 import ManageModels from "./components/admin/ManageModels";
+import SpinnerLoader from "./components/SpinnerLoader";
 
 const TeacherRoute = ({ children }) => {
   const { authenticated, isAdmin, isTeacher } = useAuthStore();
@@ -70,7 +71,7 @@ const RedirectToHome = ({ children }) => {
 
 function App() {
   const { checkAuthentication } = useAuthStore();
-  const { isAdmin } = useAuthStore();
+  const { isLoading, setLoading, authenticated } = useAuthStore();
 
   useEffect(() => {
     checkAuthentication();
@@ -78,13 +79,13 @@ function App() {
 
   return (
     <>
-      <div>
-        {/* <Header /> */}
-        <div className="d-flex row h-100 w-100 overflow-hidden">
+      {/* <div> */}
+      {/* <Header /> */}
+      {/* <div className="d-flex row h-100 w-100 overflow-hidden">
           <div className="d-flex col-2">
             <Sidebar />
           </div>
-          <div className="col-10">
+          <div className="col-10"> */}
       {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
       {/* <Home></Home> */}
       {/*<CreateClass> </CreateClass>*/}
@@ -103,11 +104,11 @@ function App() {
       {/* <AddStudent></AddStudent> */}
       {/* <ClassList></ClassList> */}
       {/* <ManageStudents></ManageStudents> */}
-       </div>
+      {/* </div>
       </div>
       <Footer />
-      </div>  
-{/* 
+      </div>   */}
+
       <Router>
         <Routes>
           <Route
@@ -129,31 +130,39 @@ function App() {
           <Route
             path="/teacher"
             element={
-              <ProtectedRoute>
-                <TeacherRoute>
-                  <Header />
-                  <Home />
-                  <AttendanceTabs />
-                  <Footer />
-                </TeacherRoute>
-              </ProtectedRoute>
+              isLoading ? (
+                <SpinnerLoader />
+              ) : (
+                <ProtectedRoute>
+                  <TeacherRoute>
+                    <Header />
+                    <Home />
+                    <AttendanceTabs />
+                    <Footer />
+                  </TeacherRoute>
+                </ProtectedRoute>
+              )
             }
           ></Route>
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
-                <AdminRoute>
-                  <Header />
-                  <Home />
-                  <ManageUsers />
-                  <Footer />
-                </AdminRoute>
-              </ProtectedRoute>
+              isLoading ? (
+                <SpinnerLoader />
+              ) : (
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <Header />
+                    <Home />
+                    <ManageUsers />
+                    <Footer />
+                  </AdminRoute>
+                </ProtectedRoute>
+              )
             }
           ></Route>
         </Routes>
-      </Router> */}
+      </Router>
     </>
   );
 }
