@@ -59,7 +59,6 @@ const RedirectToHome = ({ children }) => {
 
   if (authenticated) {
     if (isAdmin) {
-
       return <Navigate to="/admin" />;
     }
     if (isTeacher) {
@@ -88,15 +87,15 @@ function App() {
           </div>
           <div className="col-10"> */}
       {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
-      {/* <Home></Home>    */}
+      {/* <Home></Home> */}
       {/*<CreateClass> </CreateClass>*/}
-      <ManageUsers></ManageUsers>
+      {/*<ManageUsers></ManageUsers>*/}
       {/* <AddStudent></AddStudent> */}
       {/* <UploadClassPicture></UploadClassPicture> */}
-      {/* <Profile></Profile> */}
+      {/*<Profile></Profile>*/}
       {/* <AddUser></AddUser> */}
       {/* <EditUser></EditUser> */}
-      {/* <AttendanceTabs></AttendanceTabs> */}
+      {/*<AttendanceTabs></AttendanceTabs>
       {/* <ClassList></ClassList> */}
 
       {/* <Confirmation></Confirmation> */}

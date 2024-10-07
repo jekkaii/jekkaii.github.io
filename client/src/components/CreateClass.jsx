@@ -181,10 +181,10 @@ const CreateClass = () => {
               onChange={handleTermChange}
               className="form-select"
             >
-              <option value="">Select Term</option>
-              <option value="Prelims">Prelims</option>
-              <option value="Midterms">Midterms</option>
-              <option value="Finals">Finals</option>
+              <option value="">Select Semester</option>
+              <option value="Prelims">First Semester</option>
+              <option value="Midterms">Second Semester</option>
+              <option value="Finals">Short Term</option>
             </Form.Select>
           </Col>
         </Form.Group>
