@@ -9,67 +9,122 @@ export const useAuthStore = create((set) => ({
   user: null,
   token: null,
   error: null,
-  loading: false,
+  isLoading: false,
   authenticated: false,
+  isAdmin: false,
+  isTeacher: false,
+  setLoading: (isLoading) => set({ isLoading }),
   // setAuthenticated: () => set((state) => ({ authenticated: true })),
   //   setUser: (user) => set({ user }),
   //   setToken: (token) => set({ token }),
   //   setError: (error) => set({ error }),
-  //   setLoading: (loading) => set({ loading }),
   login: async (username, password) => {
+    set({ isLoading: true });
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(`${API_URL}/`, {
         username,
         password,
       });
-      if (response.status === 200) {
-        const { user, token } = response.data;
-        set({ user, token, authenticated: true, error: null, loading: false });
+      const { user, token } = response.data;
+      if (user.role === "admin") {
+        set({
+          user,
+          token,
+          authenticated: true,
+          isAdmin: true,
+          isTeacher: false,
+          error: null,
+          isLoading: false,
+        });
+      } else {
+        set({
+          user,
+          token,
+          authenticated: true,
+          isAdmin: false,
+          isTeacher: true,
+          error: null,
+          isLoading: false,
+        });
       }
     } catch (error) {
-      set({ success: false, error: error.response.data.message });
+      set({
+        success: false,
+        error: error.response.data.message,
+        isLoading: false,
+      });
     }
   },
-
   logout: async () => {
+    set({ isLoading: true });
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(`${API_URL}/logout`);
       if (response.status === 200) {
         set({
           user: null,
           token: null,
           authenticated: false,
+          isAdmin: false,
+          isTeacher: false,
           error: null,
-          loading: false,
+          isLoading: false,
         });
       }
     } catch (error) {
-      set({ success: false, error: error.response.data.message });
+      set({
+        success: false,
+        error: error.response.data.message,
+        isLoading: false,
+      });
     }
   },
 
   checkAuthentication: async () => {
+    set({ isLoading: true });
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.get(`${API_URL}/check-auth`);
       if (response.status === 200) {
         const { user, token } = response.data;
-        set({ user, token, authenticated: true, error: null, loading: false });
+        if (user.role === "admin") {
+          set({
+            user,
+            token,
+            authenticated: true,
+            isAdmin: true,
+            isTeacher: false,
+            error: null,
+            isLoading: false,
+          });
+        } else {
+          set({
+            user,
+            token,
+            authenticated: true,
+            isAdmin: false,
+            isTeacher: true,
+            error: null,
+            isLoading: false,
+          });
+        }
       }
     } catch (error) {
-      set({ success: false, error: error.response.data.message });
+      set({
+        success: false,
+        error: error.response.data.message,
+        isLoading: false,
+      });
     }
   },
 
-  signup: async (name, email, password) => {
+  checkAdmin: async () => {
     try {
-      const response = await axios.post(`${API_URL}/signup`, {
-        name,
-        email,
-        password,
-      });
-      if (response.status === 201) {
-        const { user, token } = response.data;
-        set({ user, token, authenticated: true, error: null, loading: false });
+      const response = await axios.get(`${API_URL}/check-admin`);
+
+      if (response.status === 200) {
+        set({ isAdmin: true, isTeacher: false });
       }
     } catch (error) {
       set({ success: false, error: error.response.data.message });

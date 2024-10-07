@@ -1,18 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/style.css';
 import { FaArchive, FaTrash, FaBars } from 'react-icons/fa';
 import Confirmation from './Confirmation'; // Import the Confirmation component
 
 const ClassList = () => {
+  const [classes, setClasses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [selectedAction, setSelectedAction] = useState('');
+  const [selectedClass, setSelectedClass] = useState(null);
+
+  // Fetch class details from the database when component mounts
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        // Uncomment below to fetch real data from your API
+        // const response = await fetch('/api/getClasses?professor=Cruz');
+        // const data = await response.json();
+        // setClasses(data.classes); 
+
+        // Sample data (you can comment this out and replace it with actual fetch)
+        const sampleClasses = [
+          {
+            subject: 'Information Management',
+            classCode: 'IT221',
+            classCodes: ['9552', '9553'],
+            room: 'D515',
+            schedule: 'MWF 11:30 - 12:30'
+          },
+          {
+            subject: 'IT Security',
+            classCode: 'IT322',
+            classCodes: ['9541', '9542'],
+            room: 'D512',
+            schedule: 'TTh 10:00 - 11:30'
+          }
+        ];
+        setClasses(sampleClasses);
+
+      } catch (error) {
+        console.error('Error fetching class data:', error);
+      }
+    };
+
+    fetchClasses();
+  }, []);
 
   const handleActionClick = (action, classCode) => {
+    setSelectedAction(action);
+    setSelectedClass(classCode);
+
     if (action === 'archive') {
       setModalMessage(`Are you sure you want to archive the class of ${classCode}?`);
     } else if (action === 'delete') {
       setModalMessage(`Are you sure you want to delete the class of ${classCode}?`);
     }
+
     setIsModalOpen(true);
   };
 
@@ -21,9 +64,22 @@ const ClassList = () => {
     setModalMessage('');
   };
 
-  const confirmAction = () => {
-    // Handle the confirmed action (archive or delete)
-    console.log(modalMessage);
+  const confirmAction = async () => {
+    try {
+      if (selectedAction === 'archive') {
+        // Perform archive action here (uncomment when API is ready)
+        // await fetch(`/api/archiveClass?classCode=${selectedClass}`, { method: 'POST' });
+      } else if (selectedAction === 'delete') {
+        // Perform delete action here (uncomment when API is ready)
+        // await fetch(`/api/deleteClass?classCode=${selectedClass}`, { method: 'DELETE' });
+      }
+
+      // After action, update class list
+      setClasses(classes.filter((cls) => cls.classCode !== selectedClass));
+    } catch (error) {
+      console.error('Error performing action on class:', error);
+    }
+
     closeModal();
   };
 
@@ -42,43 +98,33 @@ const ClassList = () => {
 
       {/* Create Class and Hamburger Menu Button */}
       <div className="menu-create-btn-container">
-        <FaBars className="hamburger-menu" />
         <button className="create-class-btn">+ Create Class</button>
       </div>
 
       {/* Class Section */}
-      <div className="class-section">
-        <h2>IT 221 (Information Management)</h2>
+      {classes.map((cls) => (
+        <div key={cls.classCode} className="class-section">
+          <h2>{cls.subject} ({cls.classCode})</h2>
 
-        {/* Class Cards */}
-        <div className="class-cards">
-          <div className="class-card card-1">
-            <div className="class-info">
-              <p>CLASSCODE: 9552</p>
-              <p>Room: D515</p>
-              <p>Schedule: MWF 11:30 - 12:30</p>
-              <button className="visit-class-btn">Visit Class</button>
-            </div>
-            <div className="class-actions">
-              <FaArchive className="archive-icon" onClick={() => handleActionClick('archive', 'IT221 - 9552')} />
-              <FaTrash className="trash-icon" onClick={() => handleActionClick('delete', 'IT221 - 9552')} />
-            </div>
-          </div>
-
-          <div className="class-card card-2">
-            <div className="class-info">
-              <p>CLASSCODE: 9553</p>
-              <p>Room: D515</p>
-              <p>Schedule: MWF 11:30 - 12:30</p>
-              <button className="visit-class-btn">Visit Class</button>
-            </div>
-            <div className="class-actions">
-              <FaArchive className="archive-icon" onClick={() => handleActionClick('archive', 'IT221 - 9553')} />
-              <FaTrash className="trash-icon" onClick={() => handleActionClick('delete', 'IT221 - 9553')} />
-            </div>
+          {/* Class Cards */}
+          <div className="class-cards">
+            {cls.classCodes.map((code) => (
+              <div key={code} className="class-card">
+                <div className="class-info">
+                  <p>CLASSCODE: {code}</p>
+                  <p>Room: {cls.room}</p>
+                  <p>Schedule: {cls.schedule}</p>
+                  <button className="visit-class-btn">View Class</button>
+                </div>
+                <div className="class-actions">
+                  <FaArchive className="archive-icon" onClick={() => handleActionClick('archive', code)} />
+                  <FaTrash className="trash-icon" onClick={() => handleActionClick('delete', code)} />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      ))}
 
       {/* Confirmation Modal */}
       <Confirmation

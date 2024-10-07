@@ -16,21 +16,33 @@
   --red: #b53f3f;
 }
 
+.no-shadow {
+  box-shadow: none !important; /* Remove any shadow */
+  background-color: #fff; /* Ensure background remains white */
+}
+
 /* Login */
 .login-contain {
   padding: 2rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  width: 18%; /* Reduced width for the login form */
-  max-width: 350px; /* Optional: Set a maximum width */
+  width: 20%;
+  max-width: 350px;
   margin: 0 auto;
+  box-shadow: none; /* Remove box shadow */
 }
 
 .logo {
-  width: 200px; /* Adjust logo size */
-  height: auto;
+  width: 500px; /* Adjust logo size */
+  height: 500px;
   margin-bottom: 20px;
+}
+
+.text-center {
+  color: #2a1f7e;
+  font: 21px;
+  margin-bottom: 20px; /* Add margin-bottom */
 }
 
 .selection-screen {
@@ -60,7 +72,7 @@
 .input-label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #3f3d56; /* Adjust color as needed */
+  color: #2a1f7e;
   font-weight: bold;
 }
 
@@ -68,6 +80,7 @@
   position: relative;
 }
 
+/* Password toggle icon */
 .password-toggle {
   position: absolute;
   right: 30px; /* Adjust this value if necessary */
@@ -75,7 +88,31 @@
   font-size: 1.2rem;
   top: 30%;
   transform: translateY(-50%);
-  color: #000; 
+  color: #e07272;
+}
+
+.mb-5 {
+  margin-top: 20px;
+}
+
+.login-btn {
+  background-color: #191970; /* Change button background color */
+  color: #fff;
+  border: none;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10%;
+}
+
+/* Button hover state */
+#login-btn:hover {
+  background-color: #191970; /* Slightly darker hover state */
+  color: #fff;
 }
 
 /* Media query for smaller screens */
@@ -85,7 +122,7 @@
   }
 
   .login-container {
-    width: 80%;
+    width: 100%;
   }
 }
 
@@ -125,6 +162,203 @@
 
 .add-user-btn:hover {
   background-color: #1a3965;
+}
+
+/* Sidebar */
+.d-flex.flex-column.p-3.min-vh-100 {
+  background-color: #efefef;
+  width: 500px;
+  padding: 20px;
+  border-radius: 7px;
+}
+
+.d-flex.col-2 {
+  border-radius: 10px;
+  margin: 20px;
+  border-radius: 7px;
+}
+
+.profile-image {
+  margin-top: 10%;
+}
+
+.user-section {
+  cursor: pointer;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.user-role {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: #c3c3c3;
+  border: 1px solid #dee2e6;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  gap: 5%;
+}
+
+.dropdown-menu a {
+  text-decoration: none;
+  padding: 5px 10px;
+  color: #191970;
+  font-size: 0.9rem;
+}
+
+.dropdown-menu a:hover {
+  background-color: #e9ecef;
+  border-radius: 3px;
+}
+
+.nav-link.active {
+  background-color: #abbeff;
+  color: #191970;
+  border-radius: 4px;
+  border-left: 5px solid #191970;
+}
+
+.nav-link .me-2 {
+  margin-right: 10px;
+}
+
+.nav-link:hover {
+  background-color: #abbeff;
+  color: #191970;
+  border-radius: 4px;
+}
+
+.nav-link {
+  text-decoration: none;
+}
+
+.px-3 {
+  margin-top: 10%;
+}
+
+.user-info {
+  cursor: pointer;
+  text-align: center;
+}
+
+.dropdown-menu {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+  padding: 10px;
+  text-align: center;
+}
+
+.dropdown-menu a {
+  display: block;
+  color: #191970;
+  padding: 5px 0;
+  text-decoration: none;
+  color: #fff;
+}
+
+.dropdown-menu a:hover {
+  background-color: #e6f0ff;
+  border-radius: 5px;
+}
+
+.me-2 {
+  color: #191970;
+}
+
+.me-3,
+.me-4 {
+  color: #939393;
+}
+
+.attendance-text {
+  color: #939393;
+}
+
+.logs-text {
+  color: #939393;
+}
+
+/* Footer */
+/* Footer Container */
+.footer {
+  background-color: #efefef; /* Dark background */
+  color: #191970; /* White text color */
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
+
+/* Footer Top Section */
+.footer-top {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  font-size: 16px;
+}
+
+/* Footer Navigation */
+.footer-nav a {
+  color: #191970;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0 20px;
+}
+
+.footer-nav a:hover {
+  color: #abbeff; /* Hover effect for links */
+}
+
+/* Footer Bottom Section */
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 10px;
+  font-size: 14px;
+  color: #191970;
+  border-top: 1px solid #666;
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: #191970;
+}
+
+.footer-contact {
+  display: flex;
+  align-items: center;
+}
+
+.footer-contact .headset-icon {
+  content: url("path/to/your-headset-icon.png"); /* Replace with the actual path */
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+}
+
+.footer-contact span,
+.footer-contact strong {
+  color: #191970;
+}
+
+.footer-contact strong {
+  margin-left: 5px;
+  font-weight: bold;
 }
 
 /* Table Styles */
@@ -273,7 +507,6 @@
   }
 }
 
-
 .model-cards {
   display: flex;
   flex-wrap: wrap;
@@ -354,21 +587,48 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .model-cards {
-      flex-direction: column;
-      align-items: center;
+    flex-direction: column;
+    align-items: center;
   }
 
   .toolbar {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 
   .toolbar input {
-      width: 100%;
+    width: 100%;
   }
 }
 
+/* style.css */
+.toolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.url-box {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.url-label {
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+.url-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 300px;
+}
 
 /* Create Class*/
 .attendance-container {
@@ -380,21 +640,18 @@
   padding: 20px;
   background-color: #f8f9fa;
   position: relative;
-  width: 100vw; 
+  width: 100vw;
   max-width: 1200px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   font-family: "Inter", sans-serif;
-
 }
 
 .attendance-form {
   background-color: #f9f8f8;
   padding: 40px;
-  max-width: 1000px; 
+  max-width: 1000px;
   width: 100%;
   font-family: "Inter", sans-serif;
-  
-
 }
 
 .attendance-header {
@@ -410,6 +667,7 @@
   color: #2d007a;
   font-weight: bold;
   margin-bottom: 10px;
+  margin-top: 25px;
   font-family: "Inter", sans-serif;
 }
 
@@ -421,7 +679,6 @@
   font-size: 16px;
   margin-bottom: 20px;
   font-family: "Inter", sans-serif;
-
 }
 
 .custom-button {
@@ -431,7 +688,6 @@
   color: #fff;
   transition: background-color 0.3s ease;
   font-family: "Inter", sans-serif;
-
 }
 
 .custom-button:hover {
@@ -455,7 +711,6 @@
   border: none;
   font-family: "Inter", sans-serif;
 }
-
 
 .button-container {
   display: flex;
@@ -491,15 +746,14 @@
 /* Modal Styles */
 .modal-body {
   text-align: center;
-  padding: 20px; 
+  padding: 20px;
 }
 
 .modal-footer {
   justify-content: center;
   display: flex;
-  gap: 10px; 
+  gap: 10px;
 }
-
 
 .schedule-picker {
   display: flex;
@@ -511,7 +765,7 @@
 .schedule-picker button {
   font-size: 16px;
   padding: 10px 20px;
-  border-radius: 8px; 
+  border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
@@ -526,7 +780,6 @@
   border: 1px solid #2d007a;
 }
 
-
 .modal-footer .btn-danger {
   background-color: #c82333;
   border: none;
@@ -536,7 +789,7 @@
   background-color: #28a745;
   border: none;
 }
-.modal-body{
+.modal-body {
   text-align: left;
   padding: 20px;
 }
@@ -560,7 +813,6 @@
     font-size: 14px;
     padding: 10px 20px;
     font-family: "Inter", sans-serif;
-
   }
 
   .schedule-picker button {
@@ -605,13 +857,13 @@
 .heading-container h1 {
   margin: 0;
   font-size: 24px;
-  color: #004085; 
+  color: #004085;
 }
 
 .heading-container p {
   margin: 5px 0;
   font-size: 14px;
-  color: #004085; 
+  color: #004085;
 }
 
 /* Container for Create Class and Hamburger Menu Button */
@@ -624,7 +876,7 @@
 
 .hamburger-menu {
   font-size: 24px;
-  color: #004085; 
+  color: #004085;
   margin-right: 15px;
   cursor: pointer;
 }
@@ -650,24 +902,24 @@
 .class-section h2 {
   margin-top: 20px;
   font-size: 20px;
-  color: #004085; 
+  color: #004085;
 }
 
 /* Container for class cards, displayed in a row with even spacing */
 .class-cards {
   display: flex;
   justify-content: center;
-  gap: 20px; 
+  gap: 20px;
   margin-top: 20px;
 }
 
 /* Class card styling with fixed size and unique color schemes */
 .class-card {
-  background-color: #eef; 
+  background-color: #eef;
   border-radius: 10px;
-  padding: 30px; 
-  width: 45%; 
-  height: 200px; 
+  padding: 30px;
+  width: 45%;
+  height: 200px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
@@ -675,18 +927,18 @@
 }
 
 .class-card {
-  background-color: #f0f4ff; 
-  border: 1px solid #dcdcdc; 
+  background-color: #f0f4ff;
+  border: 1px solid #dcdcdc;
 }
 
 .class-info p {
   margin: 0;
   font-size: 18px;
-  color: #004085; 
+  color: #004085;
 }
 
 .class-info p span {
-  color: #6c757d; 
+  color: #6c757d;
 }
 
 .visit-class-btn {
@@ -712,11 +964,11 @@
 /* Archive and delete icons styling */
 .archive-icon,
 .trash-icon {
-  color: white; 
-  font-size: 35px; 
+  color: white;
+  font-size: 35px;
   cursor: pointer;
-  padding: 12px; 
-  border-radius: 5px; 
+  padding: 12px;
+  border-radius: 5px;
 }
 
 /* Archive icon specific styles */
@@ -725,17 +977,17 @@
 }
 
 .archive-icon:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
 }
 
 /* Trash icon specific styles */
 .trash-icon {
-  background-color: #dc3545; 
-  margin-left: 15px; 
+  background-color: #dc3545;
+  margin-left: 15px;
 }
 
 .trash-icon:hover {
-  background-color: #c82333; 
+  background-color: #c82333;
 }
 
 /* Confirmation */
@@ -743,7 +995,8 @@
   font-family: "Inter", sans-serif;
 }
 
-#yes-btn, #no-btn {
+#yes-btn,
+#no-btn {
   padding: 8px 35px;
   font-weight: bold;
   font-family: "Inter", sans-serif;
@@ -842,7 +1095,7 @@
 }
 
 #statusButton.absent {
-  background-color: var(--red); 
+  background-color: var(--red);
   padding: 5px 20px;
   font-family: "Inter", sans-serif;
   font-weight: bold;
@@ -852,7 +1105,8 @@
   color: var(--blue);
 }
 
-#saveDaily, #saveManageStudents {
+#saveDaily,
+#saveManageStudents {
   font-family: "Inter", sans-serif;
   padding: 5px 29px;
   border-radius: 10px;
@@ -860,7 +1114,8 @@
 }
 
 /* Daily Attendance and Attendance Summary Table Style */
-#dailyTable th, #summaryTable th {
+#dailyTable th,
+#summaryTable th {
   background-color: var(--blue);
   color: white;
   font-size: large;
@@ -868,17 +1123,21 @@
   vertical-align: middle;
 }
 
-#dailyTable td, #summaryTable td {
+#dailyTable td,
+#summaryTable td {
   font-family: "Source-Serif-Pro", serif;
   vertical-align: middle;
   font-size: medium;
 }
 
-#fiUpload, #camera, #saveDaily {
-  background-color: var(--blue); 
+#fiUpload,
+#camera,
+#saveDaily {
+  background-color: var(--blue);
 }
 
-#fiUpload, #camera {
+#fiUpload,
+#camera {
   height: 40px;
 }
 
@@ -891,7 +1150,7 @@
   margin: 12px;
 }
 
-/*Manage Students*/ 
+/*Manage Students*/
 .tabsTitle {
   color: var(--blue);
 }
@@ -907,7 +1166,7 @@
 }
 
 .custom-search-input {
-  max-width: 250px; 
+  max-width: 250px;
 }
 
 /* Form label styling */
@@ -933,7 +1192,7 @@
 }
 
 .upload-btn {
-  background-color: #28a745; 
+  background-color: #28a745;
 }
 
 #add-student-btn {
@@ -941,7 +1200,7 @@
 }
 
 .delete-student-btn {
-  background-color: #dc3545; 
+  background-color: #dc3545;
 }
 
 .upload-btn:hover,
@@ -965,14 +1224,16 @@
   color: var(--blue);
 }
 
-#addButton, #editButton {
+#addButton,
+#editButton {
   background-color: var(--green);
   padding: 9px 35px;
   border-color: var(--green);
   font-size: medium;
 }
 
-#addTitle, #editTitle {
+#addTitle,
+#editTitle {
   font-family: "Inter", sans-serif;
   color: var(--blue);
 }
@@ -988,4 +1249,13 @@
 #edit {
   background-color: transparent;
   border: none;
+}
+
+.error {
+  background-color: red;
+  color: black;
+  font-size: small;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
