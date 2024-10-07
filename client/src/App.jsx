@@ -65,19 +65,18 @@ function App() {
             {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
       {/*<Home></Home>*/}
       {/*<CreateClass> </CreateClass>*/}
-      {/* <ManageUsers></ManageUsers> */}
+      {/*<ManageUsers></ManageUsers>*/}
       {/* <AddStudent></AddStudent> */}
       {/* <UploadClassPicture></UploadClassPicture> */}
-      {/* <Profile></Profile> */}
+      {/*<Profile></Profile>*/}
       {/* <AddUser></AddUser> */}
       {/* <EditUser></EditUser> */}
-      {/* <AttendanceTabs></AttendanceTabs> */}
+      {/*<AttendanceTabs></AttendanceTabs>
       {/* <ClassList></ClassList> */}
-
       {/* <Confirmation></Confirmation> */}
       {/* <AddStudent></AddStudent> */}
       {/* <ClassList></ClassList> */}
-      {/* <ManageStudents></ManageStudents> */}
+      {/*<ManageStudents></ManageStudents>*/}
       {/* </div> */}
       {/* </div> */}
       {/* <Footer /> */}
