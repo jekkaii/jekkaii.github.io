@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import axios from "axios";
 import { useAuthStore } from "../authentication/authStore";
-import "../components/Sidebar.jsx";
+import Sidebar from "./Sidebar";
 
 const Home = () => {
   const { logout } = useAuthStore();
@@ -17,6 +17,7 @@ const Home = () => {
   return (
     <>
       <div className="flex">
+        <Sidebar />
         <div className="flex text-center p-5">
           <h1>{isAdmin ? "Welcome Admin" : "Welcome Teacher"}</h1>
           <br />

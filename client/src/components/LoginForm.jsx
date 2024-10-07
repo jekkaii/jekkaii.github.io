@@ -5,7 +5,7 @@ import logo from "../components/resources/SLU Logo.png"; // Update the path to y
 import "../components/css/style.css"; // Import the CSS file
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import SpinnerLoaderV2 from "../components/SpinnerLoaderV2";
+import SpinnerLoaderV2 from "../components/LoginSipinner";
 import "../components/css/style.css";
 
 export default function LoginForm() {
