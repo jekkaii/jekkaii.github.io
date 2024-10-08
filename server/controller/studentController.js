@@ -141,24 +141,26 @@ export const updateStudentStatus = async (req, res) => {
   }
 };
 
-export const deleteStudent = async (req, res) => {
+export const deleteStudents = async (req, res) => {
   try {
-    const { idNumber } = req.body;
-    if (!idNumber) {
+    const { idNumbers } = req.body;
+    if (!idNumbers) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
-    const existingUser = await StudentModel.findOne({ idNumber });
-    if (!existingUser) {
+    const existingUsers = await StudentModel.find({
+      idNumber: { $in: idNumbers },
+    });
+    if (!existingUsers.length) {
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "No users found" });
     }
-    await existingUser.remove();
-    return res.status(200).json({ success: true, message: "User deleted" });
+    await StudentModel.deleteMany({ idNumber: { $in: idNumbers } });
+    return res.status(200).json({ success: true, message: "Users deleted" });
   } catch (error) {
-    console.error("Error deleting user:", error);
+    console.error("Error deleting users:", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };

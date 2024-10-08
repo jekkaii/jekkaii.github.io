@@ -1,32 +1,37 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { Button, Modal, Col, Form, Row } from "react-bootstrap";
 import { RiUserAddLine } from "react-icons/ri";
+import { useStudentStore } from "../../stores/studentStore";
 import "../css/style.css";
 
-const AddStudent = ({ onAddStudent }) => {
+const AddStudent = ({ onSuccess }) => {
   const [show, setShow] = useState(false);
   const [newStudent, setNewStudent] = useState({ idNumber: "", name: "" });
+  const { addStudent } = useStudentStore();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleAddToClass = () => {
-    if (newStudent.idNumber && newStudent.name) {
-      onAddStudent(newStudent);
-    }
+  const handleAddToClass = async (e) => {
+    e.preventDefault();
+    await addStudent(newStudent);
+    setNewStudent({ idNumber: "", name: "" });
     handleClose();
+    onSuccess();
   };
 
   return (
     <>
-       <Button
-          variant="success"
-          className="me-2 add-student-btn"
-          id="add-student-btn"
-          onClick={handleShow}
-        >
-          <RiUserAddLine className="fs-4" />
-        </Button>
+      <Button
+        variant="success"
+        className="me-2 add-student-btn"
+        id="add-student-btn"
+        onClick={handleShow}
+      >
+        <RiUserAddLine className="fs-4" />
+      </Button>
 
       <Modal
         show={show}
@@ -51,11 +56,7 @@ const AddStudent = ({ onAddStudent }) => {
 
         <Modal.Body>
           <Form id="formBody">
-            <Form.Group
-              as={Row}
-              className="mb-2"
-              controlId="formHorizontalIDNum"
-            >
+            <Form.Group as={Row} className="mb-2">
               <Form.Label className="fw-bold" column sm={4}>
                 ID Number:
               </Form.Label>
@@ -72,11 +73,7 @@ const AddStudent = ({ onAddStudent }) => {
               </Col>
             </Form.Group>
 
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalName"
-            >
+            <Form.Group as={Row} className="mb-3">
               <Form.Label className="fw-bold" column sm={4}>
                 Name:
               </Form.Label>

@@ -29,7 +29,7 @@ export const useStudentStore = create((set) => ({
   addStudent: async (newStudent) => {
     set({ isLoading: true });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(`${API_URL}/students`, newStudent);
       if (response.status === 200) {
         const { student } = response.data;
@@ -45,15 +45,17 @@ export const useStudentStore = create((set) => ({
     }
   },
 
-  deleteStudent: async (id) => {
+  deleteStudents: async (studentIds) => {
     set({ isLoading: true });
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const response = await axios.delete(`${API_URL}/students/${id}`);
+      const response = await axios.delete(`${API_URL}/students`, {
+        data: { studentIds },
+      });
       if (response.status === 200) {
         set({
           success: true,
-          message: "Student deleted successfully",
+          message: "Students deleted successfully",
           isLoading: false,
         });
       }

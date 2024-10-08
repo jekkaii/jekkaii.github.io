@@ -1,6 +1,8 @@
-import React from 'react';
-import { useState } from 'react';
-import { Button, Table } from 'react-bootstrap';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import React from "react";
+import { useState } from "react";
+import { Button, Table } from "react-bootstrap";
 
 const DailyAttendance = ({ handleManualAttendance, filteredInfo }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,8 +30,10 @@ const DailyAttendance = ({ handleManualAttendance, filteredInfo }) => {
               <td>{entry.name}</td>
               <td>
                 <Button
-                  onClick={() => handleManualAttendance(entry.id)}
-                  className={`button ${entry.status === "Absent" ? "absent" : ""}`}
+                  onClick={() => handleManualAttendance(entry.idNumber)}
+                  className={`button ${
+                    entry.status === "Absent" ? "absent" : ""
+                  }`}
                   id="statusButton"
                 >
                   {entry.status}
@@ -51,7 +55,7 @@ const DailyAttendance = ({ handleManualAttendance, filteredInfo }) => {
           </tr>
         </tbody>
       </Table>
-   </>
+    </>
   );
 };
 

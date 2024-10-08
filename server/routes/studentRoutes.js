@@ -1,7 +1,7 @@
 import express from "express";
 import {
   addStudent,
-  deleteStudent,
+  deleteStudents,
   getStudents,
   updateStudent,
   updatePassword,
@@ -12,7 +12,7 @@ const router = express.Router();
 
 // Student
 router.post("/students", addStudent);
-router.delete("/students/:id", deleteStudent);
+router.delete("/students", deleteStudents);
 router.get("/students", getStudents);
 router.put("/students/:id", updateStudent);
 router.put("/students/:id/password", updatePassword);
