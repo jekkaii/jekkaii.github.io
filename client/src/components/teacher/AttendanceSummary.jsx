@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import React, { useState, useCallback } from "react";
+import { Button, Table } from "react-bootstrap";
 
 // Custom Hook for controlling open/close state
 const useOpenController = (initialState = false) => {
@@ -14,24 +14,24 @@ const useOpenController = (initialState = false) => {
 
 // ExpandableButton component
 const ExpandableButton = ({ isOpen, toggle, absencesDates }) => {
-   // Disable toggle and rotation if absencesDates is empty
-   const isDisabled = absencesDates.length === 0;
+  // Disable toggle and rotation if absencesDates is empty
+  const isDisabled = absencesDates.length === 0;
 
   return (
     <Button
       variant="outline-secondary"
       onClick={!isDisabled ? toggle : undefined}
       style={{
-        padding: '0.25rem 0.5rem',
-        fontSize: '1rem',
-        transition: 'all 0.25s',
+        padding: "0.25rem 0.5rem",
+        fontSize: "1rem",
+        transition: "all 0.25s",
       }}
       disabled={isDisabled}
     >
       <span
         style={{
-          display: 'inline-block',
-          transform: isDisabled ? 'none' : `rotate(${isOpen ? 180 : 0}deg)`,
+          display: "inline-block",
+          transform: isDisabled ? "none" : `rotate(${isOpen ? 180 : 0}deg)`,
         }}
       >
         &#x25BC; {/* Unicode for down arrow */}
@@ -51,7 +51,11 @@ const TableSection = ({ entry }) => {
         <td>{entry.name}</td>
         <td>{entry.absencesDates.length}</td>
         <td>
-          <ExpandableButton isOpen={isOpen} toggle={toggle} absencesDates={entry.absencesDates}/>
+          <ExpandableButton
+            isOpen={isOpen}
+            toggle={toggle}
+            absencesDates={entry.absencesDates}
+          />
         </td>
       </tr>
       {isOpen && entry.absencesDates.length > 0 && (
@@ -73,7 +77,13 @@ const TableSection = ({ entry }) => {
 // Main Table component
 const MainTable = ({ info }) => {
   return (
-    <Table striped bordered hover className="text-center ms-3 me-3" id="summaryTable">
+    <Table
+      striped
+      bordered
+      hover
+      className="text-center ms-3 me-3"
+      id="summaryTable"
+    >
       <thead>
         <tr>
           <th>ID Number</th>
@@ -93,9 +103,7 @@ const MainTable = ({ info }) => {
 
 // AttendanceSummaryTable component
 const AttendanceSummary = ({ info }) => {
-  return (    
-    <MainTable info={info} />
-  ); 
+  return <MainTable info={info} />;
 };
 
 export default AttendanceSummary;

@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useState } from "react";
 import { Button, Table, Form, InputGroup, Row, Col } from "react-bootstrap";
 import { TbFileUpload } from "react-icons/tb";
 import { TiUserDelete } from "react-icons/ti";
-import AddStudent from './AddStudent';
-import "../css/style.css"; 
-import Confirmation from './Confirmation'; 
+import AddStudent from "./AddStudent";
+import "../css/style.css";
+import Confirmation from "./Confirmation";
 
 const ManageStudents = ({ sortedData, attendanceData }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState("");
   const [selectValue, setSelectValue] = useState([]);
 
   // Check if all students are selected
-  const isAllSelected = sortedData.length > 0 && selectValue.length === sortedData.length;
+  const isAllSelected =
+    sortedData.length > 0 && selectValue.length === sortedData.length;
 
   // Handle individual checkbox and select all
   const handleCheck = (id) => {
-    if (id === 'all') {
+    if (id === "all") {
       if (isAllSelected) {
         setSelectValue([]);
       } else {
@@ -43,10 +45,12 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
 
   const handleDeleteStudentConfirmation = () => {
     if (isAllSelected) {
-      setModalMessage('Are you sure you want to delete all students from this class?');
+      setModalMessage(
+        "Are you sure you want to delete all students from this class?"
+      );
     } else {
       const selectedNames = sortedData
-        .filter(student => selectValue.includes(student.id))
+        .filter((student) => selectValue.includes(student.id))
         .map((student, index) => (
           <React.Fragment key={student.id}>
             {index + 1}. {student.name} <br />
@@ -55,7 +59,8 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
 
       setModalMessage(
         <React.Fragment>
-          Are you sure you want to delete the following student/s from the class?
+          Are you sure you want to delete the following student/s from the
+          class?
           <br />
           {selectedNames}
         </React.Fragment>
@@ -66,7 +71,7 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalMessage('');
+    setModalMessage("");
   };
 
   return (
@@ -91,7 +96,7 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
             style={{ display: "none" }}
             id="fileUpload"
           />
-          
+
           <Button
             variant="success"
             className="me-2 upload-btn"
@@ -134,7 +139,7 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
               <Form.Check
                 type="checkbox"
                 checked={isAllSelected}
-                onChange={() => handleCheck('all')}
+                onChange={() => handleCheck("all")}
               />
             </th>
             <th>ID Number</th>
@@ -144,10 +149,12 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
         <tbody>
           {sortedData
             .filter((entry) => {
-              return searchTerm.toLowerCase() === ''
-              ? entry
-              : entry.name.toLowerCase().includes(searchTerm) || entry.idNumber.includes(searchTerm);
-            }).map((student) => (
+              return searchTerm.toLowerCase() === ""
+                ? entry
+                : entry.name.toLowerCase().includes(searchTerm) ||
+                    entry.idNumber.includes(searchTerm);
+            })
+            .map((student) => (
               <tr key={student.id}>
                 <td>
                   <Form.Check
@@ -159,11 +166,11 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
                 <td>{student.idNumber}</td>
                 <td>{student.name}</td>
               </tr>
-          ))}
+            ))}
         </tbody>
       </Table>
     </>
   );
-}
+};
 
 export default ManageStudents;

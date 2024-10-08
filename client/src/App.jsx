@@ -7,10 +7,9 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { useAuthStore } from "./authentication/authStore";
+import { useAuthStore } from "./stores/authStore";
 
 import LoginForm from "./components/LoginForm";
-import SignUp from "./components/SignUp";
 import Home from "./components/Home";
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -114,14 +113,6 @@ function App() {
             element={
               <RedirectToHome>
                 <LoginForm />
-              </RedirectToHome>
-            }
-          ></Route>
-          <Route
-            path="/signup"
-            element={
-              <RedirectToHome>
-                <SignUp />
               </RedirectToHome>
             }
           ></Route>

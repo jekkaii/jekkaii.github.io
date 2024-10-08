@@ -1,4 +1,4 @@
-import bycrpt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { UserModel } from "../model/User.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 
@@ -20,7 +20,22 @@ export const signup = async (req, res) => {
         .json({ success: false, message: "Email already exists" });
     }
     const username = email.substring(0, email.indexOf("@"));
-    const hashedPassword = await bycrpt.hash(password, 12);
+    bycrpt.getSalt(10, (err, salt) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ success: false, message: "Internal server error" });
+      }
+      bycrpt.hash(password, salt, async (err, hashedPassword) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ success: false, message: "Internal server error" });
+        }
+      });
+    });
+
+    const hashedPassword = bcrypt.hashSync(password, 12);
     const newUser = new UserModel({
       firstName,
       lastName,
@@ -59,7 +74,7 @@ export const login = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User credentials invalid" });
     }
-    const checkPasswordMatch = await bycrpt.compare(password, user.password);
+    const checkPasswordMatch = bcrypt.compareSync(password, user.password);
 
     // Check if password matches
     if (!checkPasswordMatch) {

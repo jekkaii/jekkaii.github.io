@@ -16,6 +16,7 @@
     "@mui/x-date-pickers": "^7.18.0",
     "axios": "^1.7.5",
     "bootstrap": "^5.3.3",
+    "cc-face-project": "file:",
     "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",
     "mdb-react-ui-kit": "^8.0.0",

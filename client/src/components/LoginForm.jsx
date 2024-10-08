@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MDBContainer, MDBInput } from "mdb-react-ui-kit";
-import { useAuthStore } from "../authentication/authStore";
+import { useAuthStore } from "../stores/authStore";
 import logo from "../components/resources/SLU Logo.png"; // Update the path to your logo image
 import "../components/css/style.css"; // Import the CSS file
 import { FaEye } from "react-icons/fa";

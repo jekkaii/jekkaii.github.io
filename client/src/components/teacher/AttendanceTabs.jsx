@@ -1,15 +1,17 @@
-import React from 'react';
-import { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React from "react";
+import { useState, useEffect } from "react";
 import { Tabs, Tab, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import AttendanceSummaryTable from "./AttendanceSummary";
-import DailyAttendance from './DailyAttendance';
-import "../css/style.css"; 
-import ManageStudents from './ManageStudents';
+import DailyAttendance from "./DailyAttendance";
+import "../css/style.css";
+import ManageStudents from "./ManageStudents";
 import { FaCamera } from "react-icons/fa6";
-import UploadClassPicture from './UploadClassPicture';
+import UploadClassPicture from "./UploadClassPicture";
+import { useStudentStore } from "../../stores/studentStore";
 
 const AttendanceTabs = () => {
   const [key, setKey] = useState("daily");
@@ -18,67 +20,50 @@ const AttendanceTabs = () => {
   const subjectAndCode = "IT 222 - 9451";
   const sched = "TThS (7:30 - 9:00 AM)";
   const date = "April 22, 2024";
- 
-  const [attendanceData, setAttendanceData] = useState([
-    // Dummy Data
-    {
-      id: 1,
-      idNumber: "2221234",
-      name: "Dela Cruz, Juan",
-      status: "Present",
-      absencesDates: [
-        "August 13, 2024",
-        "August 22, 2024",
-        "September 3, 2024",
-        "September 24, 2024",
-      ],
-    },
-    {
-      id: 2,
-      idNumber: "2220848",
-      name: "Escobar, Juan",
-      status: "Absent",
-      absencesDates: ["August 10, 2024"],
-    },
-    {
-      id: 3,
-      idNumber: "2220821",
-      name: "Flores, Juan",
-      status: "Present",
-      absencesDates: [],
-    },
-    {
-      id: 4,
-      idNumber: "2222256",
-      name: "Gomez, Juan",
-      status: "Present",
-      absencesDates: [],
-    },
-    {
-      id: 5,
-      idNumber: "2227790",
-      name: "Hernandez, Juan",
-      status: "Absent",
-      absencesDates: [],
-    },
-    {
-      id: 6,
-      idNumber: "2229090",
-      name: "Gomez, Juan",
-      status: "Absent",
-      absencesDates: ["August 10, 2024"],
-    },
-  ]);
-  
-  const sortedData = [...attendanceData].sort((a, b) => a.name.localeCompare(b.name));
-  
+
+  // Student Store
+  const { getStudents, updateStudentStatus, students, isLoading, error } =
+    useStudentStore();
+
+  useEffect(() => {
+    getStudents();
+  }, [getStudents]);
+
+  const [attendanceData, setAttendanceData] = useState(
+    students.map((student) => ({
+      id: student.id,
+      idNumber: student.idNumber,
+      name: student.name,
+      status: student.status,
+      attendance: [],
+    }))
+  );
+
+  useEffect(() => {
+    setAttendanceData(
+      students.map((student) => ({
+        id: student.id,
+        idNumber: student.idNumber,
+        name: student.name,
+        status: student.status,
+        attendance: [],
+      }))
+    );
+  }, [students]);
+
+  const sortedData = [...attendanceData].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+
   /* For the Date Picker */
   const [dateValue, setDateValue] = useState(dayjs());
-  const [formattedDate, setFormattedDate] = useState(dateValue.format('MMMM D, YYYY'));
+  const [formattedDate, setFormattedDate] = useState(
+    dateValue.format("MMMM D, YYYY")
+  );
 
   const handleDateChange = (newValue) => {
     setDateValue(newValue);
-    const dateString = newValue.format('MMMM D, YYYY');
+    const dateString = newValue.format("MMMM D, YYYY");
     setFormattedDate(dateString);
   };
 
@@ -125,13 +110,8 @@ const AttendanceTabs = () => {
                 value={dateValue}
                 onChange={handleDateChange}
                 disableFuture={true}
-                renderInput={(params) => (
-                  <input
-                    {...params.inputProps}
-                  />
-                )}
-              >
-              </DatePicker>
+                renderInput={(params) => <input {...params.inputProps} />}
+              ></DatePicker>
             </LocalizationProvider>
           </div>
         </div>
@@ -148,28 +128,27 @@ const AttendanceTabs = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </InputGroup>
-          
+
             <Button className="me-2" id="camera">
               <FaCamera className="fs-4" />
             </Button>
 
-            <UploadClassPicture 
-              date={formattedDate} 
-              subjectAndCode={subjectAndCode} 
+            <UploadClassPicture
+              date={formattedDate}
+              subjectAndCode={subjectAndCode}
               schedule={sched}
-            >
-            </UploadClassPicture>
+            ></UploadClassPicture>
           </Col>
-       </Row>
+        </Row>
 
         <DailyAttendance
-          handleManualAttendance = {handleManualAttendance}
+          handleManualAttendance={handleManualAttendance}
           filteredInfo={filteredInfo}
         />
       </Tab>
 
       {/* Attendance Summary Tab */}
-      <Tab eventKey="summary" title="Attendance Summary">
+      {/* <Tab eventKey="summary" title="Attendance Summary">
         <div id="tabsTitle">
           <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
           <p className="mb-0 text-center">
@@ -196,7 +175,7 @@ const AttendanceTabs = () => {
         </div>
 
         <AttendanceSummaryTable info={filteredInfo}></AttendanceSummaryTable>
-      </Tab>
+      </Tab> */}
 
       {/* Manage Students Tab */}
       <Tab eventKey="manage" title="Manage Students">
@@ -211,8 +190,10 @@ const AttendanceTabs = () => {
             {date}
           </p>
         </div>
-
-        <ManageStudents sortedData={sortedData} attendanceData={attendanceData}></ManageStudents>
+        <ManageStudents
+          sortedData={sortedData}
+          attendanceData={attendanceData}
+        ></ManageStudents>
       </Tab>
     </Tabs>
   );

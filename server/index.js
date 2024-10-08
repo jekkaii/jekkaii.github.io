@@ -3,6 +3,7 @@ import cors from "cors"; //For cross platform compatability
 import dotenv from "dotenv"; // Used to manage environment variables like URL front and back and mongodb
 import { connectToDatabase } from "./database/dbConnection.js";
 import authRoutes from "./routes/authRoutes.js";
+import studentRoutes from "./routes/studentRoutes.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
+app.use("/api/teacher", studentRoutes);
 
 app.listen(process.env.PORT, () => {
   connectToDatabase();
