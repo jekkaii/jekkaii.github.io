@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import { Button, Table, Form, InputGroup, Row, Col } from "react-bootstrap";
 import { TbFileUpload } from "react-icons/tb";
-import { TiUserDelete } from "react-icons/ti";
+import { AiOutlineUserDelete } from "react-icons/ai";
 import AddStudent from "./AddStudent";
 import "../css/style.css";
 import Confirmation from "./Confirmation";
+import EditStudent from "./EditStudent";
 
 const ManageStudents = ({ sortedData, attendanceData }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,6 +35,11 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
     }
   };
 
+  const handleEditStudent= () => {
+    // // add here code for edit student
+    // handleClose();
+  };
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     console.log("File uploaded:", file);
@@ -43,6 +49,7 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
     console.log("Save Clicked", attendanceData);
   };
 
+  // Handle delete modal confirmation
   const handleDeleteStudentConfirmation = () => {
     if (isAllSelected) {
       setModalMessage(
@@ -73,6 +80,8 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
     setIsModalOpen(false);
     setModalMessage("");
   };
+
+  console.log(selectValue);
 
   return (
     <>
@@ -105,15 +114,16 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
             <TbFileUpload className="fs-4" />
           </Button>
 
+          <EditStudent handleEditStudent={handleEditStudent} selectValue={selectValue} />
           <AddStudent />
-
+          
           <Button
             variant="danger"
             className="me-2 delete-student-btn"
             onClick={handleDeleteStudentConfirmation}
             disabled={selectValue.length === 0}
           >
-            <TiUserDelete className="fs-4" />
+            <AiOutlineUserDelete className="fs-4" />
           </Button>
         </Col>
       </Row>

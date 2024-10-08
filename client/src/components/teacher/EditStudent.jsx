@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 import { Button, Modal, Col, Form, Row } from "react-bootstrap";
-import { RiUserAddLine } from "react-icons/ri";
+import { TbUserEdit } from "react-icons/tb";
 import "../css/style.css";
 
-const AddStudent = ({ onAddStudent }) => {
+const EditStudent = ({ handleEditStudent, selectValue, selectedNames }) => {
   const [show, setShow] = useState(false);
-  const [newStudent, setNewStudent] = useState({ idNumber: "", name: "" });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const handleAddToClass = () => {
-    if (newStudent.idNumber && newStudent.name) {
-      onAddStudent(newStudent);
-    }
-    handleClose();
-  };
 
   return (
     <>
@@ -24,8 +16,9 @@ const AddStudent = ({ onAddStudent }) => {
           className="me-2 add-student-btn"
           id="add-student-btn"
           onClick={handleShow}
+          disabled={selectValue.length !== 1}
         >
-          <RiUserAddLine className="fs-4" />
+          <TbUserEdit className="fs-4" />
         </Button>
 
       <Modal
@@ -46,7 +39,7 @@ const AddStudent = ({ onAddStudent }) => {
           className="fs-2 m-3 fw-bold"
           id="addTitle"
         >
-          Add Student
+          Edit Student
         </Modal.Title>
 
         <Modal.Body>
@@ -61,12 +54,12 @@ const AddStudent = ({ onAddStudent }) => {
               </Form.Label>
               <Col sm={8}>
                 <Form.Control
-                  placeholder="Enter ID Number"
+                  // placeholder="Enter ID Number"
                   id="formInput"
-                  value={newStudent.idNumber}
-                  onChange={(e) =>
-                    setNewStudent({ ...newStudent, idNumber: e.target.value })
-                  }
+                  // value={newStudent.idNumber}
+                  // onChange={(e) =>
+                  //   setNewStudent({ ...newStudent, idNumber: e.target.value })
+                  // }
                   required
                 />
               </Col>
@@ -82,12 +75,12 @@ const AddStudent = ({ onAddStudent }) => {
               </Form.Label>
               <Col sm={8}>
                 <Form.Control
-                  placeholder="Enter Name"
+                  // placeholder="Enter Name"
                   id="formInput"
-                  value={newStudent.name}
-                  onChange={(e) =>
-                    setNewStudent({ ...newStudent, name: e.target.value })
-                  }
+                  // value={newStudent.name}
+                  // onChange={(e) =>
+                  //   setNewStudent({ ...newStudent, name: e.target.value })
+                  // }
                   required
                 />
               </Col>
@@ -98,9 +91,9 @@ const AddStudent = ({ onAddStudent }) => {
             <Button
               className="text-white fw-bold mb-4"
               id="addButton"
-              onClick={handleAddToClass}
+              onClick={handleEditStudent}
             >
-              Add to Class
+              Save Changes
             </Button>
           </div>
         </Modal.Body>
@@ -109,4 +102,4 @@ const AddStudent = ({ onAddStudent }) => {
   );
 };
 
-export default AddStudent;
+export default EditStudent;
