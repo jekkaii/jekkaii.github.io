@@ -141,24 +141,46 @@ export const updateStudentStatus = async (req, res) => {
   }
 };
 
-export const deleteStudent = async (req, res) => {
+export const deleteStudents = async (req, res) => {
   try {
-    const { idNumber } = req.body;
-    if (!idNumber) {
+    const { idNumbers } = req.body;
+    if (!idNumbers) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
-    const existingUser = await StudentModel.findOne({ idNumber });
-    if (!existingUser) {
+    const existingUsers = await StudentModel.find({
+      idNumber: { $in: idNumbers },
+    });
+    if (!existingUsers.length) {
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "No users found" });
     }
-    await existingUser.remove();
-    return res.status(200).json({ success: true, message: "User deleted" });
+    await StudentModel.deleteMany({ idNumber: { $in: idNumbers } });
+    return res.status(200).json({ success: true, message: "Users deleted" });
   } catch (error) {
-    console.error("Error deleting user:", error);
+    console.error("Error deleting users:", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
+
+export const importFile = async (req, res) => {
+  const { file } = req;
+  const allowedTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'];
+  if (!allowedTypes.includes(file.mimetype)) {
+    return res.status(400).json({ success: false, message: "Only Excel and CSV files are allowed" });
+  }
+
+  const workbook = xlsx.readFile(file.path);
+  const worksheet = workbook.Sheets['Sheet1'];
+  const data = xlsx.utils.sheet_to_json(worksheet);
+
+  try {
+    await StudentModel.insertMany(data);
+    return res.status(200).json({ success: true, message: "File imported successfully" });
+  } catch (error) {
+    console.error("Error importing file:", error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+}

@@ -31,7 +31,7 @@ const AttendanceTabs = () => {
 
   const [attendanceData, setAttendanceData] = useState(
     students.map((student) => ({
-      id: student.id,
+      id: student._id,
       idNumber: student.idNumber,
       name: student.name,
       status: student.status,
@@ -42,7 +42,7 @@ const AttendanceTabs = () => {
   useEffect(() => {
     setAttendanceData(
       students.map((student) => ({
-        id: student.id,
+        id: student._id,
         idNumber: student.idNumber,
         name: student.name,
         status: student.status,
@@ -70,7 +70,7 @@ const AttendanceTabs = () => {
   const handleManualAttendance = (id) => {
     setAttendanceData((prevData) =>
       prevData.map((entry) =>
-        entry.id === id
+        entry.idNumber === id
           ? {
               ...entry,
               status: entry.status === "Absent" ? "Present" : "Absent",

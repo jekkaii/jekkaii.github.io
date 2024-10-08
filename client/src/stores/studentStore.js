@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { updateStudentStatus } from "../../../server/controller/studentController";
+import { importFile, updateStudentStatus } from "../../../server/controller/studentController";
 
 const API_URL = "http://localhost:3001/api/teacher";
 
@@ -29,7 +29,7 @@ export const useStudentStore = create((set) => ({
   addStudent: async (newStudent) => {
     set({ isLoading: true });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(`${API_URL}/students`, newStudent);
       if (response.status === 200) {
         const { student } = response.data;
@@ -45,15 +45,17 @@ export const useStudentStore = create((set) => ({
     }
   },
 
-  deleteStudent: async (id) => {
+  deleteStudents: async (studentIds) => {
     set({ isLoading: true });
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const response = await axios.delete(`${API_URL}/students/${id}`);
+      const response = await axios.delete(`${API_URL}/students`, {
+        data: { studentIds },
+      });
       if (response.status === 200) {
         set({
           success: true,
-          message: "Student deleted successfully",
+          message: "Students deleted successfully",
           isLoading: false,
         });
       }
@@ -98,4 +100,23 @@ export const useStudentStore = create((set) => ({
       set({ error, isLoading: false });
     }
   },
+
+  importFile: async (file) => {
+    set({ isLoading: true });
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await importFile(file);
+      if (response.status === 200) {
+        set({
+          success: true,
+          message: "File imported successfully",
+          isLoading: false,
+        });
+      }
+    } catch (error) {
+      set({ error, isLoading: false });
+    }
+  },
+  
 }));
+

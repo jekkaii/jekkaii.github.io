@@ -1,17 +1,21 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import { Button, Table, Form, InputGroup, Row, Col } from "react-bootstrap";
 import { TbFileUpload } from "react-icons/tb";
-import { TiUserDelete } from "react-icons/ti";
+import { AiOutlineUserDelete } from "react-icons/ai";
+import { useStudentStore } from "../../stores/studentStore";
 import AddStudent from "./AddStudent";
 import "../css/style.css";
 import Confirmation from "./Confirmation";
+import EditStudent from "./EditStudent";
 
 const ManageStudents = ({ sortedData, attendanceData }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [selectValue, setSelectValue] = useState([]);
+  const { de, students, isLoading, error } = useStudentStore();
 
   // Check if all students are selected
   const isAllSelected =
@@ -23,7 +27,7 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
       if (isAllSelected) {
         setSelectValue([]);
       } else {
-        setSelectValue(sortedData.map((student) => student.id));
+        setSelectValue(sortedData.map((student) => student.idNumber));
       }
     } else {
       if (selectValue.includes(id)) {
@@ -34,6 +38,12 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
     }
   };
 
+  const handleEditStudent = () => {
+    // // add here code for edit student
+    // handleClose();
+  };
+  // add here code for delete student
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     console.log("File uploaded:", file);
@@ -43,6 +53,7 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
     console.log("Save Clicked", attendanceData);
   };
 
+  // Handle delete modal confirmation
   const handleDeleteStudentConfirmation = () => {
     if (isAllSelected) {
       setModalMessage(
@@ -50,13 +61,12 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
       );
     } else {
       const selectedNames = sortedData
-        .filter((student) => selectValue.includes(student.id))
+        .filter((student) => selectValue.includes(student.idNumber))
         .map((student, index) => (
-          <React.Fragment key={student.id}>
+          <React.Fragment key={student.idNumber}>
             {index + 1}. {student.name} <br />
           </React.Fragment>
         ));
-
       setModalMessage(
         <React.Fragment>
           Are you sure you want to delete the following student/s from the
@@ -105,7 +115,17 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
             <TbFileUpload className="fs-4" />
           </Button>
 
-          <AddStudent />
+          <EditStudent
+            handleEditStudent={handleEditStudent}
+            selectValue={selectValue}
+          />
+
+          <AddStudent
+            onSuccess={() => {
+              console.log("Add student success, refreshing table");
+              window.location.reload();
+            }}
+          />
 
           <Button
             variant="danger"
@@ -113,7 +133,7 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
             onClick={handleDeleteStudentConfirmation}
             disabled={selectValue.length === 0}
           >
-            <TiUserDelete className="fs-4" />
+            <AiOutlineUserDelete className="fs-4" />
           </Button>
         </Col>
       </Row>
@@ -155,12 +175,12 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
                     entry.idNumber.includes(searchTerm);
             })
             .map((student) => (
-              <tr key={student.id}>
+              <tr key={student.idNumber}>
                 <td>
                   <Form.Check
                     type="checkbox"
-                    checked={selectValue.includes(student.id)}
-                    onChange={() => handleCheck(student.id)}
+                    checked={selectValue.includes(student.idNumber)}
+                    onChange={() => handleCheck(student.idNumber)}
                   />
                 </td>
                 <td>{student.idNumber}</td>
