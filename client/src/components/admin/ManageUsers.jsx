@@ -1,6 +1,7 @@
 // src/components/ManageUsers.jsx
 import React, { useState } from "react";
-import "../css/style.css"; // Import the stylesheet
+import "../css/style.css"; // Import the stylesheet for custom styling
+import { Button, Table, Form, Modal } from "react-bootstrap"; // Using Bootstrap for table, buttons, and modal
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
 
@@ -63,10 +64,33 @@ const initialUsers = [
   },
 ];
 
+const ConfirmationModal = ({ isOpen, message, onConfirm, onCancel }) => {
+  return (
+    <Modal show={isOpen} onHide={onCancel} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>{message}</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={onConfirm}>
+          Confirm
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
 const ManageUsers = () => {
   const [users, setUsers] = useState(initialUsers);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [deleteMode, setDeleteMode] = useState(false); // Tracks if delete action is being confirmed
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 
   const toggleUserStatus = (id) => {
@@ -76,9 +100,31 @@ const ManageUsers = () => {
       )
     );
   };
-
   const deleteUser = (id) => {
     setUsers(users.filter((user) => user.id !== id));
+  };
+
+  const handleToggleChange = (user) => {
+    setSelectedUser(user);
+    setShowModal(true);
+  };
+  const handleDeleteUser = (user) => {
+    setSelectedUser(user);
+    setModalMessage(
+      `Are you sure you want to delete ${user.firstName} ${user.lastName}?`
+    );
+    setDeleteMode(true);
+    setShowModal(true);
+  };
+  const handleConfirmToggle = () => {
+    if (selectedUser) {
+      toggleUserStatus(selectedUser.id);
+    }
+    setShowModal(false);
+  };
+
+  const handleCancelToggle = () => {
+    setShowModal(false);
   };
 
   const addUser = () => {
@@ -101,32 +147,31 @@ const ManageUsers = () => {
   );
 
   return (
-    <div className="container">
-      <div className="header">
+    <div className="container mt-5">
+      <div className="header d-flex justify-content-between mb-3">
         <input
           type="text"
           placeholder="Search here..."
           value={searchTerm}
           onChange={handleSearch}
-          className="search-input"
+          className="form-control search-input"
+          style={{ maxWidth: "300px" }}
         />
-
-      <EditUser></EditUser>
-      <AddUser></AddUser> 
+        <EditUser />
+        <AddUser />
       </div>
 
-      <table className="user-table">
+      <Table bordered hover responsive className="user-table">
         <thead>
           <tr>
             <th>
-              <input type="checkbox" />
+              <Form.Check type="checkbox" label="" />
             </th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
             <th>Role</th>
             <th>Account Status</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -140,27 +185,30 @@ const ManageUsers = () => {
               <td>{user.email}</td>
               <td>{user.role}</td>
               <td>
-                <button
-                  className={`status-btn ${
-                    user.status ? "status-activated" : "status-deactivated"
-                  }`}
-                  onClick={() => toggleUserStatus(user.id)}
-                >
-                  {user.status ? "Activated" : "Deactivated"}
-                </button>
-              </td>
-              <td>
-                <button
-                  className="delete-btn"
-                  onClick={() => deleteUser(user.id)}
-                >
-                  Delete
-                </button>
+                <Form.Check
+                  type="switch"
+                  id={`status-switch-${user.id}`}
+                  checked={user.status}
+                  onChange={() => handleToggleChange(user)}
+                  label={user.status ? "Activated" : "Deactivated"}
+                />
               </td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
+
+      {/* Confirmation modal */}
+      {selectedUser && (
+        <ConfirmationModal
+          isOpen={showModal}
+          message={`Are you sure you want to ${
+            selectedUser.status ? "deactivate" : "activate"
+          } ${selectedUser.firstName} ${selectedUser.lastName}?`}
+          onConfirm={handleConfirmToggle}
+          onCancel={handleCancelToggle}
+        />
+      )}
     </div>
   );
 };

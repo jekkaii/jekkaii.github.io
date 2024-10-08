@@ -87,14 +87,14 @@ function App() {
           <div className="col-10"> */}
       {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
       {/* <Home></Home> */}
-      {/*<CreateClass> </CreateClass>*/}
-      {/*<ManageUsers></ManageUsers>*/}
+      {/* <CreateClass> </CreateClass> */}
+      <ManageUsers></ManageUsers>
       {/* <AddStudent></AddStudent> */}
       {/* <UploadClassPicture></UploadClassPicture> */}
       {/*<Profile></Profile>*/}
       {/* <AddUser></AddUser> */}
       {/* <EditUser></EditUser> */}
-      {/*<AttendanceTabs></AttendanceTabs>
+      {/* <AttendanceTabs></AttendanceTabs> */}
       {/* <ClassList></ClassList> */}
 
       {/* <Confirmation></Confirmation> */}
@@ -110,11 +110,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={
-              <RedirectToHome>
-                <LoginForm />
-              </RedirectToHome>
-            }
+            element={<RedirectToHome>{/* <LoginForm /> */}</RedirectToHome>}
           ></Route>
           <Route
             path="/teacher"
