@@ -31,7 +31,6 @@ import ManageModels from "./components/admin/ManageModels";
 import SpinnerLoader from "./components/SpinnerLoader";
 import Dash from "./components/teacher/Dash";
 
-
 const TeacherRoute = ({ children }) => {
   const { authenticated, isAdmin, isTeacher } = useAuthStore();
   if (!isTeacher || !authenticated || isAdmin) {
@@ -90,7 +89,7 @@ function App() {
       {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
       {/* <Home></Home> */}
       {/* <CreateClass> </CreateClass> */}
-      <ManageUsers></ManageUsers>
+      {/* <ManageUsers></ManageUsers> */}
       {/* <AddStudent></AddStudent> */}
       {/* <UploadClassPicture></UploadClassPicture> */}
       {/*<Profile></Profile>*/}
@@ -122,7 +121,7 @@ function App() {
               ) : (
                 <ProtectedRoute>
                   <TeacherRoute>
-                    <Dash/>
+                    <Dash />
                     <Footer />
                   </TeacherRoute>
                 </ProtectedRoute>
