@@ -5,11 +5,15 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
+import { Space, TimePicker } from "antd";
+
+const { RangePicker } = TimePicker;
 
 const CreateClass = () => {
   const [classCode, setClassCode] = useState("");
   const [subject, setSubject] = useState("");
-  const [time, setTime] = useState("");
+  const [courseNumber, setCourseNumber] = useState("");
+  const [timeRange, setTimeRange] = useState(null);
   const [academicYear, setAcademicYear] = useState("");
   const [term, setTerm] = useState("");
   const [room, setRoom] = useState("");
@@ -18,9 +22,10 @@ const CreateClass = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const handleClassCodeChange = (e) => setClassCode(e.target.value);
   const handleSubjectChange = (e) => setSubject(e.target.value);
-  const handleTimeChange = (e) => setTime(e.target.value);
+  const handleCourseNumberChange = (e) => setCourseNumber(e.target.value);
   const handleAcademicYearChange = (e) => setAcademicYear(e.target.value);
   const handleTermChange = (e) => setTerm(e.target.value);
   const handleRoomChange = (e) => setRoom(e.target.value);
@@ -45,7 +50,8 @@ const CreateClass = () => {
   const handleConfirmCancel = () => {
     setClassCode("");
     setSubject("");
-    setTime("");
+    setCourseNumber("");
+    setTimeRange(null);
     setAcademicYear("");
     setTerm("");
     setRoom("");
@@ -57,8 +63,8 @@ const CreateClass = () => {
   const handleCloseCancelConfirmation = () => setShowCancelConfirmation(false);
 
   const handleConfirmDetails = () => {
-    setShowConfirmation(false); // Close confirmation modal
-    setShowSuccessModal(true); // Show success modal
+    setShowConfirmation(false);
+    setShowSuccessModal(true);
   };
 
   const handleCloseSuccessModal = () => setShowSuccessModal(false);
@@ -86,7 +92,6 @@ const CreateClass = () => {
       >
         ←
       </Button>
-
       <Button
         variant="link"
         onClick={() => console.log("Menu clicked")}
@@ -104,7 +109,6 @@ const CreateClass = () => {
       >
         ☰
       </Button>
-
       {/* Create Class Form */}
       <Form onSubmit={handleSubmit} className="attendance-form">
         <h2 className="attendance-header">Create Class</h2>
@@ -138,16 +142,15 @@ const CreateClass = () => {
           </Col>
         </Form.Group>
 
-        <Form.Group as={Row} controlId="formTime">
+        <Form.Group as={Row} controlId="formcourseNumber">
           <Form.Label column sm="3" className="form-label">
-            Time:
+            Course Number:
           </Form.Label>
           <Col sm="9">
             <Form.Control
-              type="text"
-              value={time}
-              onChange={handleTimeChange}
-              placeholder="Enter Time"
+              value={courseNumber}
+              onChange={handleCourseNumberChange}
+              placeholder="Enter Course Number"
               className="form-control"
             />
           </Col>
@@ -182,9 +185,9 @@ const CreateClass = () => {
               className="form-select"
             >
               <option value="">Select Semester</option>
-              <option value="Prelims">First Semester</option>
-              <option value="Midterms">Second Semester</option>
-              <option value="Finals">Short Term</option>
+              <option value="First Semester">First Semester</option>
+              <option value="Second Semester">Second Semester</option>
+              <option value="Short Term">Short Term</option>
             </Form.Select>
           </Col>
         </Form.Group>
@@ -236,7 +239,6 @@ const CreateClass = () => {
           </Button>
         </div>
       </Form>
-
       {/* Schedule Modal */}
       <Modal
         show={showScheduleModal}
@@ -247,6 +249,7 @@ const CreateClass = () => {
           <Modal.Title>Select Schedule</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {/* Schedule Picker */}
           <div className="schedule-picker">
             {["M", "T", "W", "TH", "F", "S"].map((day) => (
               <Button
@@ -261,7 +264,28 @@ const CreateClass = () => {
               </Button>
             ))}
           </div>
+          {/*Time Picker*/}
+          <Form.Group as={Row} controlId="formTimeRange" className="mt-3">
+            {" "}
+            {/* Add margin-top for spacing */}
+            <Form.Label column sm="3" className="form-label">
+              Time:
+            </Form.Label>
+            <Col sm="9">
+              <RangePicker
+                value={timeRange}
+                onChange={(newTimeRange) => setTimeRange(newTimeRange)}
+                format="HH:mm"
+                minuteStep={30}
+                showTime={{ format: "HH:mm", minuteStep: 30 }}
+                style={{ width: "100%" }}
+                getPopupContainer={(trigger) => trigger.parentNode}
+                dropdownClassName="custom-range-picker-dropdown"
+              />
+            </Col>
+          </Form.Group>
         </Modal.Body>
+
         <Modal.Footer className="modal-footer">
           <Button
             variant="danger"
@@ -279,7 +303,6 @@ const CreateClass = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
       {/* Confirmation Modal */}
       <Modal show={showConfirmation} onHide={handleCloseConfirmation} centered>
         <Modal.Header closeButton>
@@ -293,7 +316,10 @@ const CreateClass = () => {
             <strong>Subject:</strong> {subject}
           </p>
           <p>
-            <strong>Time:</strong> {time}
+            <strong>Time:</strong>{" "}
+            {timeRange
+              ? timeRange.map((time) => time.format("HH:mm")).join(" - ")
+              : "N/A"}
           </p>
           <p>
             <strong>Academic Year:</strong> {academicYear}
@@ -318,14 +344,13 @@ const CreateClass = () => {
           </Button>
           <Button
             variant="primary"
-            onClick={handleConfirmDetails} // Show success modal on confirmation
+            onClick={handleConfirmDetails}
             className="custom-button"
           >
             Confirm
           </Button>
         </Modal.Footer>
       </Modal>
-
       {/* Success Modal */}
       <Modal show={showSuccessModal} onHide={handleCloseSuccessModal} centered>
         <Modal.Header closeButton>
@@ -344,7 +369,6 @@ const CreateClass = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
       {/* Cancel Confirmation Modal */}
       <Modal
         show={showCancelConfirmation}
