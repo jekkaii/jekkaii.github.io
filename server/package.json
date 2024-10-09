@@ -11,6 +11,7 @@
   "type": "module",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.0.0",
@@ -19,6 +20,7 @@
     "express": "^4.21.0",
     "express-session": "^1.0.0",
     "face-server": "file:",
+    "js": "^0.1.0",
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^3.4.0",
     "mongoose": "^8.5.3",
