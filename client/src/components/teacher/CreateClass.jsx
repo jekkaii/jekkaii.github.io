@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Modal from "react-bootstrap/Modal";
+import { Button, Form, Container, Row, Col, Modal} from "react-bootstrap";
 import { Space, TimePicker } from "antd";
+import { useClassStore } from "../../stores/classStore";
 
 const { RangePicker } = TimePicker;
 
-const CreateClass = () => {
+const CreateClass = ({ goBack }) => {
   const [classCode, setClassCode] = useState("");
   const [subject, setSubject] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
@@ -29,6 +25,41 @@ const CreateClass = () => {
   const handleAcademicYearChange = (e) => setAcademicYear(e.target.value);
   const handleTermChange = (e) => setTerm(e.target.value);
   const handleRoomChange = (e) => setRoom(e.target.value);
+
+  // console.log(timeRange);
+
+  //   const [show, setShow] = useState(false);
+  const [newClass, setNewClass] = useState({ 
+    classCode: "",
+    courseNumber: "",
+    subject: "",
+    academicYear: "",
+    term: "", 
+    room: "",
+    days: [],
+    startTime: "",
+    endTime: "" });
+  const { addClass } = useClassStore();
+
+  const handleCreateClass = async (e) => {
+    e.preventDefault();
+
+    await addClass(newClass);
+
+    setNewStudent({ 
+        classCode: "",
+        courseNumber: "",
+        subject: "",
+        academicYear: "",
+        term: "", 
+        room: "",
+        days: [],
+        startTime: "",
+        endTime: ""
+    });
+    handleClose();
+    onSuccess();
+  };
 
   const handleScheduleChange = (day) => {
     if (schedule.includes(day)) {
@@ -77,7 +108,7 @@ const CreateClass = () => {
       {/* Navigation Buttons */}
       <Button
         variant="link"
-        onClick={() => console.log("Back clicked")}
+        onClick={goBack}
         style={{
           position: "absolute",
           top: "20px",
@@ -123,7 +154,11 @@ const CreateClass = () => {
               value={classCode}
               onChange={handleClassCodeChange}
               placeholder="Enter Class Code"
-              className="form-control"
+
+              // value={newClass.classCode}
+              // onChange={(e) =>
+              //   setNewClass({ ...newClass, classCode: e.target.value })
+              // }
             />
           </Col>
         </Form.Group>
@@ -275,10 +310,10 @@ const CreateClass = () => {
               <RangePicker
                 value={timeRange}
                 onChange={(newTimeRange) => setTimeRange(newTimeRange)}
-                format="HH:mm A"
+                format="hh:mm A"
                 minuteStep={30}
                 showTime={{
-                  format: "HH:mm A",
+                  format: "hh:mm A",
                   use12Hours: true,
                   minuteStep: 30,
                 }}
@@ -322,9 +357,11 @@ const CreateClass = () => {
           <p>
             <strong>Time:</strong>{" "}
             {timeRange
-              ? timeRange.map((time) => time.format("HH:mm")).join(" - ")
+              ? timeRange.map((time) => time.format("hh:mm A")).join(" - ")
               : "N/A"}
           </p>
+
+         
           <p>
             <strong>Academic Year:</strong> {academicYear}
           </p>
@@ -395,5 +432,6 @@ const CreateClass = () => {
     </Container>
   );
 };
+
 
 export default CreateClass;

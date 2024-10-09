@@ -5,12 +5,13 @@ const API_URL = "http://localhost:3001/api";
 
 axios.defaults.withCredentials = true; // set withCredentials to true
 
-export const useStudentStore = create((set) => ({
-  students: [],
+export const useClassStore = create((set) => ({
+  class: [],
   error: null,
   success: null,
   message: null,
   isLoading: false,
+  
   getClasses: async () => {
     set({ isLoading: true });
     try {
@@ -25,7 +26,7 @@ export const useStudentStore = create((set) => ({
     }
   },
 
-  createClass: async (newClass) => {
+  addClass: async (newClass) => {
     set({ isLoading: true });
     try {
       // await new Promise((resolve) => setTimeout(resolve, 1000));

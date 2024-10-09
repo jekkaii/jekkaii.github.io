@@ -14,7 +14,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.2",
     "@mui/x-date-pickers": "^7.19.0",
-    "antd": "^5.21.2",
+    "antd": "^5.21.3",
     "axios": "^1.7.5",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
