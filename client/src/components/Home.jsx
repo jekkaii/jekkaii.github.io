@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
 import axios from "axios";
-import { useAuthStore } from "../stores/authStore";
+import { useAuthStore } from "../authentication/authStore";
 import Sidebar from "./Sidebar";
 
 const Home = () => {
@@ -18,13 +18,13 @@ const Home = () => {
     <>
       <div className="flex">
         <Sidebar />
-        <div className="flex text-center p-5">
+        {/* <div className="flex text-center p-5">
           <h1>{isAdmin ? "Welcome Admin" : "Welcome Teacher"}</h1>
           <br />
           <button onClick={handleLogout} className="btn btn-primary btn-lg">
             Logout
           </button>
-        </div>
+        </div> */}
       </div>
     </>
   );

@@ -86,9 +86,9 @@ const ClassList = () => {
   return (
     <div className="class-list-container">
       {/* User Avatar */}
-      <div className="user-avatar">
+      {/* <div className="user-avatar">
         <div className="avatar-initials">JD</div>
-      </div>
+      </div> */}
 
       {/* Main Heading */}
       <div className="heading-container">

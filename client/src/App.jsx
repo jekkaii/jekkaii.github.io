@@ -29,6 +29,8 @@ import ManageStudents from "./components/teacher/ManageStudents";
 import Confirmation from "./components/teacher/Confirmation";
 import ManageModels from "./components/admin/ManageModels";
 import SpinnerLoader from "./components/SpinnerLoader";
+import Dash from "./components/teacher/Dash";
+
 
 const TeacherRoute = ({ children }) => {
   const { authenticated, isAdmin, isTeacher } = useAuthStore();
@@ -124,9 +126,7 @@ function App() {
               ) : (
                 <ProtectedRoute>
                   <TeacherRoute>
-                    <Header />
-                    <Home />
-                    <AttendanceTabs />
+                    <Dash/>
                     <Footer />
                   </TeacherRoute>
                 </ProtectedRoute>
@@ -141,7 +141,6 @@ function App() {
               ) : (
                 <ProtectedRoute>
                   <AdminRoute>
-                    <Header />
                     <Home />
                     <ManageUsers />
                     <Footer />
