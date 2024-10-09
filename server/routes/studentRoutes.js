@@ -6,6 +6,7 @@ import {
   updateStudent,
   updatePassword,
   updateStudentStatus,
+  importFile,
 } from "../controller/studentController.js";
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.get("/students", getStudents);
 router.put("/students/:id", updateStudent);
 router.put("/students/:id/password", updatePassword);
 router.put("/students/:id/status", updateStudentStatus);
+router.post("/students/import", importFile);
 
 export default router;

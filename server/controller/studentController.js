@@ -164,3 +164,23 @@ export const deleteStudents = async (req, res) => {
     return res.status(400).json({ success: false, message: error.message });
   }
 };
+
+export const importFile = async (req, res) => {
+  const { file } = req;
+  const allowedTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'];
+  if (!allowedTypes.includes(file.mimetype)) {
+    return res.status(400).json({ success: false, message: "Only Excel and CSV files are allowed" });
+  }
+
+  const workbook = xlsx.readFile(file.path);
+  const worksheet = workbook.Sheets['Sheet1'];
+  const data = xlsx.utils.sheet_to_json(worksheet);
+
+  try {
+    await StudentModel.insertMany(data);
+    return res.status(200).json({ success: true, message: "File imported successfully" });
+  } catch (error) {
+    console.error("Error importing file:", error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+}
