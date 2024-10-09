@@ -566,7 +566,7 @@
 
 .model-actions button {
   padding: 6px 12px;
-  border: none;
+  border: none; /* Removed borders */
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -594,6 +594,15 @@
 
 .model-actions button:hover {
   opacity: 0.9;
+}
+
+/* Disabled button styling (grayed out and unclickable) */
+.model-actions button:disabled {
+  background-color: #cccccc; /* Light gray background */
+  color: #666666; /* Dark gray text */
+  cursor: not-allowed; /* Shows the button is disabled */
+  pointer-events: none; /* Makes the button unclickable */
+  opacity: 0.6; /* Slightly reduces opacity to emphasize disabled state */
 }
 
 /* Responsive Design */
