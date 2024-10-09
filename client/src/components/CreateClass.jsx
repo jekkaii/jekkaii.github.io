@@ -275,9 +275,13 @@ const CreateClass = () => {
               <RangePicker
                 value={timeRange}
                 onChange={(newTimeRange) => setTimeRange(newTimeRange)}
-                format="HH:mm"
+                format="HH:mm A"
                 minuteStep={30}
-                showTime={{ format: "HH:mm", minuteStep: 30 }}
+                showTime={{
+                  format: "HH:mm A",
+                  use12Hours: true,
+                  minuteStep: 30,
+                }}
                 style={{ width: "100%" }}
                 getPopupContainer={(trigger) => trigger.parentNode}
                 dropdownClassName="custom-range-picker-dropdown"
