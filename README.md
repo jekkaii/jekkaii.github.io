@@ -84,6 +84,32 @@ Your terminal should look like this
 
 ![Server Terminal Screenshot](https://github.com/user-attachments/assets/b3598437-0674-40d6-8a6f-56347264f19e)
 <br><br>
+
+### Face Recognition
+
+_Step 1: Go to the **project directory** of the face recognition_
+
+    -- cd cogito-creatio/face_recognition/
+
+_Step 2: Create a python virtual environment_
+
+    -- python -m venv venv
+
+_Step 3: Activate the virtual environment_
+
+    -- venv/Scripts/activate
+
+_Step 4: Install the needed python libraries_
+
+    -- pip install -r requirements.txt
+
+_Step 5: Run the Face Recognition Application_
+
+    -- py face_recognition_api.py
+
+![image](https://github.com/user-attachments/assets/e0e15cd7-13b6-4928-ae71-0dcea9d8c30d)
+<br><br>
+
 ## Technologies
 Languages used: Python, Javascript, HTML, CSS<br>
 CSS Frameworks: Bootstrap, MBD, Materialize<br>
