@@ -3,27 +3,32 @@ import { ClassModel } from "../model/Class.js";
 
 export const addClass = async (req, res) => {
     try {
-        const { teacher, students, classCode, courseNumber, subject, time, room, schedule, academicYear, term } = req.body;
-        if (!teacher || !students || !classCode || !courseNumber || !subject || !time || !room || !schedule || !academicYear || !term) { // Check if all fields are provided
+        const { teacher, students = [], classCode, courseNumber, subject, academicYear, term, room, days, startTime, endTime } = req.body;
+
+        if (!classCode || !courseNumber || !subject || !academicYear || !term || !room || !days || !startTime || !endTime ) { // Check if all fields are provided
             return res.status(400).json({ success: false, message: "All fields are required" });
         }        
+
+        // const { user } = useAuth0();
+
         const existingClass = await ClassModel.findOne({ classCode });
+
         if (existingClass) {
             return res.status(400).json({ success: false, message: "Class already exists" });
         }
-        const hashedPassword = bycrpt.hashSync(req.body.password, 12);
+        
         const newClass = new ClassModel({
-            teacher,
+            teacher: teacher || null, // Set to null in the meantime while teacher user._id is not yet implemented
             students,
             classCode,
             courseNumber,
             subject,
-            time,
-            room,
-            schedule,
             academicYear,
             term,
-            password: hashedPassword
+            room,
+            days, 
+            startTime,
+            endTime
         });
         await newClass.save();
         return res.status(200).json({ success: true, message: "Class created successfully" });

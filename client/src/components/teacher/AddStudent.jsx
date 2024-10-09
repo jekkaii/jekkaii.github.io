@@ -16,7 +16,16 @@ const AddStudent = ({ onSuccess }) => {
 
   const handleAddToClass = async (e) => {
     e.preventDefault();
+
+    // IN PROGRESS, WAIT LANG
+    // // Check the ID Number input 7 digits
+    // if (isNaN(idNumber) || idNumber.length !== 7) {
+    //   alert(`The ID number entered is invalid.`);
+    //   return; 
+    // }
+
     await addStudent(newStudent);
+
     setNewStudent({ idNumber: "", name: "" });
     handleClose();
     onSuccess();

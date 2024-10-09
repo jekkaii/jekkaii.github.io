@@ -10,11 +10,10 @@ import {
 const router = express.Router();
 
 // Student
-router.post("/class", addClass);
-router.delete("/class", deleteClass);
-router.get("/class/:id", getClass);
-router.put("/class/:id", updateClass);
-router.get("/class/", readClasses);
-
+router.post("/classes", addClass);
+router.delete("/classes", deleteClass);
+router.get("/classes/:id", getClass);
+router.put("/classes/:id", updateClass);
+router.get("/classes/", readClasses);
 
 export default router;

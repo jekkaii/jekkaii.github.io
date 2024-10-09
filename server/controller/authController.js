@@ -148,3 +148,21 @@ export const checkAdmin = async (req, res) => {
     return res.status(400).json({ success: false, message: error.message });
   }
 };
+
+// const jwt = require('jsonwebtoken');
+
+// // Middleware to authenticate and retrieve user ID from JWT
+// export const authenticateToken = (req, res, next) => {
+//   const token = req.cookies.token || req.header('Authorization').replace('Bearer ', '');
+
+//   if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
+
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     req.userId = decoded.id; // Attach the user ID to the request object
+//     next();
+//   } catch (err) {
+//     res.status(400).json({ message: 'Invalid token.' });
+//   }
+// };
+
