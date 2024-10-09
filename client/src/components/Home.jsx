@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
 import axios from "axios";
-import { useAuthStore } from "../authentication/authStore";
+import { useAuthStore } from "../stores/authStore.js";
 import Sidebar from "./Sidebar";
 
 const Home = () => {
