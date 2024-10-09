@@ -51,6 +51,7 @@ _Step 2: Install the needed **dependencies**_
     npm install @mui/material @mui/x-date-pickers dayjs
     npm install @mui/material @emotion/react @emotion/styled
     npm install react-router-dom
+    npm install antd 
 
 _Step 3: Run the Application_
 
