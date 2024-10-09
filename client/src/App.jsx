@@ -111,7 +111,11 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<RedirectToHome>{/* <LoginForm /> */}</RedirectToHome>}
+            element={
+              <RedirectToHome>
+                <LoginForm />
+              </RedirectToHome>
+            }
           ></Route>
           <Route
             path="/teacher"
