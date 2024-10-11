@@ -1,34 +1,16 @@
 import React, { useState } from "react";
 import { Button, Form, Container, Row, Col, Modal} from "react-bootstrap";
-import { Space, TimePicker } from "antd";
+import { TimePicker } from "antd";
 import { useClassStore } from "../../stores/classStore";
 
 const { RangePicker } = TimePicker;
 
-const CreateClass = ({ goBack }) => {
-  const [classCode, setClassCode] = useState("");
-  const [subject, setSubject] = useState("");
-  const [courseNumber, setCourseNumber] = useState("");
+const CreateClass = ({ goBack, onSuccess }) => {
   const [timeRange, setTimeRange] = useState(null);
-  const [academicYear, setAcademicYear] = useState("");
-  const [term, setTerm] = useState("");
-  const [room, setRoom] = useState("");
-  const [schedule, setSchedule] = useState([]);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  const handleClassCodeChange = (e) => setClassCode(e.target.value);
-  const handleSubjectChange = (e) => setSubject(e.target.value);
-  const handleCourseNumberChange = (e) => setCourseNumber(e.target.value);
-  const handleAcademicYearChange = (e) => setAcademicYear(e.target.value);
-  const handleTermChange = (e) => setTerm(e.target.value);
-  const handleRoomChange = (e) => setRoom(e.target.value);
-
-  // console.log(timeRange);
-
-  //   const [show, setShow] = useState(false);
+  const { addClass } = useClassStore();
   const [newClass, setNewClass] = useState({ 
     classCode: "",
     courseNumber: "",
@@ -38,15 +20,44 @@ const CreateClass = ({ goBack }) => {
     room: "",
     days: [],
     startTime: "",
-    endTime: "" });
-  const { addClass } = useClassStore();
+    endTime: "" 
+  });
+
+  const validateStringLength = (str, maxLength, value) => {
+    if (str.length > maxLength) {
+      return `Error: The ${value} exceeds the maximum length of ${maxLength} characters.`;
+    }
+    return null; // Return null if there's no error
+  };
+  
+  // classCode: ""  - 5 digit
+  //courseNumber: "", - no (done)
+  // subject: "", -no (done)
+  // academicYear: "", - yess (done)
+  // term: "", - no (done)
+  // room: "", - D516 yes
+  // days: [], - must not be empty
+  // startTime: "", must not be empty
+ // endTime: "" must not be empty
+
+
+  // Get the current year
+  const currentYear = new Date().getFullYear();
+  
+  // Set the starting year to one year prior to the current year
+  const startYear = currentYear - 1; 
+
+  // Generate the academic years
+  const years = Array.from({ length: 3 }, (_, index) => {
+    const year = startYear + index;
+    return `${year}-${year + 1}`;
+  });
 
   const handleCreateClass = async (e) => {
     e.preventDefault();
-
     await addClass(newClass);
 
-    setNewStudent({ 
+    setNewClass({ 
         classCode: "",
         courseNumber: "",
         subject: "",
@@ -57,18 +68,30 @@ const CreateClass = ({ goBack }) => {
         startTime: "",
         endTime: ""
     });
-    handleClose();
+    setShowConfirmation(false);
     onSuccess();
   };
 
   const handleScheduleChange = (day) => {
-    if (schedule.includes(day)) {
-      setSchedule(schedule.filter((d) => d !== day));
-    } else {
-      setSchedule([...schedule, day]);
-    }
+    setNewClass((prevClass) => ({
+      ...prevClass,
+      days: prevClass.days.includes(day)
+        ? prevClass.days.filter((d) => d !== day)
+        : [...prevClass.days, day]
+    }));
   };
 
+  const handleTimeChange = (newTimeRange) => {
+    if (newTimeRange && newTimeRange.length === 2) {
+      setNewClass((prevClass) => ({
+        ...prevClass,
+        startTime: newTimeRange[0].format("hh:mm A"),
+        endTime: newTimeRange[1].format("hh:mm A")
+      }));
+    }
+    setTimeRange(newTimeRange);
+  };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowConfirmation(true);
@@ -79,26 +102,12 @@ const CreateClass = ({ goBack }) => {
   };
 
   const handleConfirmCancel = () => {
-    setClassCode("");
-    setSubject("");
-    setCourseNumber("");
-    setTimeRange(null);
-    setAcademicYear("");
-    setTerm("");
-    setRoom("");
-    setSchedule([]);
+    setNewClass("");
     setShowCancelConfirmation(false);
   };
 
   const handleCloseConfirmation = () => setShowConfirmation(false);
   const handleCloseCancelConfirmation = () => setShowCancelConfirmation(false);
-
-  const handleConfirmDetails = () => {
-    setShowConfirmation(false);
-    setShowSuccessModal(true);
-  };
-
-  const handleCloseSuccessModal = () => setShowSuccessModal(false);
 
   return (
     <Container
@@ -151,28 +160,12 @@ const CreateClass = ({ goBack }) => {
           <Col sm="9">
             <Form.Control
               type="text"
-              value={classCode}
-              onChange={handleClassCodeChange}
               placeholder="Enter Class Code"
-
-              // value={newClass.classCode}
-              // onChange={(e) =>
-              //   setNewClass({ ...newClass, classCode: e.target.value })
-              // }
-            />
-          </Col>
-        </Form.Group>
-
-        <Form.Group as={Row} controlId="formSubject">
-          <Form.Label column sm="3" className="form-label">
-            Subject:
-          </Form.Label>
-          <Col sm="9">
-            <Form.Control
-              value={subject}
-              onChange={handleSubjectChange}
-              placeholder="Enter Subject"
-              className="form-control"
+              value={newClass.classCode}
+              onChange={(e) =>
+                setNewClass({ ...newClass, classCode: e.target.value })
+              }
+              required
             />
           </Col>
         </Form.Group>
@@ -183,10 +176,30 @@ const CreateClass = ({ goBack }) => {
           </Form.Label>
           <Col sm="9">
             <Form.Control
-              value={courseNumber}
-              onChange={handleCourseNumberChange}
+              value={newClass.courseNumber}
+              onChange={(e) =>
+                setNewClass({ ...newClass, courseNumber: e.target.value })
+              }
               placeholder="Enter Course Number"
               className="form-control"
+              required
+            />
+          </Col>
+        </Form.Group>
+
+        <Form.Group as={Row} controlId="formSubject">
+          <Form.Label column sm="3" className="form-label">
+            Subject:
+          </Form.Label>
+          <Col sm="9">
+            <Form.Control
+             value={newClass.subject}
+             onChange={(e) =>
+               setNewClass({ ...newClass, subject: e.target.value })
+             }
+              placeholder="Enter Subject"
+              className="form-control"
+              required
             />
           </Col>
         </Form.Group>
@@ -197,14 +210,19 @@ const CreateClass = ({ goBack }) => {
           </Form.Label>
           <Col sm="9">
             <Form.Select
-              value={academicYear}
-              onChange={handleAcademicYearChange}
+              value={newClass.academicYear}
+              onChange={(e) =>
+                setNewClass({ ...newClass, academicYear: e.target.value })
+              }
               className="form-select"
+              required
             >
               <option value="">Select Academic Year</option>
-              <option value="2022-2023">2022-2023</option>
-              <option value="2023-2024">2023-2024</option>
-              <option value="2025-2026">2025-2026</option>
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
             </Form.Select>
           </Col>
         </Form.Group>
@@ -215,14 +233,17 @@ const CreateClass = ({ goBack }) => {
           </Form.Label>
           <Col sm="9">
             <Form.Select
-              value={term}
-              onChange={handleTermChange}
+              value={newClass.term}
+              onChange={(e) =>
+                setNewClass({ ...newClass, term: e.target.value })
+              }
               className="form-select"
+              required
             >
               <option value="">Select Semester</option>
-              <option value="First Semester">First Semester</option>
-              <option value="Second Semester">Second Semester</option>
-              <option value="Short Term">Short Term</option>
+              <option value="First">First Semester</option>
+              <option value="Second">Second Semester</option>
+              <option value="Short">Short Term</option>
             </Form.Select>
           </Col>
         </Form.Group>
@@ -234,10 +255,13 @@ const CreateClass = ({ goBack }) => {
           <Col sm="9">
             <Form.Control
               type="text"
-              value={room}
-              onChange={handleRoomChange}
+              value={newClass.room}
+              onChange={(e) =>
+                setNewClass({ ...newClass, room: e.target.value })
+              }
               placeholder="Enter Room"
               className="form-control"
+              required
             />
           </Col>
         </Form.Group>
@@ -289,11 +313,10 @@ const CreateClass = ({ goBack }) => {
             {["M", "T", "W", "TH", "F", "S"].map((day) => (
               <Button
                 key={day}
-                variant={schedule.includes(day) ? "primary" : "outline-primary"}
-                className={`m-1 ${
-                  schedule.includes(day) ? "selected" : "unselected"
-                }`}
+                variant={newClass.days.includes(day) ? "primary" : "outline-primary"}
+                className={`m-1 ${newClass.days.includes(day) ? "selected" : "unselected"}`}
                 onClick={() => handleScheduleChange(day)}
+                required
               >
                 {day}
               </Button>
@@ -309,7 +332,7 @@ const CreateClass = ({ goBack }) => {
             <Col sm="9">
               <RangePicker
                 value={timeRange}
-                onChange={(newTimeRange) => setTimeRange(newTimeRange)}
+                onChange={handleTimeChange}
                 format="hh:mm A"
                 minuteStep={30}
                 showTime={{
@@ -319,7 +342,7 @@ const CreateClass = ({ goBack }) => {
                 }}
                 style={{ width: "100%" }}
                 getPopupContainer={(trigger) => trigger.parentNode}
-                dropdownClassName="custom-range-picker-dropdown"
+                required
               />
             </Col>
           </Form.Group>
@@ -349,30 +372,29 @@ const CreateClass = ({ goBack }) => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            <strong>Class Code:</strong> {classCode}
+            <strong>Class Code:</strong> {newClass.classCode}
           </p>
           <p>
-            <strong>Subject:</strong> {subject}
+            <strong>Course Number:</strong> {newClass.courseNumber}
           </p>
           <p>
-            <strong>Time:</strong>{" "}
+            <strong>Subject:</strong> {newClass.subject}
+          </p>
+          <p>
+            <strong>Academic Year:</strong> {newClass.academicYear}
+          </p>
+          <p>
+            <strong>Term:</strong> {newClass.term} {newClass.term === "Short" ? "Term" : "Semester"}
+          </p>
+          <p>
+            <strong>Room:</strong> {newClass.room}
+          </p>
+          <p>
+            <strong>Schedule: </strong> 
+            {newClass.days} {" "}
             {timeRange
               ? timeRange.map((time) => time.format("hh:mm A")).join(" - ")
               : "N/A"}
-          </p>
-
-         
-          <p>
-            <strong>Academic Year:</strong> {academicYear}
-          </p>
-          <p>
-            <strong>Term:</strong> {term}
-          </p>
-          <p>
-            <strong>Room:</strong> {room}
-          </p>
-          <p>
-            <strong>Schedule:</strong> {schedule.join(", ")}
           </p>
         </Modal.Body>
         <Modal.Footer className="modal-footer">
@@ -385,15 +407,16 @@ const CreateClass = ({ goBack }) => {
           </Button>
           <Button
             variant="primary"
-            onClick={handleConfirmDetails}
+            onClick={handleCreateClass}
             className="custom-button"
           >
             Confirm
           </Button>
         </Modal.Footer>
       </Modal>
+
       {/* Success Modal */}
-      <Modal show={showSuccessModal} onHide={handleCloseSuccessModal} centered>
+      {/* <Modal show={showSuccessModal} onHide={handleCloseSuccessModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Success</Modal.Title>
         </Modal.Header>
@@ -409,7 +432,8 @@ const CreateClass = ({ goBack }) => {
             OK
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
+
       {/* Cancel Confirmation Modal */}
       <Modal
         show={showCancelConfirmation}

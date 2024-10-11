@@ -151,7 +151,12 @@ const ClassList = () => {
           <button className="create-class-btn" onClick={handleShowCreateClass}>+ Create Class</button>
         )}
 
-        {showCreateClass && <CreateClass goBack={handleBackButtonClick} />}
+        {showCreateClass && <CreateClass 
+          goBack={handleBackButtonClick} 
+          onSuccess={() => {
+            console.log("Class successfully created, refreshing window");
+            window.location.reload();
+          }}/>}        
       </div>
 
       {!showCreateClass && ( // if the createClass btn is clicked, do not display class section
