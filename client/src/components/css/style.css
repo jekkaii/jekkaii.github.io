@@ -298,6 +298,7 @@
 }
 
 /* Sidebar */
+
 .d-flex.flex-column.p-3.min-vh-100 {
   background-color: #efefef;
   width: 200px;
@@ -340,28 +341,47 @@
   color: #6c757d;
 }
 
-.dropdown-menu {
-  display: flex;
-  flex-direction: column;
-  background-color: #c3c3c3;
-  border: 1px solid #dee2e6;
-  padding: 10px;
-  margin-top: 5px;
+
+/* Sidebar top bar styling */
+.d-flex.justify-content-between {
+  background-color: #f8f9fa;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile dropdown button styling */
+.dropdown-toggle {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 15px;
   border-radius: 5px;
-  gap: 5%;
+  cursor: pointer;
 }
 
-.dropdown-menu a {
-  text-decoration: none;
-  padding: 5px 10px;
-  color: #191970;
-  font-size: 0.9rem;
+.dropdown-toggle:hover {
+  background-color: #0056b3;
 }
 
-.dropdown-menu a:hover {
-  background-color: #e9ecef;
-  border-radius: 3px;
+/* Dropdown menu styling */
+.dropdown-menu {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.dropdown-item {
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+
 
 .nav-link.active {
   background-color: #abbeff;
@@ -970,10 +990,16 @@
 }
 
 
+
+
+/* Class List styles */
 /* Container for the entire class list page */
 .class-list-container {
-  padding: 20px;
+  padding: 18px;
   font-family: Arial, sans-serif;
+  max-width: 1x; /* Set a max width */
+  margin: 0 auto; /* Center the container */
+  height: calc(100vh - 80px); /* Ensure it doesn't touch the footer */
 }
 
 /* Main heading and subtext, centered */
@@ -1000,7 +1026,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: 20px;
+
 }
 
 .hamburger-menu {
@@ -1013,7 +1039,7 @@
 .create-class-btn {
   background-color: #007bff;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 12px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -1029,9 +1055,11 @@
 }
 
 .class-section h2 {
-  margin-top: 20px;
+  margin-bottom: 2%;
+  margin-top: 5%;
   font-size: 20px;
   color: #004085;
+  font-weight: 600;
 }
 
 /* Container for class cards, displayed in a row with even spacing */
@@ -1050,7 +1078,7 @@
   border-radius: 10px;
   padding: 30px;
   width: 95%;
-  height: 200px;
+  height: 150px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
@@ -1064,8 +1092,9 @@
 
 .class-info p {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
   color: #004085;
+  text-align: left;
 }
 
 .class-info p span {
@@ -1075,11 +1104,12 @@
 .visit-class-btn {
   background-color: #28a745;
   color: white;
-  padding: 10px 15px;
+  padding: 7px 8px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  font-size: 14px;
+  
 }
 
 .visit-class-btn:hover {
@@ -1140,6 +1170,9 @@
 #no-btn {
   background-color: var(--red);
 }
+
+
+
 
 /* Upload Class Picture */
 #uploadIcon {
