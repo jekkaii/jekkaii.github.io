@@ -1,84 +1,145 @@
-// src/components/ManageUsers.jsx
 import React, { useState } from "react";
-import "../css/style.css"; // Import the stylesheet for custom styling
-import { Button, Table, Form, Modal } from "react-bootstrap"; // Using Bootstrap for table, buttons, and modal
-import AddUser from "./AddUser";
-import EditUser from "./EditUser";
+import "../css/style.css";
+import { Button, Table, Form, Modal } from "react-bootstrap";
+import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 
 const initialUsers = [
   {
     id: 1,
-    firstName: "Andrada",
-    lastName: "Celestine",
-    email: "celandrada@slu.edu.ph",
+    firstName: "Jekka",
+    lastName: "Hufalar",
+    email: "2216683@slu.edu.ph",
     role: "Admin",
     status: true,
   },
   {
     id: 2,
-    firstName: "Bergonio",
-    lastName: "Adrian",
-    email: "abergonio@slu.edu.ph",
-    role: "Employee",
+    firstName: "Nelle Angela",
+    lastName: "Ramat",
+    email: "nramat@slu.edu.ph",
+    role: "Faculty",
     status: true,
   },
   {
     id: 3,
-    firstName: "Camio",
-    lastName: "Cedric Sen",
+    firstName: "Cedric",
+    lastName: "Camio",
     email: "cedcamio@slu.edu.ph",
-    role: "Employee",
+    role: "Faculty",
     status: true,
   },
   {
     id: 4,
-    firstName: "De Guzman",
-    lastName: "George",
+    firstName: "George",
+    lastName: "De Guzman",
     email: "georgedg@slu.edu.ph",
-    role: "Employee",
+    role: "Faculty",
     status: true,
   },
   {
     id: 5,
-    firstName: "Efraim",
-    lastName: "Heleina",
-    email: "hefraim@slu.edu.ph",
+    firstName: "Mika",
+    lastName: "Dela Cruz",
+    email: "mikadelacruz@slu.edu.ph",
     role: "Admin",
     status: true,
   },
   {
     id: 6,
-    firstName: "Friedman",
-    lastName: "Rhiannon",
+    firstName: "Rhiannon",
+    lastName: "Friedman",
     email: "rfriedman@slu.edu.ph",
     role: "Admin",
     status: false,
   },
   {
     id: 7,
-    firstName: "Gelnn",
-    lastName: "Kurt",
+    firstName: "Kurt",
+    lastName: "Glenn",
     email: "kgelnn@slu.edu.ph",
-    role: "Employee",
+    role: "Faculty",
     status: false,
   },
 ];
 
-const ConfirmationModal = ({ isOpen, message, onConfirm, onCancel }) => {
+const ConfirmationModal = ({ isOpen, message, onConfirm, onCancel }) => (
+  <Modal show={isOpen} onHide={onCancel} centered>
+    <Modal.Header closeButton>
+      <Modal.Title>Confirmation</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <p>{message}</p>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={onCancel}>
+        Cancel
+      </Button>
+      <Button variant="primary" onClick={onConfirm}>
+        Confirm
+      </Button>
+    </Modal.Footer>
+  </Modal>
+);
+
+const AddEditUserModal = ({ isOpen, user, onSave, onCancel, isEditing }) => {
+  const [firstName, setFirstName] = useState(user ? user.firstName : "");
+  const [lastName, setLastName] = useState(user ? user.lastName : "");
+  const [email, setEmail] = useState(user ? user.email : "");
+  const [role, setRole] = useState(user ? user.role : "Faculty");
+
+  const handleSave = () => {
+    const updatedUser = { ...user, firstName, lastName, email, role };
+    onSave(updatedUser);
+  };
+
   return (
     <Modal show={isOpen} onHide={onCancel} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Confirmation</Modal.Title>
+        <Modal.Title>{isEditing ? "Edit User" : "Add User"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>{message}</p>
+        <Form.Group>
+          <Form.Label>First Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Last Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Role</Form.Label>
+          <Form.Control
+            as="select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option>Faculty</option>
+            <option>Admin</option>
+          </Form.Control>
+        </Form.Group>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
-        <Button variant="primary" onClick={onConfirm}>
-          Confirm
+        <Button variant="primary" onClick={handleSave}>
+          {isEditing ? "Save Changes" : "Add User"}
         </Button>
       </Modal.Footer>
     </Modal>
@@ -90,7 +151,11 @@ const ManageUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [deleteMode, setDeleteMode] = useState(false); // Tracks if delete action is being confirmed
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [isAddEditModalOpen, setIsAddEditModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [actionType, setActionType] = useState("");
+
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 
   const toggleUserStatus = (id) => {
@@ -100,43 +165,63 @@ const ManageUsers = () => {
       )
     );
   };
-  const deleteUser = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
 
   const handleToggleChange = (user) => {
     setSelectedUser(user);
+    setActionType("toggle");
     setShowModal(true);
   };
-  const handleDeleteUser = (user) => {
-    setSelectedUser(user);
-    setModalMessage(
-      `Are you sure you want to delete ${user.firstName} ${user.lastName}?`
-    );
-    setDeleteMode(true);
-    setShowModal(true);
-  };
-  const handleConfirmToggle = () => {
-    if (selectedUser) {
+
+  const handleConfirmAction = () => {
+    if (actionType === "toggle" && selectedUser) {
       toggleUserStatus(selectedUser.id);
+    } else if (actionType === "delete" && selectedUser) {
+      setUsers(users.filter((u) => u.id !== selectedUser.id));
     }
     setShowModal(false);
+    setSelectedUser(null);
   };
 
-  const handleCancelToggle = () => {
+  const handleCancelAction = () => {
     setShowModal(false);
+    setSelectedUser(null);
   };
 
-  const addUser = () => {
-    const newUser = {
-      id: Date.now(),
-      firstName: "New",
-      lastName: "User",
-      email: "newuser@slu.edu.ph",
-      role: "Employee",
-      status: true,
-    };
-    setUsers([...users, newUser]);
+  const handleSelectUser = (id) => {
+    setSelectedUsers((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((userId) => userId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
+  const handleAddUser = () => {
+    setIsEditing(false);
+    setSelectedUser(null);
+    setIsAddEditModalOpen(true);
+  };
+
+  const handleEditUser = (user) => {
+    setSelectedUser(user);
+    setIsEditing(true);
+    setIsAddEditModalOpen(true);
+  };
+
+  const handleSaveUser = (updatedUser) => {
+    if (isEditing) {
+      setUsers(
+        users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+      );
+    } else {
+      setUsers([...users, { ...updatedUser, id: Date.now(), status: true }]);
+    }
+    setIsAddEditModalOpen(false);
+  };
+
+  const handleDeleteUser = (user) => {
+    setSelectedUser(user);
+    setActionType("delete");
+    setShowModal(true);
   };
 
   const filteredUsers = users.filter(
@@ -148,38 +233,49 @@ const ManageUsers = () => {
 
   return (
     <div className="container mt-5">
-      <div className="header d-flex justify-content-between mb-3">
-        <input
-          type="text"
-          placeholder="Search here..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="form-control search-input"
-          style={{ maxWidth: "300px" }}
-        />
-        <EditUser />
-        <AddUser />
+      {/* Search bar */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <div style={{ position: "relative", maxWidth: "300px" }}>
+          <input
+            type="text"
+            value={searchTerm}
+            placeholder="Search Here"
+            onChange={handleSearch}
+            className="form-control"
+            style={{ paddingLeft: "35px" }}
+          />
+          <FaSearch
+            style={{
+              position: "absolute",
+              left: "12px",
+              top: "30%",
+              transform: "translateY(-50%)",
+              color: "#888",
+              fontSize: "16px",
+            }}
+          />
+        </div>
+
+        <Button className="btn-primary" onClick={handleAddUser}>
+          <FaPlus className="me-2" />
+          ADD USER
+        </Button>
       </div>
 
       <Table bordered hover responsive className="user-table">
         <thead>
           <tr>
-            <th>
-              <Form.Check type="checkbox" label="" />
-            </th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
             <th>Role</th>
             <th>Account Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredUsers.map((user) => (
             <tr key={user.id}>
-              <td>
-                <input type="checkbox" />
-              </td>
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
               <td>{user.email}</td>
@@ -190,25 +286,65 @@ const ManageUsers = () => {
                   id={`status-switch-${user.id}`}
                   checked={user.status}
                   onChange={() => handleToggleChange(user)}
-                  label={user.status ? "Activated" : "Deactivated"}
+                  label={
+                    <span
+                      className={`status-label ${
+                        user.status ? "activated" : "deactivated"
+                      }`}
+                    >
+                      {user.status ? "Activated" : "Deactivated"}
+                    </span>
+                  }
                 />
+              </td>
+              <td>
+                <Button variant="warning" onClick={() => handleEditUser(user)}>
+                  <FaEdit />
+                </Button>{" "}
+                <Button variant="danger" onClick={() => handleDeleteUser(user)}>
+                  <FaTrash />
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
 
-      {/* Confirmation modal */}
-      {selectedUser && (
-        <ConfirmationModal
-          isOpen={showModal}
-          message={`Are you sure you want to ${
-            selectedUser.status ? "deactivate" : "activate"
-          } ${selectedUser.firstName} ${selectedUser.lastName}?`}
-          onConfirm={handleConfirmToggle}
-          onCancel={handleCancelToggle}
-        />
-      )}
+      {/* Confirmation Modal for Delete & Status */}
+      <ConfirmationModal
+        isOpen={showModal}
+        message={
+          actionType === "delete" ? (
+            <>
+              Are you sure you want to delete{" "}
+              <span style={{ fontWeight: "bold", color: "red" }}>
+                {selectedUser?.firstName} {selectedUser?.lastName}
+              </span>
+              's account?
+            </>
+          ) : (
+            <>
+              Are you sure you want to{" "}
+              {selectedUser?.status ? "deactivate" : "activate"}{" "}
+              <span style={{ fontWeight: "bold", color: "red" }}>
+                {selectedUser?.firstName} {selectedUser?.lastName}
+              </span>
+              's account?
+            </>
+          )
+        }
+        onConfirm={handleConfirmAction}
+        onCancel={handleCancelAction}
+      />
+
+      {/* Add/Edit User modal */}
+      <AddEditUserModal
+        isOpen={isAddEditModalOpen}
+        user={selectedUser}
+        onSave={handleSaveUser}
+        onCancel={() => setIsAddEditModalOpen(false)}
+        isEditing={isEditing}
+      />
     </div>
   );
 };

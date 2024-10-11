@@ -13,16 +13,14 @@ import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
-import CreateClass from "./components/CreateClass";
+import CreateClass from "./components/teacher/CreateClass";
 import ManageUsers from "./components/admin/ManageUsers";
 import Header from "./components/admin/Header";
 import Footer from "./components/teacher/Footer";
 import AddStudent from "./components/teacher/AddStudent";
 import UploadClassPicture from "./components/teacher/UploadClassPicture";
 import Profile from "./components/teacher/Profile";
-import AddUser from "./components/admin/AddUser";
 import Sidebar from "./components/Sidebar";
-import EditUser from "./components/admin/EditUser";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
 import ClassList from "./components/teacher/ClassList";
 import ManageStudents from "./components/teacher/ManageStudents";
@@ -90,6 +88,7 @@ function App() {
       {/* <Home></Home> */}
       {/* <CreateClass> </CreateClass> */}
       {/* <ManageUsers></ManageUsers> */}
+      {/* <ManageModels></ManageModels> */}
       {/* <AddStudent></AddStudent> */}
       {/* <UploadClassPicture></UploadClassPicture> */}
       {/*<Profile></Profile>*/}
@@ -106,7 +105,6 @@ function App() {
       {/* </div> */}
       {/* <Footer /> */}
       {/* </div>  */}
-
       <Router>
         <Routes>
           <Route
