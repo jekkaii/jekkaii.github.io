@@ -1,12 +1,19 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import '../components/css/style.css';
-import faceImage from '../components/resources/face.png';
-import { FaHome, FaClipboardList, FaFileAlt, FaUserCircle } from 'react-icons/fa';
+import "../components/css/style.css";
+import faceImage from "../components/resources/face.png";
+import { useAuthStore } from "../stores/authStore";
+import {
+  FaHome,
+  FaClipboardList,
+  FaFileAlt,
+  FaUserCircle,
+} from "react-icons/fa";
 
 function Sidebar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { isAdmin, isTeacher } = useAuthStore();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -50,7 +57,7 @@ function Sidebar() {
         </div>
       </div> */}
 
-      <div className="d-flex flex-column p-3 min-vh-100">
+      <div className="d-flex flex-column p-3 min-vh-100 hv-100">
         <div className="profile-image mb-3 text-center">
           <img src={faceImage} alt="face" width="160" />
         </div>
@@ -58,23 +65,33 @@ function Sidebar() {
         <hr />
 
         <ul className="d-flex flex-column mb-auto list-unstyled">
-          <li className="nav-item mb-1">
-            <a href="#" className="px-3 py-2 nav-link active">
-              <FaHome className="me-2" />Home
-            </a>
-          </li>
-          <li className="nav-item mb-1">
-            <a href="../teacher/AttendanceTabs.jsx" className="px-3 py-2 nav-link">
-              <FaClipboardList className="me-3" />
-              <span className="attendance-text">Attendance</span>
-            </a>
-          </li>
-          <li className="nav-item mb-1">
-            <a href="#" className="px-3 py-2 nav-link">
-              <FaFileAlt className="me-4" />
-              <span className="logs-text">Logs</span>
-            </a>
-          </li>
+          {isAdmin ? (
+            <>
+              <li className="nav-item mb-1">
+                <Link to="/admin" className="px-3 py-2 nav-link active">
+                  <FaUserCircle className="me-2" />
+                  <span className="manage-users-text">Manage Users</span>
+                </Link>
+              </li>
+            </>
+          ) : isTeacher ? (
+            <>
+              <li className="nav-item mb-1">
+                <Link to="/teacher" className="px-3 py-2 nav-link active">
+                  <FaHome className="me-2" />
+                  Home
+                </Link>
+              </li>
+              <li className="nav-item mb-1">
+                <Link to="/teacher/attendance" className="px-3 py-2 nav-link">
+                  <FaClipboardList className="me-3" />
+                  <span className="attendance-text">Attendance</span>
+                </Link>
+              </li>
+            </>
+          ) : (
+            <></>
+          )}
         </ul>
       </div>
     </>

@@ -7,9 +7,9 @@ import "../components/css/style.css"; // Update the path to your logo image
 export default class Footer extends Component {
   render() {
     return (
-      <footer className="footer">
+      <footer className="container-fluid p-0">
         {/* Top section of the footer containing logo and nav links */}
-        <div className="footer-top d-flex justify-content-between align-items-center py-3">
+        <div className="d-flex justify-content-between align-items-center py-3">
           <div className="footer-logo">
             <div className="profile-image mb-3 text-center">
               <img src={logo} alt="face" width="160" />
@@ -29,7 +29,7 @@ export default class Footer extends Component {
         </div>
 
         {/* Bottom section of the footer containing copyright and contact info */}
-        <div className="footer-bottom d-flex justify-content-between align-items-center py-3 border-top">
+        <div className="d-flex justify-content-between align-items-center py-3 border-top">
           <p className="mb-0">
             &copy; 2024 Cogito Creatio. All rights reserved
           </p>

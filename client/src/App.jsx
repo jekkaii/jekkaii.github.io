@@ -10,13 +10,14 @@ import {
 import { useAuthStore } from "./stores/authStore";
 
 import LoginForm from "./components/LoginForm";
-import Home from "./components/Home";
+import LogoutButton from "./components/LogoutButton";
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import CreateClass from "./components/teacher/CreateClass";
+import EditStudent from "./components/teacher/EditStudent";
 import ManageUsers from "./components/admin/ManageUsers";
 import Header from "./components/admin/Header";
-import Footer from "./components/teacher/Footer";
+import Footer from "./components/Footer";
 import AddStudent from "./components/teacher/AddStudent";
 import UploadClassPicture from "./components/teacher/UploadClassPicture";
 import Profile from "./components/teacher/Profile";
@@ -28,22 +29,6 @@ import Confirmation from "./components/teacher/Confirmation";
 import ManageModels from "./components/admin/ManageModels";
 import SpinnerLoader from "./components/SpinnerLoader";
 import Dash from "./components/teacher/Dash";
-
-const TeacherRoute = ({ children }) => {
-  const { authenticated, isAdmin, isTeacher } = useAuthStore();
-  if (!isTeacher || !authenticated || isAdmin) {
-    return <Navigate to="/" />;
-  }
-  return children;
-};
-
-const AdminRoute = ({ children }) => {
-  const { authenticated, isAdmin, isTeacher } = useAuthStore();
-  if (!isAdmin || !authenticated || isTeacher) {
-    return <Navigate to="/" />;
-  }
-  return children;
-};
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -106,47 +91,68 @@ function App() {
       {/* <Footer /> */}
       {/* </div>  */}
       <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <RedirectToHome>
-                <LoginForm />
-              </RedirectToHome>
-            }
-          ></Route>
-          <Route
-            path="/teacher"
-            element={
-              isLoading ? (
-                <SpinnerLoader />
-              ) : (
-                <ProtectedRoute>
-                  <TeacherRoute>
-                    <Dash />
-                    <Footer />
-                  </TeacherRoute>
-                </ProtectedRoute>
-              )
-            }
-          ></Route>
-          <Route
-            path="/admin"
-            element={
-              isLoading ? (
-                <SpinnerLoader />
-              ) : (
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <Home />
-                    <ManageUsers />
-                    <Footer />
-                  </AdminRoute>
-                </ProtectedRoute>
-              )
-            }
-          ></Route>
-        </Routes>
+        <div className="container-fluid p-0">
+          <div className="d-flex flex-row bd-highlight mb-3">
+            {authenticated && <Sidebar />}
+            {/* Main Content */}
+            <div className="flex col">
+              <Routes>
+                {/* Login Route */}
+                <Route
+                  path="/"
+                  element={
+                    <RedirectToHome>
+                      <LoginForm />
+                    </RedirectToHome>
+                  }
+                ></Route>
+                {/* Protected Routes */}
+                {/* Teacher Routes */}
+                <Route
+                  path="/teacher"
+                  element={
+                    isLoading ? (
+                      <SpinnerLoader />
+                    ) : (
+                      <ProtectedRoute>
+                        <LogoutButton />
+                        <ClassList />
+                      </ProtectedRoute>
+                    )
+                  }
+                ></Route>
+                <Route
+                  path="/teacher/attendance"
+                  element={
+                    isLoading ? (
+                      <SpinnerLoader />
+                    ) : (
+                      <ProtectedRoute>
+                        <AttendanceTabs />
+                      </ProtectedRoute>
+                    )
+                  }
+                ></Route>
+
+                {/* Admin Routes */}
+                <Route
+                  path="/admin"
+                  element={
+                    isLoading ? (
+                      <SpinnerLoader />
+                    ) : (
+                      <ProtectedRoute>
+                        <LogoutButton />
+                        <ManageUsers />
+                      </ProtectedRoute>
+                    )
+                  }
+                ></Route>
+              </Routes>
+            </div>
+          </div>
+          {authenticated && <Footer />}
+        </div>
       </Router>
     </>
   );

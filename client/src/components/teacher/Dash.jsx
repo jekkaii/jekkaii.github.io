@@ -1,20 +1,33 @@
-import React from 'react';
-import Sidebar from '../Sidebar'; // Assuming Sidebar is a separate component
-import ClassList from '../teacher/ClassList';
-import '../css/style.css';
+import React from "react";
+import Sidebar from "../Sidebar"; // Assuming Sidebar is a separate component
+import ClassList from "../teacher/ClassList";
+import "../css/style.css";
+import { useAuthStore } from "../../stores/authStore";
+import Footer from "../Footer";
 
 const TeacherDashboard = () => {
-  return (
-    <div className="dashboard-container">
-      {/* Sidebar Component */}
-      <Sidebar />
+  const { logout } = useAuthStore();
+  const { isAdmin } = useAuthStore();
 
-      {/* Main Content */}
-      <div className="dashboard-content">
-        {/* Add other components if needed */}
-        <ClassList />
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await logout();
+  };
+
+  return (
+    <>
+      <div className="container-fluid">
+        {/* Sidebar Component */}
+        <div className="d-flex flex-row bd-highlight mb-3">
+          <Sidebar />
+          {/* Main Content */}
+          <div className="flex col">
+            <ClassList />
+          </div>
+        </div>
+        <Footer />
       </div>
-    </div>
+    </>
   );
 };
 
