@@ -20,8 +20,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-app.use("/api/teacher", studentRoutes);
-app.use("/api/class", classRoutes);
+app.use("/api/teacher", studentRoutes, classRoutes);
 
 app.listen(process.env.PORT, () => {
   connectToDatabase();

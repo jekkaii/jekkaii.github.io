@@ -15,7 +15,7 @@ export default function LoginForm() {
 
   // Initialize authStore
   const { login } = useAuthStore();
-  const { isLoggingIn, error, isLoading } = useAuthStore();
+  const { isLoggingIn, error } = useAuthStore();
 
   const handleLogin = async () => {
     await login(idNumber, password);

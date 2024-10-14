@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL = "http://localhost:3001/api";
+const API_URL = "http://localhost:3001/api/teacher";
 
 axios.defaults.withCredentials = true; // For secure cookie handling
 
@@ -18,10 +18,10 @@ export const useClassStore = create((set) => ({
         const { classes } = response.data;
         set({ classes, isLoading: false, error: null });
       } else {
-        throw new Error('Failed to fetch classes');
+        throw new Error("Failed to fetch classes");
       }
     } catch (error) {
-      console.error('Error fetching classes:', error);
+      console.error("Error fetching classes:", error);
       set({ error: error.response?.data || error.message, isLoading: false });
     }
   },
@@ -47,11 +47,13 @@ export const useClassStore = create((set) => ({
     set({ isLoading: true });
     try {
       const response = await axios.delete(`${API_URL}/classes`, {
-        data: { classCode }
+        data: { classCode },
       });
       if (response.status === 200) {
         set((state) => ({
-          classes: state.classes.filter((classItem) => classItem.classCode !== classCode),
+          classes: state.classes.filter(
+            (classItem) => classItem.classCode !== classCode
+          ),
           isLoading: false,
           error: null,
         }));
@@ -66,12 +68,14 @@ export const useClassStore = create((set) => ({
     set({ isLoading: true });
     try {
       const response = await axios.patch(`${API_URL}/classes/archive`, {
-        classCode
+        classCode,
       });
       if (response.status === 200) {
         set((state) => ({
-          classes: state.classes.map((classItem) => 
-            classItem.classCode === classCode ? { ...classItem, archived: true } : classItem
+          classes: state.classes.map((classItem) =>
+            classItem.classCode === classCode
+              ? { ...classItem, archived: true }
+              : classItem
           ),
           isLoading: false,
           error: null,

@@ -98,9 +98,7 @@ export const useAuthStore = create((set) => ({
     try {
       // This delay is for testing purposes
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const response = await axios.get(`${API_URL}/check-auth`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(`${API_URL}/check-auth`);
       if (response.status === 200) {
         const { user, token } = response.data;
         if (user.role === "admin") {
