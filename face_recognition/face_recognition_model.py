@@ -28,10 +28,12 @@ class FaceRecognitionModel:
         
         for test_embedding in X_test_embeddings:
             closest_label, similarity = self.find_closest_label(test_embedding)
+            similarity_percentage = similarity * 100  
+
             if similarity < self.similarity_threshold:
-                predictions.append("Unknown")
+                predictions.append(("Unknown", similarity_percentage))
             else:
-                predictions.append(closest_label)
+                predictions.append((closest_label, similarity_percentage))
         
         return predictions
     
@@ -45,18 +47,18 @@ class FaceRecognitionModel:
 
         return closest_label, max_similarity
 
-    def save_models(self, model, label_encoder, class_code):
-        models_dir = f'{os.curdir}/cc_models/{class_code}'
+    def save_model(self, model, label_encoder, model_name: str):
+        models_dir = f'{os.curdir}/cc_models/'
     
         if not os.path.exists(models_dir):
             os.makedirs(models_dir)
 
-        joblib.dump(model, f'cc_models/{class_code}/{class_code}_model.pkl')
-        joblib.dump(label_encoder, f'cc_models/{class_code}/{class_code}_label_encoder.pkl')
-        print(f"Models saved to cc_models/{class_code}.")
+        joblib.dump(model, f'cc_models/{model_name}_model.pkl')
+        joblib.dump(label_encoder, f'cc_models/{model_name}_label_encoder.pkl')
+        print(f"Models saved to cc_models.")
 
-    def load_models(self, class_code):
-        self.model = joblib.load(f'cc_models/{class_code}/{class_code}_model.pkl')
-        self.encoder = joblib.load(f'cc_models/{class_code}/{class_code}_label_encoder.pkl')
-        print(f"Models loaded from cc_models/{class_code}.")
-        
+    def load_model(self, model_name: str):
+        self.model = joblib.load(f'cc_models/{model_name}_model.pkl')
+        self.encoder = joblib.load(f'cc_models/{model_name}_label_encoder.pkl')
+
+        return "Models loaded from cc_models."
