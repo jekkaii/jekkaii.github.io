@@ -1,5 +1,8 @@
 import bcrypt from "bcryptjs"; 
 import { StudentModel } from "../model/Student.js";
+import xlsx from 'xlsx';
+import express from 'express';
+import multer from 'multer';
 
 export const addStudent = async (req, res) => {
   try {
@@ -165,22 +168,29 @@ export const deleteStudents = async (req, res) => {
   }
 };
 
+const upload = multer({ dest: 'uploads/' });
+
 export const importFile = async (req, res) => {
   const { file } = req;
-  const allowedTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'];
-  if (!allowedTypes.includes(file.mimetype)) {
-    return res.status(400).json({ success: false, message: "Only Excel and CSV files are allowed" });
+  if (!file) {
+    return res.status(400).json({ success: false, message: "No file uploaded" });
   }
 
-  const workbook = xlsx.readFile(file.path);
-  const worksheet = workbook.Sheets['Sheet1'];
-  const data = xlsx.utils.sheet_to_json(worksheet);
-
   try {
+    const workbook = xlsx.readFile(file.path);
+    const worksheet = workbook.Sheets['Sheet1'];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+
+    const existingIds = await StudentModel.distinct('idNumber');
+    const duplicateIds = data.filter(item => existingIds.includes(item.idNumber));
+    if (duplicateIds.length) {
+      return res.status(400).json({ success: false, message: `The following idNumbers are already in the database: ${duplicateIds.map(item => item.idNumber).join(', ')}` });
+    }
+
     await StudentModel.insertMany(data);
     return res.status(200).json({ success: true, message: "File imported successfully" });
   } catch (error) {
     console.error("Error importing file:", error);
     return res.status(400).json({ success: false, message: error.message });
   }
-}
+};
