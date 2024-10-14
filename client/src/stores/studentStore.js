@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { importFile, updateStudentStatus } from "../../../server/controller/studentController";
+import {importFile, updateStudentStatus } from "../../../server/controller/studentController";
 
 const API_URL = "http://localhost:3001/api/teacher";
 

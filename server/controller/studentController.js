@@ -1,8 +1,7 @@
-import bcrypt from "bcryptjs"; 
+
 import { StudentModel } from "../model/Student.js";
-import xlsx from 'xlsx';
-import express from 'express';
-import multer from 'multer';
+import * as xlsx from 'xlsx';
+//import multer from 'multer';
 
 export const addStudent = async (req, res) => {
   try {
@@ -168,16 +167,14 @@ export const deleteStudents = async (req, res) => {
   }
 };
 
-const upload = multer({ dest: 'uploads/' });
-
 export const importFile = async (req, res) => {
-  const { file } = req;
+  const file = req.files ? req.files.file : undefined;
   if (!file) {
     return res.status(400).json({ success: false, message: "No file uploaded" });
   }
 
   try {
-    const workbook = xlsx.readFile(file.path);
+    const workbook = xlsx.readFile(file.tempFilePath);
     const worksheet = workbook.Sheets['Sheet1'];
     const data = xlsx.utils.sheet_to_json(worksheet);
 
