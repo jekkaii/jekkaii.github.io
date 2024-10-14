@@ -57,7 +57,7 @@ export default function LoginForm() {
             remember: true,
           }}
         >
-          {error && !isLoading && (
+          {error && !isLoggingIn && (
             <Alert className="mb-4" message={error} type="error" showIcon />
           )}
 
