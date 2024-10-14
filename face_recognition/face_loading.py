@@ -10,6 +10,7 @@ class FaceLoading:
         self.X = []
         self.Y = []
         self.detector = MTCNN()
+        self.confidence_threshold = 0.95  
 
     def extract_faces(self, filename, multiple=False):
         img = cv.imread(filename)
@@ -26,18 +27,22 @@ class FaceLoading:
         if multiple:
             face_arrs = []
             for face in faces:
-                x, y, w, h = face['box']
-                x, y = abs(x), abs(y)
-                face_img = img[y:y+h, x:x+w]
-                face_resized = cv.resize(face_img, self.target_size)
-                face_arrs.append(face_resized)
+                if face['confidence'] >= self.confidence_threshold:  
+                    x, y, w, h = face['box']
+                    x, y = abs(x), abs(y)
+                    face_img = img[y:y+h, x:x+w]
+                    face_resized = cv.resize(face_img, self.target_size)
+                    face_arrs.append(face_resized)
             return face_arrs
         else:
-            x, y, w, h = faces[0]['box']  
-            x, y = abs(x), abs(y)
-            face = img[y:y+h, x:x+w]
-            face_arr = cv.resize(face, self.target_size)
-            return face_arr
+            if faces[0]['confidence'] >= self.confidence_threshold:  
+                x, y, w, h = faces[0]['box']
+                x, y = abs(x), abs(y)
+                face = img[y:y+h, x:x+w]
+                face_arr = cv.resize(face, self.target_size)
+                return face_arr
+            else:
+                raise ValueError(f"Face confidence below threshold: {faces[0]['confidence']}")
 
     def load_faces(self, dir, multiple=False):
         FACES = []
@@ -72,6 +77,4 @@ class FaceLoading:
             self.X.extend(FACES)
             self.Y.extend(labels)
         
-        # np.savez_compressed('faces_embeddings.npz', embeddings=np.asarray(self.X), labels=np.asarray(self.Y))
-        # print("All faces and labels have been saved to 'faces_embeddings.npz'")
         return np.asarray(self.X), np.asarray(self.Y)
