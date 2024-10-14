@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, Container, Row, Col, Modal} from "react-bootstrap";
-import { TimePicker } from "antd";
-import { useClassStore } from "../../stores/classStore";
+import { TimePicker } from "antd";import { useClassStore } from "../../stores/classStore";
 
 const { RangePicker } = TimePicker;
 
@@ -10,7 +9,8 @@ const CreateClass = ({ goBack, onSuccess }) => {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
-  const { addClass } = useClassStore();
+  const { addClass, error } = useClassStore();
+
   const [newClass, setNewClass] = useState({ 
     classCode: "",
     courseNumber: "",
@@ -30,16 +30,15 @@ const CreateClass = ({ goBack, onSuccess }) => {
     return null; // Return null if there's no error
   };
   
-  // classCode: ""  - 5 digit
-  //courseNumber: "", - no (done)
-  // subject: "", -no (done)
-  // academicYear: "", - yess (done)
-  // term: "", - no (done)
-  // room: "", - D516 yes
-  // days: [], - must not be empty
+  // TO DO:
+    // classCode: ""  - 5 digit (show in front-end)
+    // room: "", - D516 (show in frontend)
+  // days: [], - must not be empty 
   // startTime: "", must not be empty
  // endTime: "" must not be empty
-
+ // start time must be at 7:30 am
+ // end time must end at 8:30 pm
+ // end time must not start before the start time
 
   // Get the current year
   const currentYear = new Date().getFullYear();
@@ -71,6 +70,8 @@ const CreateClass = ({ goBack, onSuccess }) => {
     setShowConfirmation(false);
     onSuccess();
   };
+
+  console.log(error);
 
   const handleScheduleChange = (day) => {
     setNewClass((prevClass) => ({
@@ -132,29 +133,24 @@ const CreateClass = ({ goBack, onSuccess }) => {
       >
         ←
       </Button>
-      <Button
-        variant="link"
-        onClick={() => console.log("Menu clicked")}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          fontSize: "24px",
-          textDecoration: "none",
-          color: "#000",
-          backgroundColor: "#f0f0f0",
-          padding: "8px",
-          borderRadius: "50%",
-        }}
-      >
-        ☰
-      </Button>
+
+      {error && (
+        <div
+          className="alert alert-danger p-2 mb-0 d-flex align-items-center animate__animated animate__fadeInDown"
+          role="alert"
+          style={{ animationDuration: "0.5s" }}
+        >
+          {/* Display the error message */}
+          <div>{error.response?.data?.message || error.message || "An error occurred"}</div>
+        </div>
+      )}
+
       {/* Create Class Form */}
       <Form onSubmit={handleSubmit} className="attendance-form">
         <h2 className="attendance-header">Create Class</h2>
 
-        <Form.Group as={Row} className="mb-3" controlId="formClassCode">
-          <Form.Label column sm="3" className="form-label">
+        <Form.Group as={Row} controlId="formClassCode">
+          <Form.Label column sm="3" className="form-label fw-bold">
             Class Code:
           </Form.Label>
           <Col sm="9">
@@ -171,7 +167,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
         </Form.Group>
 
         <Form.Group as={Row} controlId="formcourseNumber">
-          <Form.Label column sm="3" className="form-label">
+          <Form.Label column sm="3" className="form-label fw-bold">
             Course Number:
           </Form.Label>
           <Col sm="9">
@@ -188,7 +184,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
         </Form.Group>
 
         <Form.Group as={Row} controlId="formSubject">
-          <Form.Label column sm="3" className="form-label">
+          <Form.Label column sm="3" className="form-label fw-bold">
             Subject:
           </Form.Label>
           <Col sm="9">
@@ -205,7 +201,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
         </Form.Group>
 
         <Form.Group as={Row} controlId="formAcademicYear">
-          <Form.Label column sm="3" className="form-label">
+          <Form.Label column sm="3" className="form-label fw-bold">
             Academic Year:
           </Form.Label>
           <Col sm="9">
@@ -228,7 +224,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
         </Form.Group>
 
         <Form.Group as={Row} controlId="formTerm">
-          <Form.Label column sm="3" className="form-label">
+          <Form.Label column sm="3" className="form-label fw-bold">
             Term:
           </Form.Label>
           <Col sm="9">
@@ -249,7 +245,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
         </Form.Group>
 
         <Form.Group as={Row} controlId="formRoom">
-          <Form.Label column sm="3" className="form-label">
+          <Form.Label column sm="3" className="form-label fw-bold">
             Room:
           </Form.Label>
           <Col sm="9">
@@ -267,17 +263,45 @@ const CreateClass = ({ goBack, onSuccess }) => {
         </Form.Group>
 
         <Form.Group as={Row} controlId="formSchedule">
-          <Form.Label column sm="3" className="form-label">
-            Schedule:
+          <Form.Label column sm="3" className="form-label fw-bold">
+            Days:
           </Form.Label>
-          <Col sm="9">
-            <Button
-              variant="secondary"
-              onClick={() => setShowScheduleModal(true)}
-              className="custom-button schedule-button"
-            >
-              Select Schedule
-            </Button>
+          <Col sm="9" className="d-flex align-items-center">
+            <div className="schedule-picker d-flex w-100">
+              {["M", "T", "W", "TH", "F", "S"].map((day) => (
+                <Button
+                  key={day}
+                  variant={newClass.days.includes(day) ? "primary" : "outline-primary"}
+                  className={`m-0 my-1 py-1 ${newClass.days.includes(day) ? "selected" : "unselected"} w-100`}
+                  onClick={() => handleScheduleChange(day)}
+                >
+                  {day}
+                </Button>
+              ))}
+            </div>
+          </Col>
+        </Form.Group>
+
+        {/* Time Picker */}
+        <Form.Group as={Row} controlId="formTimeRange" className="mt-3">
+          <Form.Label column sm="3" className="form-label fw-bold">
+            Time:
+          </Form.Label>
+          <Col>
+            <RangePicker
+              value={timeRange}
+              onChange={handleTimeChange}
+              format="hh:mm A"
+              minuteStep={30}
+              showTime={{
+                format: "hh:mm A",
+                use12Hours: true,
+                minuteStep: 30,
+              }}
+              style={{ width: "100%" }}
+              getPopupContainer={(trigger) => trigger.parentNode}
+              required
+            />
           </Col>
         </Form.Group>
 
@@ -286,6 +310,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
             variant="primary"
             type="submit"
             className="custom-button create-button"
+            onClick={handleCreateClass}
           >
             Create Class
           </Button>
@@ -298,75 +323,99 @@ const CreateClass = ({ goBack, onSuccess }) => {
           </Button>
         </div>
       </Form>
-      {/* Schedule Modal */}
+
+         {/* Cancel Confirmation Modal */}
+      
       <Modal
-        show={showScheduleModal}
-        onHide={() => setShowScheduleModal(false)}
+        show={showCancelConfirmation}
+        onHide={handleCloseCancelConfirmation}
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Select Schedule</Modal.Title>
+          <Modal.Title>Cancel Class Creation</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          {/* Schedule Picker */}
-          <div className="schedule-picker">
-            {["M", "T", "W", "TH", "F", "S"].map((day) => (
-              <Button
-                key={day}
-                variant={newClass.days.includes(day) ? "primary" : "outline-primary"}
-                className={`m-1 ${newClass.days.includes(day) ? "selected" : "unselected"}`}
-                onClick={() => handleScheduleChange(day)}
-                required
-              >
-                {day}
-              </Button>
-            ))}
-          </div>
-          {/*Time Picker*/}
-          <Form.Group as={Row} controlId="formTimeRange" className="mt-3">
-            {" "}
-            {/* Add margin-top for spacing */}
-            <Form.Label column sm="3" className="form-label">
-              Time:
-            </Form.Label>
-            <Col sm="9">
-              <RangePicker
-                value={timeRange}
-                onChange={handleTimeChange}
-                format="hh:mm A"
-                minuteStep={30}
-                showTime={{
-                  format: "hh:mm A",
-                  use12Hours: true,
-                  minuteStep: 30,
-                }}
-                style={{ width: "100%" }}
-                getPopupContainer={(trigger) => trigger.parentNode}
-                required
-              />
-            </Col>
-          </Form.Group>
-        </Modal.Body>
-
-        <Modal.Footer className="modal-footer">
-          <Button
-            variant="danger"
-            onClick={() => setShowScheduleModal(false)}
-            className="custom-button"
-          >
-            Cancel
+        <Modal.Body>Are you sure you want to cancel?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseCancelConfirmation}>
+            NO
           </Button>
-          <Button
-            variant="success"
-            onClick={() => setShowScheduleModal(false)}
-            className="custom-button"
-          >
-            OK
+          <Button variant="danger" onClick={handleConfirmCancel}>
+            YES
           </Button>
         </Modal.Footer>
       </Modal>
-      {/* Confirmation Modal */}
-      <Modal show={showConfirmation} onHide={handleCloseConfirmation} centered>
+    </Container>
+    
+      // Schedule Modal
+      // <Modal
+      //   show={showScheduleModal}
+      //   onHide={() => setShowScheduleModal(false)}
+      //   centered
+      // >
+      //   <Modal.Header closeButton>
+      //     <Modal.Title>Select Schedule</Modal.Title>
+      //   </Modal.Header>
+      //   <Modal.Body>
+      //     {/* Schedule Picker */}
+      //     <div className="schedule-picker">
+      //       {["M", "T", "W", "TH", "F", "S"].map((day) => (
+      //         <Button
+      //           key={day}
+      //           variant={newClass.days.includes(day) ? "primary" : "outline-primary"}
+      //           className={`m-1 ${newClass.days.includes(day) ? "selected" : "unselected"}`}
+      //           onClick={() => handleScheduleChange(day)}
+      //           required
+      //         >
+      //           {day}
+      //         </Button>
+      //       ))}
+      //     </div>
+      //     {/*Time Picker*/}
+      //     <Form.Group as={Row} controlId="formTimeRange" className="mt-3">
+      //       {" "}
+      //       {/* Add margin-top for spacing */}
+      //       <Form.Label column sm="3" className="form-label">
+      //         Time:
+      //       </Form.Label>
+      //       <Col sm="9">
+      //         <RangePicker
+      //           value={timeRange}
+      //           onChange={handleTimeChange}
+      //           format="hh:mm A"
+      //           minuteStep={30}
+      //           showTime={{
+      //             format: "hh:mm A",
+      //             use12Hours: true,
+      //             minuteStep: 30,
+      //           }}
+      //           style={{ width: "100%" }}
+      //           getPopupContainer={(trigger) => trigger.parentNode}
+      //           required
+      //         />
+      //       </Col>
+      //     </Form.Group>
+      //   </Modal.Body>
+
+      //   <Modal.Footer className="modal-footer">
+      //     <Button
+      //       variant="danger"
+      //       onClick={() => setShowScheduleModal(false)}
+      //       className="custom-button"
+      //     >
+      //       Cancel
+      //     </Button>
+      //     <Button
+      //       variant="success"
+      //       onClick={() => setShowScheduleModal(false)}
+      //       className="custom-button"
+      //     >
+      //       OK
+      //     </Button>
+      //   </Modal.Footer>
+      // </Modal> /}
+
+      // Confirmation Modal
+      /* <Modal show={showConfirmation} onHide={handleCloseConfirmation} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Class Details</Modal.Title>
         </Modal.Header>
@@ -413,10 +462,10 @@ const CreateClass = ({ goBack, onSuccess }) => {
             Confirm
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */
 
-      {/* Success Modal */}
-      {/* <Modal show={showSuccessModal} onHide={handleCloseSuccessModal} centered>
+      /* Success Modal */
+      /* <Modal show={showSuccessModal} onHide={handleCloseSuccessModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Success</Modal.Title>
         </Modal.Header>
@@ -432,30 +481,8 @@ const CreateClass = ({ goBack, onSuccess }) => {
             OK
           </Button>
         </Modal.Footer>
-      </Modal> */}
-
-      {/* Cancel Confirmation Modal */}
-      <Modal
-        show={showCancelConfirmation}
-        onHide={handleCloseCancelConfirmation}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Cancel Class Creation</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to cancel?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseCancelConfirmation}>
-            NO
-          </Button>
-          <Button variant="danger" onClick={handleConfirmCancel}>
-            YES
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </Container>
+      </Modal> */
   );
 };
-
 
 export default CreateClass;
