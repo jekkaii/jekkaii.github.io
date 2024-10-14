@@ -102,3 +102,27 @@ export const readClasses = async (req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+
+// Add this new function in your classController.js
+
+export const archiveClass = async (req, res) => {
+    try {
+        const { classCode } = req.body;
+        if (!classCode) {
+            return res.status(400).json({ success: false, message: "Class code is required" });
+        }
+        const existingClass = await ClassModel.findOne({ classCode });
+        if (!existingClass) {
+            return res.status(404).json({ success: false, message: "Class not found" });
+        }
+        
+        // Assuming your class model has an "archived" field
+        existingClass.archived = true; // or whatever logic you need to mark as archived
+        await existingClass.save();
+        
+        return res.status(200).json({ success: true, message: "Class archived successfully" });
+    } catch (error) {
+        console.error("Error archiving class:", error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};

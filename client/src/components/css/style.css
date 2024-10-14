@@ -952,6 +952,7 @@
   text-align: left;
   padding: 20px;
 }
+
 /* Media Queries */
 @media (max-width: 768px) {
   .attendance-container {
@@ -980,24 +981,53 @@
   }
 }
 
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px;
+  border-radius: 5px;
+  z-index: 1000; /* Ensure it is above other content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px; /* Adjust width as needed */
+  color: white;
+}
+
+.notification.success {
+  background-color: #28a745; /* Green for success */
+}
+
+.notification.error {
+  background-color: #c82333; /* Red for error */
+}
+
+.notification button {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+
 /* Class List styles */
-/* Container for the entire class list page */
 .class-list-container {
   padding: 18px;
   font-family: Arial, sans-serif;
-  max-width: 1x; /* Set a max width */
-  margin: 0 auto; /* Center the container */
-  height: calc(100vh - 80px); /* Ensure it doesn't touch the footer */
+  max-width: 1200px;
+  margin: 0 auto;
+  height: calc(100vh - 80px);
 }
 
-/* Main heading and subtext, centered */
 .heading-container {
   text-align: center;
   margin-bottom: 20px;
 }
 
 .heading-container h1 {
-  margin: 2% 0 2% 0;
+  margin: 2% 0;
   font-size: 24px;
   color: #004085;
   font-weight: 700;
@@ -1009,18 +1039,10 @@
   color: #004085;
 }
 
-/* Container for Create Class and Hamburger Menu Button */
 .menu-create-btn-container {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
-}
-
-.hamburger-menu {
-  font-size: 24px;
-  color: #004085;
-  margin-right: 15px;
-  cursor: pointer;
+  margin-bottom: 20px;
 }
 
 .create-class-btn {
@@ -1030,95 +1052,99 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .create-class-btn:hover {
   background-color: #0056b3;
 }
 
-/* Class section heading, centered */
-.class-section {
-  text-align: center;
-}
-
-.class-section h2 {
-  margin-bottom: 2%;
-  margin-top: 5%;
-  font-size: 20px;
-  color: #004085;
-  font-weight: 600;
-}
-
-/* Container for class cards, displayed in a row with even spacing */
-.class-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 20px;
-  justify-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Class card styling with fixed size and unique color schemes */
-.class-card {
-  background-color: #eef;
-  border-radius: 10px;
-  padding: 30px;
-  width: 95%;
-  height: 150px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+/* Subject grouping */
+.grouped-classes-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 40px;
 }
 
+.subject-section {
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.subject-heading {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.class-cards-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center; /* Center cards */
+}
+
+/* Class card styles */
 .class-card {
   background-color: #f0f4ff;
-  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 20px;
+  width: 550px; /* Increased width */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.class-info {
+  flex-grow: 1;
 }
 
 .class-info p {
-  margin: 0;
-  font-size: 16px;
+  margin: 5px 0;
+  font-size: 18px; /* Increased font size */
   color: #004085;
-  text-align: left;
-}
-
-.class-info p span {
-  color: #6c757d;
 }
 
 .visit-class-btn {
   background-color: #28a745;
   color: white;
-  padding: 7px 8px;
+  padding: 10px 12px; /* Increased padding */
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+  width: 90%;
 }
 
 .visit-class-btn:hover {
   background-color: #218838;
 }
 
-/* Archive and delete icons on the right side of the card */
 .class-actions {
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
+  gap: 10px; /* Add space between action buttons */
+  margin-top: 10px; /* Add space above the action buttons */
 }
 
-/* Archive and delete icons styling */
+
 .archive-icon,
 .trash-icon {
   color: white;
-  font-size: 35px;
+  font-size: 20px;
   cursor: pointer;
-  padding: 12px;
+  padding: 8px;
   border-radius: 5px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Archive icon specific styles */
 .archive-icon {
   background-color: #072649;
 }
@@ -1127,35 +1153,18 @@
   background-color: #0056b3;
 }
 
-/* Trash icon specific styles */
 .trash-icon {
   background-color: #dc3545;
-  margin-left: 15px;
+  margin-left: 10px;
 }
 
 .trash-icon:hover {
   background-color: #c82333;
 }
 
-/* Confirmation */
-#confirmationMessage {
-  font-family: "Inter", sans-serif;
-}
 
-#yes-btn,
-#no-btn {
-  padding: 8px 35px;
-  font-weight: bold;
-  font-family: "Inter", sans-serif;
-}
 
-#yes-btn {
-  background-color: var(--blue);
-}
 
-#no-btn {
-  background-color: var(--red);
-}
 
 /* Upload Class Picture */
 #uploadIcon {

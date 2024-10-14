@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    archiveClass,
     addClass,
     deleteClass,
     getClass,
@@ -15,5 +16,6 @@ router.delete("/classes", deleteClass);
 router.get("/classes/:id", getClass);
 router.put("/classes/:id", updateClass);
 router.get("/classes/", readClasses);
+router.patch("/classes/archive", archiveClass);
 
 export default router;

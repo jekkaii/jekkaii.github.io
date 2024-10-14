@@ -1,86 +1,24 @@
-import React, { useState, useEffect } from "react";
-import "../css/style.css";
-import { FaArchive, FaTrash, FaBars } from "react-icons/fa";
-import Confirmation from "./Confirmation"; // Import the Confirmation component
-import CreateClass from "./CreateClass";
-import { useClassStore } from "../../stores/classStore";
+import React, { useEffect, useState } from 'react';
+import '../css/style.css';
+import { FaArchive, FaTrash } from 'react-icons/fa';
+import Confirmation from './Confirmation'; 
+import CreateClass from './CreateClass';
+import Notification from './Notification'; // Import the notification component
+import { useClassStore } from "../../stores/classStore"; 
 
 const ClassList = () => {
-  const [classesData, setClassesData] = useState([]);
+  const { getClasses, classes, isLoading, error, deleteClass, archiveClass } = useClassStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
   const [showCreateClass, setShowCreateClass] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationType, setNotificationType] = useState(''); // 'success' or 'error'
 
-  // Fetch class details from the database when component mounts
   useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        // Uncomment below to fetch real data from your API
-        // const response = await fetch('/api/getClasses?professor=Cruz');
-        // const data = await response.json();
-        // setClasses(data.classes);
-
-        // Sample data (you can comment this out and replace it with actual fetch)
-        const sampleClasses = [
-          {
-            subject: "Information Management",
-            classCode: "IT221",
-            classCodes: ["9552", "9553"],
-            room: "D515",
-            days: ["M", "W", "F"],
-            startTime: "11:30 AM",
-            endTime: "12:30",
-          },
-          {
-            subject: "IT Security",
-            classCode: "IT322",
-            classCodes: ["9541", "9542"],
-            room: "D512",
-            days: ["T", "Th"],
-            startTime: "10:00 AM",
-            endTime: "11:30",
-          },
-        ];
-        setClassesData(sampleClasses);
-      } catch (error) {
-        console.error("Error fetching class data:", error);
-      }
-    };
-
-    fetchClasses();
-  }, []);
-
-  // // Class Store
-  // const { getClasses, classes, isLoading, error } = useClassStore();
-
-  //   useEffect(() => {
-  //     getClasses();
-  //   }, [getClasses]);
-
-  //   const [classesData, setClassesData] = useState([]);
-
-  //   useEffect(() => {
-  //     if (classes && classes.length > 0) { // Check if classes array is populated
-  //       setClassesData(
-  //         classes.map((item) => ({
-  //           id: item._id,
-  //           teacher: item.teacher,
-  //           students: item.students,
-  //           classCode: item.classCode,
-  //           courseNumber: item.courseNumber,
-  //           subject:  item.subject,
-  //           academicYear: item.academicYear,
-  //           term: item.term,
-  //           room: item.room,
-  //           days: item.days,
-  //           startTime: item.startTime,
-  //           endTime: item.endTime
-  //         }))
-  //       );
-  //     }
-  //   }, [classes]);
+    getClasses();
+  }, [getClasses]);
 
   const handleShowCreateClass = () => {
     setShowCreateClass(true);
@@ -93,62 +31,67 @@ const ClassList = () => {
   const handleActionClick = (action, classCode) => {
     setSelectedAction(action);
     setSelectedClass(classCode);
-
-    if (action === "archive") {
-      setModalMessage(
-        `Are you sure you want to archive the class of ${classCode}?`
-      );
-    } else if (action === "delete") {
-      setModalMessage(
-        `Are you sure you want to delete the class of ${classCode}?`
-      );
-    }
-
+    setModalMessage(
+      action === 'archive'
+        ? `Are you sure you want to archive the class with code ${classCode}?`
+        : `Are you sure you want to delete the class with code ${classCode}?`
+    );
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalMessage("");
+    setModalMessage('');
+  };
+
+  const closeNotification = () => {
+    setNotificationMessage('');
+    setNotificationType('');
   };
 
   const confirmAction = async () => {
     try {
-      if (selectedAction === "archive") {
-        // Perform archive action here (uncomment when API is ready)
-        // await fetch(`/api/archiveClass?classCode=${selectedClass}`, { method: 'POST' });
-      } else if (selectedAction === "delete") {
-        // Perform delete action here (uncomment when API is ready)
-        // await fetch(`/api/deleteClass?classCode=${selectedClass}`, { method: 'DELETE' });
+      if (selectedAction === 'archive') {
+        await archiveClass(selectedClass); // Call the archiveClass function
+        setNotificationMessage('Class archived successfully!'); // Set success message
+        setNotificationType('success');
+      } else if (selectedAction === 'delete') {
+        await deleteClass(selectedClass); // Call the deleteClass function
+        setNotificationMessage('Class deleted successfully!'); // Set success message
+        setNotificationType('success');
       }
-
-      // After action, update class list
-      // setClasses(classes.filter((cls) => cls.classCode !== selectedClass));
+      await getClasses(); // Refresh the classes after action
     } catch (error) {
-      console.error("Error performing action on class:", error);
+      console.error('Error performing action on class:', error);
+      setNotificationMessage('An error occurred. Please try again.'); // Set error message
+      setNotificationType('error');
     }
-
-    closeModal();
+    closeModal(); // Close the modal
   };
+  
+  // Group classes by subject
+  const groupedClasses = classes.reduce((acc, cls) => {
+    const subject = cls.subject;
+    if (!acc[subject]) {
+      acc[subject] = [];
+    }
+    acc[subject].push(cls);
+    return acc;
+  }, {});
 
   return (
     <div className="class-list-container">
-      {/* User Avatar */}
-      {/* <div className="user-avatar">
-        <div className="avatar-initials">JD</div>
-      </div> */}
-      {!showCreateClass && ( // if the createClass btn is clicked, do not display header
+      {!showCreateClass && (
         <>
-          {/* Main Heading */}
           <div className="heading-container">
             <h1>All Classes</h1>
             <p>Here are the list of the classes you handle</p>
           </div>
         </>
       )}
-      {/* Create Class and Hamburger Menu Button */}
+
       <div className="menu-create-btn-container">
-        {!showCreateClass && ( // if the createClass btn is clicked, do not display button
+        {!showCreateClass && (
           <button className="create-class-btn" onClick={handleShowCreateClass}>
             + Create Class
           </button>
@@ -158,71 +101,68 @@ const ClassList = () => {
           <CreateClass
             goBack={handleBackButtonClick}
             onSuccess={() => {
-              console.log("Class successfully created, refreshing window");
-              window.location.reload();
+              getClasses();
             }}
           />
         )}
       </div>
-      {/* TEMPORARY FIX LANG TO KASI DI SIYA KUMAKASYA SA DASHBOARD */}
-      {!showCreateClass && ( // if the createClass btn is clicked, do not display class section
+
+      {!showCreateClass && (
         <>
-          {/* Class Section */}
-          <div className="row">
-            {classesData.length > 0 ? (
-              classesData.map((cls) => (
-                <div key={cls.classCode} className="col-md-6 col-lg-4">
-                  <div className="card">
-                    <div className="card-header">
-                      <h5>
-                        {cls.subject} ({cls.classCode})
-                      </h5>
-                    </div>
-                    <div className="card-body">
-                      <p>CLASSCODE: {cls.classCodes.join(", ")}</p>
-                      <p>Room: {cls.room}</p>
-                      <p>
-                        Schedule: {cls.days.join(", ")} {cls.startTime} -{" "}
-                        {cls.endTime}
-                      </p>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <button className="btn btn-primary">View Class</button>
-                        <div>
-                          <button
-                            className="btn"
-                            onClick={() =>
-                              handleActionClick("archive", cls.classCodes[0])
-                            }
-                          >
-                            <FaArchive className="archive-icon" />
-                          </button>
-                          <button
-                            className="btn"
-                            onClick={() =>
-                              handleActionClick("delete", cls.classCodes[0])
-                            }
-                          >
-                            <FaTrash className="trash-icon" />
-                          </button>
+          {isLoading ? (
+            <p>Loading classes...</p>
+          ) : error ? (
+            <p>Error fetching classes: {error.message}</p>
+          ) : Object.keys(groupedClasses).length > 0 ? (
+            <div className="grouped-classes-container">
+              {Object.keys(groupedClasses).map((subject) => (
+                <div key={subject} className="subject-section">
+                  <h2 className="subject-heading">{subject}</h2>
+                  <div className="class-cards-container">
+                    {groupedClasses[subject].map((cls) => (
+                      <div key={cls.classCode} className="class-card">
+                        <div className="class-info">
+                          <p>Class Code: {cls.classCode}</p>
+                          <p>Room: {cls.room}</p>
+                          <p>Academic Year: {cls.academicYear}</p>
+                          <p>Term: {cls.term}</p>
+                          <p>Schedule: {cls.days.join(', ')} {cls.startTime} - {cls.endTime}</p>
+                        </div>
+                        <div className="class-actions">
+                          <button className="visit-class-btn">View Class</button>
+                          <FaArchive
+                            className="archive-icon"
+                            onClick={() => handleActionClick('archive', cls.classCode)}
+                          />
+                          <FaTrash
+                            className="trash-icon"
+                            onClick={() => handleActionClick('delete', cls.classCode)}
+                          />
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="col-md-12">
-                <p className="text-center">No classes available.</p>
-              </div>
-            )}
-          </div>
-          {/* Confirmation Modal */}
+              ))}
+            </div>
+          ) : (
+            <p>No classes available.</p>
+          )}
+
           <Confirmation
             isOpen={isModalOpen}
             onClose={closeModal}
             onConfirm={confirmAction}
             message={modalMessage}
           />
+
+          {notificationMessage && (
+            <Notification 
+              message={notificationMessage} 
+              type={notificationType} 
+              onClose={closeNotification} 
+            />
+          )}
         </>
       )}{" "}
     </div>
