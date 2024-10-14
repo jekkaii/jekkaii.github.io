@@ -60,36 +60,12 @@ function App() {
     checkAuthentication();
   }, [checkAuthentication]);
 
+  if (isLoading) {
+    return <SpinnerLoader />;
+  }
+
   return (
     <>
-      {/* <div> */}
-      {/* <Header /> */}
-      {/* <div className="d-flex row h-100 w-100 overflow-hidden">
-          <div className="d-flex col-2">
-            <Sidebar />
-          </div>
-          <div className="col-10"> */}
-      {/* Insert nyo under dito ung mga itetest nyong UI* or uncomment nyo lang */}
-      {/* <Home></Home> */}
-      {/* <CreateClass> </CreateClass> */}
-      {/* <ManageUsers></ManageUsers> */}
-      {/* <ManageModels></ManageModels> */}
-      {/* <AddStudent></AddStudent> */}
-      {/* <UploadClassPicture></UploadClassPicture> */}
-      {/*<Profile></Profile>*/}
-      {/* <AddUser></AddUser> */}
-      {/* <EditUser></EditUser> */}
-      {/* <AttendanceTabs></AttendanceTabs> */}
-      {/* <ClassList></ClassList> */}
-
-      {/* <Confirmation></Confirmation> */}
-      {/* <AddStudent></AddStudent> */}
-      {/* <ClassList></ClassList> */}
-      {/* <ManageStudents></ManageStudents> */}
-      {/* </div> */}
-      {/* </div> */}
-      {/* <Footer /> */}
-      {/* </div>  */}
       <Router>
         <div className="container-fluid p-0">
           <div className="d-flex flex-row bd-highlight mb-3">
@@ -111,14 +87,10 @@ function App() {
                 <Route
                   path="/teacher"
                   element={
-                    isLoading ? (
-                      <SpinnerLoader />
-                    ) : (
-                      <ProtectedRoute>
-                        <LogoutButton />
-                        <ClassList />
-                      </ProtectedRoute>
-                    )
+                    <ProtectedRoute>
+                      <LogoutButton />
+                      <ClassList />
+                    </ProtectedRoute>
                   }
                 ></Route>
                 <Route
@@ -138,14 +110,10 @@ function App() {
                 <Route
                   path="/admin"
                   element={
-                    isLoading ? (
-                      <SpinnerLoader />
-                    ) : (
-                      <ProtectedRoute>
-                        <LogoutButton />
-                        <ManageUsers />
-                      </ProtectedRoute>
-                    )
+                    <ProtectedRoute>
+                      <LogoutButton />
+                      <ManageUsers />
+                    </ProtectedRoute>
                   }
                 ></Route>
               </Routes>

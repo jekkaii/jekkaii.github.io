@@ -5,29 +5,32 @@ const API_URL = "http://localhost:3001/api/auth";
 
 axios.defaults.withCredentials = true; // set withCredentials to true
 
+// This store manages the authentication state of the user
 export const useAuthStore = create((set) => ({
-  user: null,
-  token: null,
-  error: null,
-  isLoading: false,
-  authenticated: false,
-  isAdmin: false,
-  isTeacher: false,
+  user: null, // The user object obtained from the server
+  token: null, // The authentication token obtained from the server
+  error: null, // Any error messages that occur during authentication
+  isLoading: false, // Whether the login or logout request is in progress
+  isLoggingIn: false, // Whether the login request is in progress
+  authenticated: false, // Whether the user is authenticated
+  isAdmin: false, // Whether the user is an admin
+  isTeacher: false, // Whether the user is a teacher
+
+  // Set the loading state to the given value
   setLoading: (isLoading) => set({ isLoading }),
-  // setAuthenticated: () => set((state) => ({ authenticated: true })),
-  //   setUser: (user) => set({ user }),
-  //   setToken: (token) => set({ token }),
-  //   setError: (error) => set({ error }),
+
+  // Log the user in
   login: async (username, password) => {
-    set({ isLoading: true });
+    set({ isLoggingIn: true });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Make the login request to the server
       const response = await axios.post(`${API_URL}/`, {
         username,
         password,
       });
       const { user, token } = response.data;
       if (user.role === "admin") {
+        // If the user is an admin, set the corresponding state
         set({
           user,
           token,
@@ -35,9 +38,10 @@ export const useAuthStore = create((set) => ({
           isAdmin: true,
           isTeacher: false,
           error: null,
-          isLoading: false,
+          isLoggingIn: false,
         });
       } else {
+        // If the user is a teacher, set the corresponding state
         set({
           user,
           token,
@@ -45,23 +49,29 @@ export const useAuthStore = create((set) => ({
           isAdmin: false,
           isTeacher: true,
           error: null,
-          isLoading: false,
+          isLoggingIn: false,
         });
       }
     } catch (error) {
+      // If there is an error, set the error state
       set({
         success: false,
         error: error.response.data.message,
-        isLoading: false,
+        isLoggingIn: false,
       });
     }
   },
+
+  // Log the user out
   logout: async () => {
     set({ isLoading: true });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // This delay is for testing purposes
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Make the logout request to the server
       const response = await axios.post(`${API_URL}/logout`);
       if (response.status === 200) {
+        // If the logout is successful, reset the state
         set({
           user: null,
           token: null,
@@ -73,6 +83,7 @@ export const useAuthStore = create((set) => ({
         });
       }
     } catch (error) {
+      // If there is an error, set the error state
       set({
         success: false,
         error: error.response.data.message,
@@ -81,14 +92,19 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  // Check if the user is authenticated
   checkAuthentication: async () => {
     set({ isLoading: true });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const response = await axios.get(`${API_URL}/check-auth`);
+      // This delay is for testing purposes
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const response = await axios.get(`${API_URL}/check-auth`, {
+        withCredentials: true,
+      });
       if (response.status === 200) {
         const { user, token } = response.data;
         if (user.role === "admin") {
+          // If the user is an admin, set the corresponding state
           set({
             user,
             token,
@@ -99,6 +115,7 @@ export const useAuthStore = create((set) => ({
             isLoading: false,
           });
         } else {
+          // If the user is a teacher, set the corresponding state
           set({
             user,
             token,
@@ -111,6 +128,7 @@ export const useAuthStore = create((set) => ({
         }
       }
     } catch (error) {
+      // If there is an error, set the error state
       set({
         success: false,
         error: error.response.data.message,
@@ -119,6 +137,7 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  // Check if the user is an admin
   checkAdmin: async () => {
     try {
       const response = await axios.get(`${API_URL}/check-admin`);

@@ -15,7 +15,7 @@ export default function LoginForm() {
 
   // Initialize authStore
   const { login } = useAuthStore();
-  const { isLoading, error } = useAuthStore();
+  const { isLoggingIn, error, isLoading } = useAuthStore();
 
   const handleLogin = async () => {
     await login(idNumber, password);
@@ -110,7 +110,7 @@ export default function LoginForm() {
           {/* Login button */}
           <Form.Item className="mb-5">
             <Button block type="primary" htmlType="submit" size="large">
-              {isLoading ? <SpinnerLoaderV2 /> : "Login"}
+              {isLoggingIn ? <SpinnerLoaderV2 /> : "Login"}
             </Button>
           </Form.Item>
 
