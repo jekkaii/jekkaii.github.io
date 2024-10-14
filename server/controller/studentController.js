@@ -1,6 +1,5 @@
-
 import { StudentModel } from "../model/Student.js";
-import * as xlsx from 'xlsx';
+// import * as xlsx from 'xlsx';
 //import multer from 'multer';
 
 export const addStudent = async (req, res) => {
@@ -170,22 +169,35 @@ export const deleteStudents = async (req, res) => {
 export const importFile = async (req, res) => {
   const file = req.files ? req.files.file : undefined;
   if (!file) {
-    return res.status(400).json({ success: false, message: "No file uploaded" });
+    return res
+      .status(400)
+      .json({ success: false, message: "No file uploaded" });
   }
 
   try {
     const workbook = xlsx.readFile(file.tempFilePath);
-    const worksheet = workbook.Sheets['Sheet1'];
+    const worksheet = workbook.Sheets["Sheet1"];
     const data = xlsx.utils.sheet_to_json(worksheet);
 
-    const existingIds = await StudentModel.distinct('idNumber');
-    const duplicateIds = data.filter(item => existingIds.includes(item.idNumber));
+    const existingIds = await StudentModel.distinct("idNumber");
+    const duplicateIds = data.filter((item) =>
+      existingIds.includes(item.idNumber)
+    );
     if (duplicateIds.length) {
-      return res.status(400).json({ success: false, message: `The following idNumbers are already in the database: ${duplicateIds.map(item => item.idNumber).join(', ')}` });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: `The following idNumbers are already in the database: ${duplicateIds
+            .map((item) => item.idNumber)
+            .join(", ")}`,
+        });
     }
 
     await StudentModel.insertMany(data);
-    return res.status(200).json({ success: true, message: "File imported successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "File imported successfully" });
   } catch (error) {
     console.error("Error importing file:", error);
     return res.status(400).json({ success: false, message: error.message });

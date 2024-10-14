@@ -1018,7 +1018,6 @@ h2 {
   margin-left: 10px;
 }
 
-
 /* Class List styles */
 .class-list-container {
   padding: 18px;
@@ -1137,7 +1136,6 @@ h2 {
   margin-top: 10px; /* Add space above the action buttons */
 }
 
-
 .archive-icon,
 .trash-icon {
   color: white;
@@ -1168,10 +1166,6 @@ h2 {
 .trash-icon:hover {
   background-color: #c82333;
 }
-
-
-
-
 
 /* Upload Class Picture */
 #uploadIcon {
@@ -1418,20 +1412,6 @@ h2 {
   font-weight: bold;
   margin-top: 5px;
   margin-bottom: 5px;
-}
-
-.forgot-password {
-  color: #2a1f7e;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: medium;
-}
-
-.forgot-password:hover {
-  color: #402fbc;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: medium;
 }
 
 .hr-lines:before {

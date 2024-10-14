@@ -4,24 +4,20 @@ import { MDBContainer } from "mdb-react-ui-kit";
 import { useAuthStore } from "../stores/authStore";
 import facelogo from "../components/resources/face.png"; // Update the path to your logo image
 import "../components/css/style.css"; // Import the CSS file
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
 import SpinnerLoaderV2 from "../components/LoginSipinner";
-import { Button, ConfigProvider, Input } from "antd";
-import { LockFilled, UserOutlined } from "@ant-design/icons";
+import { Button, ConfigProvider, Input, Form, Flex, Alert } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import google from "../components/resources/google.png";
 
 export default function LoginForm() {
   const [idNumber, setIdNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   // Initialize authStore
   const { login } = useAuthStore();
   const { isLoading, error } = useAuthStore();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     await login(idNumber, password);
   };
 
@@ -34,11 +30,14 @@ export default function LoginForm() {
       }}
     >
       <MDBContainer className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100 no-shadow">
+        {/* Logo */}
         <div className="d-flex w-100 mb-4" style={{ maxWidth: "400px" }}>
           <img src={facelogo} alt="University Logo" className="img-fluid" />
         </div>
+
+        {/* Login header */}
         <div
-          className="d-flex w-100 text-center row mb-2"
+          className="d-flex w-100 text-center row mb-4"
           style={{ maxWidth: "400px" }}
         >
           <h1 className="p-0">Welcome Back!</h1>
@@ -47,81 +46,75 @@ export default function LoginForm() {
           </h6>
         </div>
 
-        <form
-          onSubmit={handleLogin}
+        {/* Login form */}
+        <Form
+          layout="vertical"
+          onFinish={handleLogin}
           className="w-100"
           style={{ maxWidth: "400px" }}
+          name="login"
+          initialValues={{
+            remember: true,
+          }}
         >
-          {error && (
-            <div
-              className="alert alert-danger p-2 mb-0 d-flex align-items-center animate__animated animate__fadeInDown"
-              role="alert"
-              style={{ animationDuration: "0.5s" }}
-            >
-              <div>{error}</div>
-            </div>
+          {error && !isLoading && (
+            <Alert className="mb-4" message={error} type="error" showIcon />
           )}
-          {/* ID Number Input */}
-          <div className="flex col mb-4">
-            <div className="position-relative">
-              <label htmlFor="idNumber" className="form-label">
-                Username<span className="text-danger"> *</span>
-              </label>
-              <Input
-                onChange={(e) => setIdNumber(e.target.value)}
-                id="idNumber"
-                size="large"
-                value={idNumber}
-                prefix={<UserOutlined style={{ color: "#2a1f7e" }} />}
-              />
-            </div>
-            {/* Password Input with Toggle */}
-            <div className="position-relative">
-              <label htmlFor="password" className="form-label">
-                Password<span className="text-danger"> *</span>
-              </label>
-              <Input
-                onChange={(e) => setPassword(e.target.value)}
-                size="large"
-                id="password"
-                prefix={<LockFilled style={{ color: "#2a1f7e" }} />}
-                type={showPassword ? "text" : "password"}
-                value={password}
-              />
-              <span
-                className="password-toggle position-absolute"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  top: "78%",
-                  right: "10px",
-                  cursor: "pointer",
-                  transform: "translateY(-50%)",
-                  color: "#007bff",
-                }}
-              >
-                {showPassword ? (
-                  <FaEye color="#191970" />
-                ) : (
-                  <FaEyeSlash color="#191970" />
-                )}
-              </span>
-            </div>
-          </div>
 
-          {/* Forgot Password */}
-          <div className="mb-4">
-            <Link to="#" className="forgot-password">
+          {/* Username input */}
+
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Username!",
+              },
+            ]}
+          >
+            <Input
+              onChange={(e) => setIdNumber(e.target.value)}
+              prefix={<UserOutlined style={{ color: "#2a1f7e" }} />}
+              size="large"
+            />
+          </Form.Item>
+          {/* Password input */}
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+          >
+            <Input.Password
+              className=""
+              prefix={<LockOutlined style={{ color: "#2a1f7e" }} />}
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              size="large"
+              security="true"
+            />
+          </Form.Item>
+
+          {/* Forgot password link */}
+          <Flex justify="end" align="center" className="mb-4">
+            <Link to="#" className="text-decoration-none fw-bold">
               Forgot Password?
             </Link>
-          </div>
+          </Flex>
 
-          {/* Login Button */}
-          <div className="d-grid gap-2 mb-5">
-            <Button type="primary" htmlType="submit" size="large">
+          {/* Login button */}
+          <Form.Item className="mb-5">
+            <Button block type="primary" htmlType="submit" size="large">
               {isLoading ? <SpinnerLoaderV2 /> : "Login"}
             </Button>
-          </div>
+          </Form.Item>
 
+          {/* Terms of Service and Privacy Policy links */}
           <div className="text-center mb-5">
             <p>
               By signing in, you agree to our
@@ -136,6 +129,7 @@ export default function LoginForm() {
             </p>
           </div>
 
+          {/* Sign in with Google button */}
           <hr className="mb-5" />
           <div className="d-grid gap-2 mb-5">
             <Button color="primary" variant="outlined" size="large">
@@ -143,7 +137,7 @@ export default function LoginForm() {
               Sign in with Google
             </Button>
           </div>
-        </form>
+        </Form>
       </MDBContainer>
     </ConfigProvider>
   );
