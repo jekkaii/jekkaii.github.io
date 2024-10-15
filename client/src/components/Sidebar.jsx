@@ -1,37 +1,24 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, props } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../components/css/style.css";
 import faceImage from "../components/resources/face.png";
 import faceImageInverted from "../components/resources/face-inverted.png";
 import { useAuthStore } from "../stores/authStore";
-import {
-  Layout,
-  Menu,
-  Button,
-  Flex,
-  ConfigProvider,
-  Divider,
-  Switch,
-} from "antd";
+import { Layout, Menu, Button, Flex, ConfigProvider, Divider } from "antd";
 const { Sider } = Layout;
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-
-import { FaHome, FaClipboardList, FaFileAlt } from "react-icons/fa";
+import { FaHome, FaClipboardList, FaSignOutAlt } from "react-icons/fa";
 
 function Sidebar() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { isAdmin, isTeacher } = useAuthStore();
+  const { isAdmin, isTeacher, logout } = useAuthStore(); // Include logout from authStore
   const [collapsed, setCollapsed] = useState(false);
   const [theme, setTheme] = useState("light");
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
-
-  const changeTheme = (value) => {
-    setTheme(value ? "dark" : "light");
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await logout(); // Call logout from the auth store
   };
 
   return (
@@ -41,27 +28,21 @@ function Sidebar() {
           theme === "dark"
             ? {
                 token: {
-                  // Seed Token
                   colorPrimary: "#3628A3",
                   colorLink: "#2a1f7e",
                   colorLinkActive: "#2a1f7e",
                   colorLinkHover: "#2a1f7e",
                   colorText: "#ffffff",
-
-                  // Alias Token
                   colorBgContainer: "#141414",
                 },
               }
             : {
                 token: {
-                  // Seed Token
                   colorPrimary: "#3628A3",
                   colorLink: "#2a1f7e",
                   colorLinkActive: "#2a1f7e",
                   colorLinkHover: "#2a1f7e",
                   colorText: "gray",
-
-                  // Alias Token
                   colorBgContainer: "#ffffff",
                 },
               }
@@ -106,7 +87,7 @@ function Sidebar() {
               </Button>
             </Flex>
 
-            <Flex style={{ margin: "0px 10px 0px 10px" }}>
+            <Flex style={{ margin: "10px 10px 20px 10px" }}>
               <Divider style={{ margin: 0 }} />
             </Flex>
 
@@ -117,7 +98,7 @@ function Sidebar() {
               }}
               theme={theme}
               mode="inline"
-              defaultSelectedKeys={["2"]}
+              defaultSelectedKeys={["1"]}
               items={[
                 {
                   key: "1",
@@ -161,57 +142,35 @@ function Sidebar() {
                 }
               )}
             />
-            {/* Theme Toggle */}
-            {/* 
-            <Flex style={{ margin: "0px 10px 0px 10px" }}>
+
+            {/* Divider and Logout Button */}
+            <Flex style={{ margin: "10px 10px 0px 10px" }}>
               <Divider />
             </Flex>
 
-            <Flex vertical gap={5}>
-              <Flex justify="center" gap={5}>
-                {!collapsed && <SunFilled style={{ fontSize: "20px" }} />}
-                <Switch onChange={changeTheme} />
-                {!collapsed && <MoonFilled style={{ fontSize: "20px" }} />}
-              </Flex>
-            </Flex> */}
+            <Flex justify="center" style={{ padding: "10px 12px 10px 12px" }}>
+              {/* Logout Button Styling */}
+              <Button
+                type="primary"
+                icon={<FaSignOutAlt style={{ fontSize: "16px" }} />}
+                onClick={handleLogout}
+                style={{
+                  display: "flex",
+                  alignItems: "left",
+                  justifyContent: "center",
+                  transition: "width 0.6s",
+                  whiteSpace: "nowrap",
+                  ...(collapsed
+                    ? { width: "50px", height: "auto", padding: "10px" }
+                    : { width: "auto", height: "40px", padding: "10px 50px" }),
+                }}
+              >
+                {!collapsed && "Logout"}
+              </Button>
+            </Flex>
           </Flex>
         </Sider>
       </ConfigProvider>
-      {/* Topbar with Profile Dropdown */}
-      {/* <div className="d-flex justify-content-between align-items-center p-3">
-        <div className="dropdown">
-          <button
-            className="btn btn-secondary dropdown-toggle"
-            type="button"
-            onClick={toggleDropdown}
-            aria-expanded={dropdownOpen}
-          >
-            <FaUserCircle className="me-2" /> My Profile
-          </button>
-          {dropdownOpen && (
-            <ul className="dropdown-menu dropdown-menu-right">
-              <li>
-                <a className="dropdown-item" href="#">
-                  Profile
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="#">
-                  Settings
-                </a>
-              </li>
-              <li>
-                <hr className="dropdown-divider" />
-              </li>
-              <li>
-                <a className="dropdown-item" href="#">
-                  Logout
-                </a>
-              </li>
-            </ul>
-          )}
-        </div>
-      </div> */}
     </>
   );
 }

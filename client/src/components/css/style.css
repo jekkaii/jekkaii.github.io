@@ -8,20 +8,6 @@
     url("../resources/source-serif-pro-regular.ttf") format("truetype");
 }
 
-body,
-p {
-  font-family: "Source-Serif-Pro", sans-serif;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Inter", sans-serif;
-}
-
 :root {
   --blue: #2a1f7e;
   --green: #277326;
@@ -457,73 +443,6 @@ h6 {
   color: #939393;
 }
 
-/* Footer */
-/* Footer Container */
-.footer {
-  background-color: #efefef; /* Dark background */
-  color: #191970; /* White text color */
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: center;
-  margin-top: 3%;
-}
-
-/* Footer Top Section */
-.footer-top {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  font-size: 16px;
-}
-
-/* Footer Navigation */
-.footer-nav a {
-  color: #191970;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 0 20px;
-}
-
-.footer-nav a:hover {
-  color: #abbeff; /* Hover effect for links */
-}
-
-/* Footer Bottom Section */
-.footer-bottom {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 10px 10px;
-  font-size: 14px;
-  color: #191970;
-  border-top: 1px solid #666;
-}
-
-.footer-bottom p {
-  margin: 0;
-  color: #191970;
-}
-
-.footer-contact {
-  display: flex;
-  align-items: center;
-}
-
-.footer-contact .headset-icon {
-  content: url("path/to/your-headset-icon.png"); /* Replace with the actual path */
-  width: 18px;
-  height: 18px;
-  margin-right: 5px;
-}
-
-.footer-contact span,
-.footer-contact strong {
-  color: #191970;
-}
-
-.footer-contact strong {
-  margin-left: 5px;
-  font-weight: bold;
-}
 
 /* Table Styles */
 .user-table {
@@ -830,14 +749,15 @@ h6 {
 .attendance-header {
   font-size: 28px;
   font-weight: bold;
-  color: #2a1f7e;
+  color: #2d007a;
   margin-bottom: 30px;
   text-align: center;
   font-family: "Inter", sans-serif;
 }
 
 .form-label {
-  color: #2a1f7e;
+  color: #2d007a;
+  font-weight: bold;
   margin-bottom: 10px;
   margin-top: 25px;
   font-family: "Inter", sans-serif;
@@ -898,7 +818,7 @@ h6 {
   top: 20px;
   font-size: 24px;
   text-decoration: none;
-  color: #2a1f7e;
+  color: #2d007a;
   background-color: #fff;
   padding: 8px;
   border-radius: 5px;
@@ -942,14 +862,14 @@ h6 {
 }
 
 .schedule-picker .selected {
-  background-color: #2a1f7e;
+  background-color: #2d007a;
   color: #fff;
 }
 
 .schedule-picker .unselected {
   background-color: #f8f9fa;
-  color: #2a1f7e;
-  border: 1px solid #2a1f7e;
+  color: #2d007a;
+  border: 1px solid #2d007a;
 }
 
 .modal-footer .btn-danger {
@@ -1023,6 +943,7 @@ h6 {
   cursor: pointer;
   margin-left: 10px;
 }
+
 
 /* Class List styles */
 .class-list-container {
@@ -1142,6 +1063,7 @@ h6 {
   margin-top: 10px; /* Add space above the action buttons */
 }
 
+
 .archive-icon,
 .trash-icon {
   color: white;
@@ -1172,6 +1094,10 @@ h6 {
 .trash-icon:hover {
   background-color: #c82333;
 }
+
+
+
+
 
 /* Upload Class Picture */
 #uploadIcon {
@@ -1420,37 +1346,70 @@ h6 {
   margin-bottom: 5px;
 }
 
-.hr-lines:before {
-  content: " ";
-  display: block;
-  height: 2px;
-  width: 130px;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  background: red;
-}
-
-hr {
-  border: none;
-  border-top: 3px double #000000;
-  color: #090909;
-  overflow: visible;
+/* Footer */
+/* Footer Container */
+.footer {
+  background-color: #efefef; /* Dark background */
+  color: #191970; /* White text color */
+  padding-left: 20px;
+  padding-right: 20px;
   text-align: center;
-  height: 5px;
+  margin-top: 3%;
 }
 
-hr.signinwith::after {
-  background: #ffffff;
-  content: "OR";
-  padding: 0 4px;
-  position: relative;
-  top: -13px;
+/* Footer Top Section */
+.footer-top {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  font-size: 16px;
 }
 
-.siderStyle {
-  text-align: "center";
-  line-height: "120px";
-  color: "#fff";
-  background: "#1677ff";
+/* Footer Navigation */
+.footer-nav a {
+  color: #191970;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0 20px;
+}
+
+.footer-nav a:hover {
+  color: #abbeff; /* Hover effect for links */
+}
+
+/* Footer Bottom Section */
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 10px;
+  font-size: 14px;
+  color: #191970;
+  border-top: 1px solid #666;
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: #191970;
+}
+
+.footer-contact {
+  display: flex;
+  align-items: center;
+}
+
+.footer-contact .headset-icon {
+  content: url("path/to/your-headset-icon.png"); 
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+}
+
+.footer-contact span,
+.footer-contact strong {
+  color: #191970;
+}
+
+.footer-contact strong {
+  margin-left: 5px;
+  font-weight: bold;
 }
