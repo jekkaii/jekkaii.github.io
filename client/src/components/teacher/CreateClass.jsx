@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, Container, Row, Col, Modal} from "react-bootstrap";
+import { IoCaretBackCircleSharp } from "react-icons/io5";
 import { TimePicker } from "antd";import { useClassStore } from "../../stores/classStore";
 
 const { RangePicker } = TimePicker;
@@ -115,24 +116,23 @@ const CreateClass = ({ goBack, onSuccess }) => {
       className="attendance-container"
       style={{ height: "100vh", position: "relative" }}
     >
-      {/* Navigation Buttons */}
-      <Button
-        variant="link"
-        onClick={goBack}
-        style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          fontSize: "24px",
-          textDecoration: "none",
-          color: "#000",
-          backgroundColor: "#f0f0f0",
-          padding: "8px",
-          borderRadius: "50%",
-        }}
-      >
-        ←
-      </Button>
+ {/* Navigation Buttons */}
+<Button
+  variant="link"
+  onClick={goBack}
+  style={{
+    position: "absolute",
+    top: "20px",
+    left: "25px",
+    fontSize: "35px",
+    textDecoration: "none",
+    color: "#191970",
+    padding: "1px 5px",
+  }}
+>
+  <IoCaretBackCircleSharp />
+</Button>
+
 
       {error && (
         <div

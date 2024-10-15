@@ -736,6 +736,7 @@
   max-width: 1200px;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .attendance-form {
@@ -952,6 +953,7 @@
   max-width: 1200px;
   margin: 0 auto;
   height: calc(100vh - 80px);
+
 }
 
 .heading-container {
