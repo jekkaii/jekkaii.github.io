@@ -6,14 +6,27 @@ import "../components/css/style.css";
 import faceImage from "../components/resources/face.png";
 import faceImageInverted from "../components/resources/face-inverted.png";
 import { useAuthStore } from "../stores/authStore";
-import { Layout, Menu, Button, Flex, ConfigProvider, Divider } from "antd";
+import {
+  Layout,
+  Menu,
+  Button,
+  Flex,
+  ConfigProvider,
+  Divider,
+  Typography,
+} from "antd";
 const { Sider } = Layout;
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { FaHome, FaClipboardList, FaSignOutAlt } from "react-icons/fa";
+import {
+  LeftOutlined,
+  RightOutlined,
+  AppstoreOutlined,
+  RobotOutlined,
+  BookOutlined,
+} from "@ant-design/icons";
 
 function Sidebar() {
   const { isAdmin, isTeacher, logout } = useAuthStore(); // Include logout from authStore
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [theme, setTheme] = useState("light");
 
   const handleLogout = async (e) => {
@@ -24,37 +37,21 @@ function Sidebar() {
   return (
     <>
       <ConfigProvider
-        theme={
-          theme === "dark"
-            ? {
-                token: {
-                  colorPrimary: "#3628A3",
-                  colorLink: "#2a1f7e",
-                  colorLinkActive: "#2a1f7e",
-                  colorLinkHover: "#2a1f7e",
-                  colorText: "#ffffff",
-                  colorBgContainer: "#141414",
-                },
-              }
-            : {
-                token: {
-                  colorPrimary: "#3628A3",
-                  colorLink: "#2a1f7e",
-                  colorLinkActive: "#2a1f7e",
-                  colorLinkHover: "#2a1f7e",
-                  colorText: "gray",
-                  colorBgContainer: "#ffffff",
-                },
-              }
-        }
+        theme={{
+          components: {
+            Menu: {
+              collapsedIconSize: 17,
+            },
+          },
+        }}
       >
         <Sider
+          width={180}
+          collapsedWidth={75}
           trigger={null}
           theme={theme}
           style={{
-            margin: "20px 10px",
-            borderRadius: "10px",
-            boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
+            boxShadow: "1px 0px 5px 0px rgba(0, 0, 0, 0.1)",
           }}
           collapsible
           collapsed={collapsed}
@@ -65,7 +62,7 @@ function Sidebar() {
               gap={10}
               justify="center"
               align="middle"
-              style={{ marginTop: 24, marginBottom: 24 }}
+              style={{ marginTop: 24, marginBottom: 5 }}
             >
               <img
                 src={theme === "light" ? faceImage : faceImageInverted}
@@ -74,12 +71,12 @@ function Sidebar() {
                   transition:
                     "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), display 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                   display: collapsed ? "none" : "block",
-                  width: collapsed ? 0 : 140,
+                  width: collapsed ? 0 : 100,
                   overflow: "hidden",
                 }}
               />
               <Button
-                size={collapsed ? "large" : "small"}
+                size={collapsed ? "medium" : "small"}
                 type="primary"
                 onClick={() => setCollapsed(!collapsed)}
               >
@@ -93,35 +90,33 @@ function Sidebar() {
 
             {/* Menu Items */}
             <Menu
-              style={{
-                padding: "10px 10px 0px 10px",
-              }}
+              style={{ padding: "0 10px 0 10px" }}
               theme={theme}
               mode="inline"
               defaultSelectedKeys={["1"]}
               items={[
                 {
                   key: "1",
-                  icon: <FaHome style={{ fontSize: "19px" }} />,
+                  icon: <AppstoreOutlined />,
                   label: (
                     <Link className="text-decoration-none" to="/dashboard">
-                      Home
+                      Dashboard
                     </Link>
                   ),
                 },
               ].concat(
                 isTeacher && {
                   key: "2",
-                  icon: <FaClipboardList style={{ fontSize: "19px" }} />,
+                  icon: <BookOutlined />,
                   label: (
                     <Link className="text-decoration-none" to="/teacher">
-                      Manage Classes
+                      Classes
                     </Link>
                   ),
                 },
                 isAdmin && {
                   key: "2",
-                  icon: <FaClipboardList style={{ fontSize: "19px" }} />,
+                  icon: <BookOutlined />,
                   label: (
                     <Link className="text-decoration-none" to="/admin">
                       Manage Users
@@ -130,7 +125,7 @@ function Sidebar() {
                 },
                 isAdmin && {
                   key: "3",
-                  icon: <FaClipboardList style={{ fontSize: "19px" }} />,
+                  icon: <RobotOutlined />,
                   label: (
                     <Link
                       className="text-decoration-none"
@@ -142,7 +137,6 @@ function Sidebar() {
                 }
               )}
             />
-
           </Flex>
         </Sider>
       </ConfigProvider>

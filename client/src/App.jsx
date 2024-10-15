@@ -21,8 +21,9 @@ import ClassList from "./components/teacher/ClassList";
 import SpinnerLoader from "./components/SpinnerLoader";
 import ProfileDropdown from "./components/teacher/Dropdown";
 import Profile from "./components/teacher/Profile";
-import { Layout, Switch, ConfigProvider, Flex } from "antd";
+import { Layout, Switch, ConfigProvider, Flex, Typography } from "antd";
 const { Content, Header: HeaderLayout } = Layout;
+const { Paragraph, Text } = Typography;
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -48,7 +49,7 @@ const RedirectToHome = ({ children }) => {
 
 function App() {
   const { checkAuthentication } = useAuthStore();
-  const { isLoading, setLoading, authenticated } = useAuthStore();
+  const { isLoading, setLoading, authenticated, user } = useAuthStore();
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
@@ -65,11 +66,12 @@ function App() {
         theme={{
           token: {
             // Seed Token
-            colorPrimary: "#3628A3",
+            colorPrimary: "#2a1f7e",
             colorLink: "#2a1f7e",
             colorLinkActive: "#2a1f7e",
             colorLinkHover: "#2a1f7e",
-            colorText: "gray",
+            colorText: "#010103",
+            colorTextSecondary: "gray",
 
             // Alias Token
             colorBgContainer: "#ffffff",
@@ -78,17 +80,6 @@ function App() {
       >
         <Router>
           <Layout>
-            {authenticated && (
-              <HeaderLayout style={{ backgroundColor: "#ffffff" }}>
-                <Flex
-                  style={{ padding: "20px", width: "100%" }}
-                  align="center"
-                  justify="end"
-                >
-                  <ProfileDropdown />
-                </Flex>
-              </HeaderLayout>
-            )}
             <Layout>
               {/* Sidebar Component */}
               {authenticated && (
@@ -98,10 +89,50 @@ function App() {
               )}
 
               <Layout>
+                {authenticated && (
+                  <HeaderLayout
+                    style={{
+                      backgroundColor: "#ffffff",
+                      minHeight: "110px",
+                      padding: 0,
+                    }}
+                  >
+                    <Flex
+                      justify="space-between"
+                      align="center"
+                      style={{ height: "100%" }}
+                    >
+                      <Flex vertical style={{ padding: "20px" }}>
+                        <Typography.Title
+                          type="primary"
+                          level={3}
+                          style={{ margin: 0 }}
+                        >
+                          <small>Welcome,</small>
+                          <span className="fw-bold"> {user.firstName}</span>
+                        </Typography.Title>
+                        <Typography.Text
+                          type="secondary"
+                          level={3}
+                          style={{ margin: 0 }}
+                        >
+                          Lets take a look at your activity today
+                        </Typography.Text>
+                      </Flex>
+                      <Flex
+                        style={{ padding: "20px" }}
+                        align="center"
+                        justify="end"
+                      >
+                        <ProfileDropdown />
+                      </Flex>
+                    </Flex>
+                  </HeaderLayout>
+                )}
                 {/* Main Content */}
                 <Content
                   style={{
-                    margin: "24px 16px",
+                    margin: "24px 16px 0",
                     padding: 24,
                     minHeight: 280,
                     background: "#fff",
@@ -179,9 +210,9 @@ function App() {
                     ></Route>
                   </Routes>
                 </Content>
+                {authenticated && <Footer />}
               </Layout>
             </Layout>
-            {authenticated && <Footer />}
           </Layout>
         </Router>
       </ConfigProvider>

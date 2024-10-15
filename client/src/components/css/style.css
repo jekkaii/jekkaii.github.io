@@ -8,6 +8,10 @@
     url("../resources/source-serif-pro-regular.ttf") format("truetype");
 }
 
+* {
+  font-family: "Inter", sans-serif;
+}
+
 :root {
   --blue: #2a1f7e;
   --green: #277326;
@@ -442,7 +446,6 @@
 .logs-text {
   color: #939393;
 }
-
 
 /* Table Styles */
 .user-table {
@@ -945,7 +948,6 @@
   margin-left: 10px;
 }
 
-
 /* Class List styles */
 .class-list-container {
   padding: 18px;
@@ -1064,7 +1066,6 @@
   margin-top: 10px; /* Add space above the action buttons */
 }
 
-
 .archive-icon,
 .trash-icon {
   color: white;
@@ -1095,10 +1096,6 @@
 .trash-icon:hover {
   background-color: #c82333;
 }
-
-
-
-
 
 /* Upload Class Picture */
 #uploadIcon {
@@ -1347,7 +1344,6 @@
   margin-bottom: 5px;
 }
 
-
 /* Dropdown  */
 /* Add these styles to your CSS file, e.g., App.css */
 .custom-dropdown-menu .ant-dropdown-menu-item {
@@ -1358,8 +1354,6 @@
 .custom-dropdown-menu .ant-dropdown-menu-item:hover {
   background-color: #6d2d2d; /* Light gray hover effect */
 }
-
-
 
 /* Footer */
 /* Footer Container */
@@ -1413,7 +1407,7 @@
 }
 
 .footer-contact .headset-icon {
-  content: url("path/to/your-headset-icon.png"); 
+  content: url("path/to/your-headset-icon.png");
   width: 18px;
   height: 18px;
   margin-right: 5px;

@@ -11,8 +11,11 @@ export default class Footer extends Component {
       <Flex
         vertical
         style={{
+          margin: "24px 16px",
           padding: 24,
           background: "#fff",
+          overflow: "initial",
+          borderRadius: "10px",
           boxShadow: "5px 5px 10px 0px rgba(0, 0, 0, 0.1)",
         }}
       >
