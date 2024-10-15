@@ -106,7 +106,8 @@ const ClassList = () => {
           <CreateClass
             goBack={handleBackButtonClick}
             onSuccess={() => {
-              getClasses();
+              window.alert("Class is created successfully! Refreshing page.")
+              window.location.reload();
             }}
           />
         )}

@@ -10,25 +10,57 @@ const AddStudent = ({ onSuccess }) => {
   const [show, setShow] = useState(false);
   const [newStudent, setNewStudent] = useState({ idNumber: "", name: "" });
   const { addStudent } = useStudentStore();
+  const [touchedFields, setTouchedFields] = useState({});
+  const [errors, setErrors] = useState({});
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setNewStudent({ idNumber: "", name: "" });
+    setErrors({});
+    setTouchedFields({});
+    setShow(false);
+  };
   const handleShow = () => setShow(true);
+
+  const validateField = (name, value) => {
+    const validationErrors = {};
+
+    if (name === "idNumber" && !(/^\d{7}$/.test(value))) {
+      validationErrors.idNumber = "ID number must be exactly 7 digits.";
+    }
+  
+    if (name === "name" && !value.trim()) {
+      validationErrors.name = "Name is required.";
+    }
+  
+    return validationErrors;
+  };
+
+  const handleBlur = (name, value) => {
+    setTouchedFields((prevTouched) => ({ ...prevTouched, [name]: true }));
+  
+    const fieldErrors = validateField(name, value);
+    setErrors((prevErrors) => ({ ...prevErrors, ...fieldErrors }));
+  };
 
   const handleAddToClass = async (e) => {
     e.preventDefault();
+  
+    const validationErrors = {}
+  
+    Object.keys(newStudent).forEach((key) => {
+      const fieldErrors = validateField(key, newStudent[key]);
+      Object.assign(validationErrors, fieldErrors);
+    });
 
-    // IN PROGRESS, WAIT LANG
-    // // Check the ID Number input 7 digits
-    // if (isNaN(idNumber) || idNumber.length !== 7) {
-    //   alert(`The ID number entered is invalid.`);
-    //   return; 
-    // }
+    setErrors(validationErrors);
+  
+    if (Object.keys(validationErrors).length === 0) {
+      await addStudent(newStudent);
 
-    await addStudent(newStudent);
-
-    setNewStudent({ idNumber: "", name: "" });
-    handleClose();
-    onSuccess();
+      setNewStudent({ idNumber: "", name: "" });
+      handleClose();
+      onSuccess();
+    }
   };
 
   return (
@@ -74,11 +106,20 @@ const AddStudent = ({ onSuccess }) => {
                   placeholder="Enter ID Number"
                   id="formInput"
                   value={newStudent.idNumber}
-                  onChange={(e) =>
-                    setNewStudent({ ...newStudent, idNumber: e.target.value })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewStudent({ ...newStudent, idNumber: value });
+                    const fieldErrors = validateField("idNumber", value); 
+                    setErrors((prevErrors) => ({ ...prevErrors, idNumber: fieldErrors.idNumber }));
+                  }}
+                  onBlur={(e) => handleBlur("idNumber", e.target.value)}
                   required
                 />
+                {touchedFields.idNumber && errors.idNumber && (
+                  <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                    {errors.idNumber}
+                  </span>
+                )}
               </Col>
             </Form.Group>
 
@@ -91,11 +132,20 @@ const AddStudent = ({ onSuccess }) => {
                   placeholder="Enter Name"
                   id="formInput"
                   value={newStudent.name}
-                  onChange={(e) =>
-                    setNewStudent({ ...newStudent, name: e.target.value })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewStudent({ ...newStudent, name: value });
+                    const fieldErrors = validateField("name", value); 
+                    setErrors((prevErrors) => ({ ...prevErrors, name: fieldErrors.name }));
+                  }}
+                  onBlur={(e) => handleBlur("name", e.target.value)}
                   required
                 />
+                {touchedFields.name && errors.name && (
+                <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                  {errors.name}
+                </span>
+              )}
               </Col>
             </Form.Group>
           </Form>
