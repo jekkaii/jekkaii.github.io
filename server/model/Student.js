@@ -29,7 +29,7 @@ const StudentSchema = new mongoose.Schema(
     absencesDates: [
       {
         date: {
-          type: Date,
+          type: [Date],
         },
       },
     ],
@@ -37,4 +37,4 @@ const StudentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const StudentModel = mongoose.model("student", StudentSchema);
+export const StudentModel = mongoose.model("Student", StudentSchema);

@@ -2,11 +2,11 @@ import bcrypt from "bcryptjs";
 import { UserModel } from "../model/User.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 
-export const signup = async (req, res) => {
+export const signupTeacher = async (req, res) => {
   try {
-    const { firstName, lastName, email, role, password } = req.body;
+    const { firstName, lastName, email, password, department } = req.body;
 
-    if (!firstName || !lastName || !email || !password || !role) {
+    if (!firstName || !lastName || !email || !password || !department) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
@@ -19,44 +19,86 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Email already exists" });
     }
-    const username = email.substring(0, email.indexOf("@"));
-    bycrpt.getSalt(10, (err, salt) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ success: false, message: "Internal server error" });
-      }
-      bycrpt.hash(password, salt, async (err, hashedPassword) => {
-        if (err) {
-          return res
-            .status(500)
-            .json({ success: false, message: "Internal server error" });
-        }
-      });
-    });
 
-    const hashedPassword = bcrypt.hashSync(password, 12);
-    const newUser = new UserModel({
+    var salt = bcrypt.genSaltSync(10);
+
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    const newTeacher = new UserModel({
       firstName,
       lastName,
-      username,
       email,
-      role,
+      username: email.substring(0, email.indexOf("@")),
       password: hashedPassword,
+      role: "Teacher",
+      lastLogin: Date.now(),
+      department,
+      classes: [],
     });
 
-    await newUser.save();
-    generateTokenAndSetCookie(res, newUser._id);
+    await newTeacher.save();
+    generateTokenAndSetCookie(res, newTeacher._id);
 
     const responseData = {
       success: true,
-      message: "User created successfully",
-      user: { ...newUser._doc, password: undefined },
+      message: "Teacher created successfully",
+      user: { ...newTeacher._doc, password: undefined },
     };
 
     return res.status(201).json(responseData);
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("Error creating teacher:", error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const signupAdmin = async (req, res) => {
+  try {
+    const { firstName, lastName, email, password, adminLevel } = req.body;
+
+    if (!firstName || !lastName || !email || !password || !adminLevel) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+    }
+
+    const existingUser = await UserModel.findOne({ email });
+
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already exists" });
+    }
+
+    var salt = bcrypt.genSaltSync(10);
+
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    const newAdmin = new UserModel({
+      firstName,
+      lastName,
+      email,
+      username: email.substring(0, email.indexOf("@")),
+      password: hashedPassword,
+      role: "Admin",
+      lastLogin: Date.now(),
+      adminInfo: {
+        adminLevel,
+      },
+    });
+
+    await newAdmin.save();
+    generateTokenAndSetCookie(res, newAdmin._id);
+
+    const responseData = {
+      success: true,
+      message: "Admin created successfully",
+      user: { ...newAdmin._doc, password: undefined },
+    };
+
+    return res.status(201).json(responseData);
+  } catch (error) {
+    console.error("Error creating admin:", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
@@ -165,4 +207,3 @@ export const checkAdmin = async (req, res) => {
 //     res.status(400).json({ message: 'Invalid token.' });
 //   }
 // };
-

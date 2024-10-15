@@ -1,6 +1,7 @@
 import express from "express";
 import {
-  signup,
+  signupTeacher,
+  signupAdmin,
   login,
   logout,
   checkAuth,
@@ -13,7 +14,8 @@ const router = express.Router();
 // Authentication
 router.get("/check-auth", verifyToken, checkAuth); // Check if user is authenticated
 router.get("/check-admin", verifyToken, checkAdmin);
-router.post("/signup", signup);
+router.post("/createteacher", signupTeacher);
+router.post("/createadmin", signupAdmin);
 router.post("/", login);
 router.post("/logout", logout);
 

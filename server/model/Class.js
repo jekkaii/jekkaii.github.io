@@ -1,50 +1,38 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const ClassSchema = new mongoose.Schema(
   {
-    teacher: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", 
-      default: null, // Null muna habang di ba naconnect yung user._id
-      // required: true
-    },
-    students: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
-      default: [], // Null muna habang di ba naconnect yung user._id
-       // required: true
-    }],
     classCode: {
       type: String,
       required: true,
       unique: true,
-      trim: true
+      trim: true,
     },
     courseNumber: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     subject: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     academicYear: {
       type: String,
       required: true,
-      trim: true // Example format: '2024-2025'
+      trim: true, // Example format: '2024-2025'
     },
     term: {
       type: String,
       required: true,
       enum: ["First", "Second", "Short"],
-      trim: true
+      trim: true,
     },
     room: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     days: {
       type: [String],
@@ -53,16 +41,27 @@ const ClassSchema = new mongoose.Schema(
     },
     startTime: {
       type: String,
-      required: true, 
-      trim: true
+      required: true,
+      trim: true,
     },
     endTime: {
       type: String,
-      required: true, 
-      trim: true
+      required: true,
+      trim: true,
     },
-  }, 
+    teacherId: {
+      type: Schema.Types.ObjectId,
+      ref: "Teacher", // Reference to the teacher who owns the class
+      required: true,
+    },
+    students: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Student", // Referencing StudentModel
+      },
+    ],
+  },
   { timestamps: true }
 );
 
-export const ClassModel = mongoose.model("class", ClassSchema);
+export const ClassModel = mongoose.model("Class", ClassSchema);
