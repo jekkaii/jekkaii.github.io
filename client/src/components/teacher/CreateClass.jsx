@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Button, Form, Container, Row, Col, Modal} from "react-bootstrap";
 import { IoCaretBackCircleSharp } from "react-icons/io5";
 import { TimePicker } from "antd";import { useClassStore } from "../../stores/classStore";
+import Confirmation from "./Confirmation";
 
 const { RangePicker } = TimePicker;
 
 const CreateClass = ({ goBack, onSuccess }) => {
   const [timeRange, setTimeRange] = useState(null);
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
-  const { addClass, error } = useClassStore();
+  const { addClass } = useClassStore();
+  const [touchedFields, setTouchedFields] = useState({});
+  const [errors, setErrors] = useState({});
 
   const [newClass, setNewClass] = useState({ 
     classCode: "",
@@ -24,27 +24,8 @@ const CreateClass = ({ goBack, onSuccess }) => {
     endTime: "" 
   });
 
-  const validateStringLength = (str, maxLength, value) => {
-    if (str.length > maxLength) {
-      return `Error: The ${value} exceeds the maximum length of ${maxLength} characters.`;
-    }
-    return null; // Return null if there's no error
-  };
-  
-  // TO DO:
-    // classCode: ""  - 5 digit (show in front-end)
-    // room: "", - D516 (show in frontend)
-  // days: [], - must not be empty 
-  // startTime: "", must not be empty
- // endTime: "" must not be empty
- // start time must be at 7:30 am
- // end time must end at 8:30 pm
- // end time must not start before the start time
-
-  // Get the current year
+  // Get the current year and set the starting year to one year prior to the current year
   const currentYear = new Date().getFullYear();
-  
-  // Set the starting year to one year prior to the current year
   const startYear = currentYear - 1; 
 
   // Generate the academic years
@@ -53,52 +34,123 @@ const CreateClass = ({ goBack, onSuccess }) => {
     return `${year}-${year + 1}`;
   });
 
-  const handleCreateClass = async (e) => {
-    e.preventDefault();
-    await addClass(newClass);
+  const validateField = (name, value) => {
+    const validationErrors = {};
+    const formattedName = typeof name === 'string' ? name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^([a-z])/g, (match) => match.toUpperCase()) : name; 
 
-    setNewClass({ 
-        classCode: "",
-        courseNumber: "",
-        subject: "",
-        academicYear: "",
-        term: "", 
-        room: "",
-        days: [],
-        startTime: "",
-        endTime: ""
-    });
-    setShowConfirmation(false);
-    onSuccess();
-  };
-
-  console.log(error);
-
-  const handleScheduleChange = (day) => {
-    setNewClass((prevClass) => ({
-      ...prevClass,
-      days: prevClass.days.includes(day)
-        ? prevClass.days.filter((d) => d !== day)
-        : [...prevClass.days, day]
-    }));
-  };
-
-  const handleTimeChange = (newTimeRange) => {
-    if (newTimeRange && newTimeRange.length === 2) {
-      setNewClass((prevClass) => ({
-        ...prevClass,
-        startTime: newTimeRange[0].format("hh:mm A"),
-        endTime: newTimeRange[1].format("hh:mm A")
-      }));
+    if (name === "classCode" && !(/^\d{4}[A-Z]?$/.test(value))) {
+      validationErrors.classCode = "Class code must be 4 digits, optionally followed by a capital letter (e.g., 9400 or 9400C).";
     }
-    setTimeRange(newTimeRange);
+
+    if ((name === "courseNumber" || name === "subject" || name === "academicYear" || name === "term") && !value.trim()) {
+      validationErrors[name] = `${formattedName} is required.`;
+    }
+
+    if (name === "room" && !(/^[A-Z]\d{3}$/.test(value))) {
+      validationErrors.room = "Room must be 1 capital letter followed by 3 digits (e.g., D515).";
+    }
+
+    if (name === "days" && newClass.days.length === 0) {
+      validationErrors.days = "Days are required.";
+    }
+
+    if (name === "time" && (timeRange === null || timeRange.length < 2)) {
+      validationErrors.time = "Time is required.";
+    }
+
+    return validationErrors;
+  };
+
+  const handleBlur = (name, value) => {
+    setTouchedFields((prevTouched) => ({ ...prevTouched, [name]: true }));
+  
+    const fieldErrors = validateField(name, value);
+    setErrors((prevErrors) => ({ ...prevErrors, ...fieldErrors }));
   };
   
-  const handleSubmit = (e) => {
+  const handleCreateClass = async (e) => {
     e.preventDefault();
-    setShowConfirmation(true);
+  
+    const validationErrors = {}
+  
+    // Validate fields when submitting
+    Object.keys(newClass).forEach((key) => {
+      const fieldErrors = validateField(key, newClass[key]);
+      Object.assign(validationErrors, fieldErrors);
+    });
+
+    setErrors(validationErrors);
+  
+    if (Object.keys(validationErrors).length === 0) {
+      // const capitalizedSubject = newClass.subject.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+
+      // // Update the subject field before submitting
+      // const updatedClass = {
+      //   ...newClass,
+      //   subject: capitalizedSubject,
+      // };
+  
+      // await addClass(updatedClass);
+      
+      await addClass(newClass);
+
+      setNewClass({ 
+          classCode: "",
+          courseNumber: "",
+          subject: "",
+          academicYear: "",
+          term: "", 
+          room: "",
+          days: [],
+          startTime: "",
+          endTime: ""
+      });
+      setShowConfirmation(false);
+      onSuccess();
+    }
   };
 
+  const handleScheduleChange = (day) => {
+    setTouchedFields((prev) => ({ ...prev, days: true }));
+    setNewClass((prevClass) => {
+      const updatedDays = prevClass.days.includes(day)
+        ? prevClass.days.filter((d) => d !== day)
+        : [...prevClass.days, day];
+      
+      if (updatedDays.length > 0) {
+        setErrors((prevErrors) => {
+          const { days, ...restErrors } = prevErrors;
+          return restErrors;
+        });
+      } else {
+        setErrors((prevErrors) => ({ ...prevErrors, days: "Days are required." }));
+      }
+      
+      return {
+        ...prevClass,
+        days: updatedDays
+      };
+    });
+  };
+  
+  
+  const handleTimeChange = (newTimeRange) => {
+    setTimeRange(newTimeRange);
+  
+    if (newTimeRange && newTimeRange.length === 2) {
+      setErrors((prevErrors) => {
+        const { time, ...rest } = prevErrors;
+        return rest;
+      });
+    }
+  
+    setNewClass((prevClass) => ({
+      ...prevClass,
+      startTime: newTimeRange ? newTimeRange[0]?.format("hh:mm A") : "",
+      endTime: newTimeRange ? newTimeRange[1]?.format("hh:mm A") : "",
+    }));
+  };
+  
   const handleCancel = () => {
     setShowCancelConfirmation(true);
   };
@@ -108,7 +160,6 @@ const CreateClass = ({ goBack, onSuccess }) => {
     setShowCancelConfirmation(false);
   };
 
-  const handleCloseConfirmation = () => setShowConfirmation(false);
   const handleCloseCancelConfirmation = () => setShowCancelConfirmation(false);
 
   return (
@@ -134,19 +185,9 @@ const CreateClass = ({ goBack, onSuccess }) => {
 </Button>
 
 
-      {error && (
-        <div
-          className="alert alert-danger p-2 mb-0 d-flex align-items-center animate__animated animate__fadeInDown"
-          role="alert"
-          style={{ animationDuration: "0.5s" }}
-        >
-          {/* Display the error message */}
-          <div>{error.response?.data?.message || error.message || "An error occurred"}</div>
-        </div>
-      )}
 
       {/* Create Class Form */}
-      <Form onSubmit={handleSubmit} className="attendance-form">
+      <Form className="attendance-form">
         <h2 className="attendance-header">Create Class</h2>
 
         <Form.Group as={Row} controlId="formClassCode">
@@ -158,12 +199,22 @@ const CreateClass = ({ goBack, onSuccess }) => {
               type="text"
               placeholder="Enter Class Code"
               value={newClass.classCode}
-              onChange={(e) =>
-                setNewClass({ ...newClass, classCode: e.target.value })
-              }
+              onChange={(e) => {
+                const value = e.target.value;
+                setNewClass({ ...newClass, classCode: value });
+                const fieldErrors = validateField("classCode", value); 
+                setErrors((prevErrors) => ({ ...prevErrors, classCode: fieldErrors.classCode }));
+              }}
+              onBlur={(e) => handleBlur("classCode", e.target.value)}
               required
             />
+            {touchedFields.classCode && errors.classCode && (
+              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                {errors.classCode}
+              </span>
+            )}
           </Col>
+
         </Form.Group>
 
         <Form.Group as={Row} controlId="formcourseNumber">
@@ -172,14 +223,23 @@ const CreateClass = ({ goBack, onSuccess }) => {
           </Form.Label>
           <Col sm="9">
             <Form.Control
-              value={newClass.courseNumber}
-              onChange={(e) =>
-                setNewClass({ ...newClass, courseNumber: e.target.value })
-              }
               placeholder="Enter Course Number"
               className="form-control"
+              value={newClass.courseNumber}
+              onChange={(e) => {
+                const value = e.target.value;
+                setNewClass({ ...newClass, courseNumber: value });
+                const fieldErrors = validateField("courseNumber", value); 
+                setErrors((prevErrors) => ({ ...prevErrors, courseNumber: fieldErrors.courseNumber }));
+              }}
+              onBlur={(e) => handleBlur("courseNumber", e.target.value)}
               required
             />
+            {touchedFields.courseNumber && errors.courseNumber && (
+              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                {errors.courseNumber}
+              </span>
+            )}
           </Col>
         </Form.Group>
 
@@ -189,14 +249,23 @@ const CreateClass = ({ goBack, onSuccess }) => {
           </Form.Label>
           <Col sm="9">
             <Form.Control
-             value={newClass.subject}
-             onChange={(e) =>
-               setNewClass({ ...newClass, subject: e.target.value })
-             }
+              value={newClass.subject}
+              onChange={(e) => {
+                const value = e.target.value;
+                setNewClass({ ...newClass, subject: value });
+                const fieldErrors = validateField("subject", value); 
+                setErrors((prevErrors) => ({ ...prevErrors, subject: fieldErrors.subject}));
+              }}
+              onBlur={(e) => handleBlur("subject", e.target.value)}
               placeholder="Enter Subject"
               className="form-control"
               required
             />
+            {touchedFields.subject && errors.subject && (
+              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                {errors.subject}
+              </span>
+            )}
           </Col>
         </Form.Group>
 
@@ -207,9 +276,13 @@ const CreateClass = ({ goBack, onSuccess }) => {
           <Col sm="9">
             <Form.Select
               value={newClass.academicYear}
-              onChange={(e) =>
-                setNewClass({ ...newClass, academicYear: e.target.value })
-              }
+              onChange={(e) => {
+                const value = e.target.value;
+                setNewClass({ ...newClass, academicYear: value });
+                const fieldErrors = validateField("academicYear", value); 
+                setErrors((prevErrors) => ({ ...prevErrors, academicYear: fieldErrors.academicYear }));
+              }}
+              onBlur={(e) => handleBlur("academicYear", e.target.value)}
               className="form-select"
               required
             >
@@ -220,6 +293,11 @@ const CreateClass = ({ goBack, onSuccess }) => {
                   </option>
                 ))}
             </Form.Select>
+            {touchedFields.academicYear && errors.academicYear && (
+              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                {errors.academicYear}
+              </span>
+            )}
           </Col>
         </Form.Group>
 
@@ -229,10 +307,13 @@ const CreateClass = ({ goBack, onSuccess }) => {
           </Form.Label>
           <Col sm="9">
             <Form.Select
-              value={newClass.term}
-              onChange={(e) =>
-                setNewClass({ ...newClass, term: e.target.value })
-              }
+               onChange={(e) => {
+                const value = e.target.value;
+                setNewClass({ ...newClass, term: value });
+                const fieldErrors = validateField("term", value); 
+                setErrors((prevErrors) => ({ ...prevErrors, term: fieldErrors.term }));
+              }}
+              onBlur={(e) => handleBlur("term", e.target.value)}
               className="form-select"
               required
             >
@@ -241,6 +322,11 @@ const CreateClass = ({ goBack, onSuccess }) => {
               <option value="Second">Second Semester</option>
               <option value="Short">Short Term</option>
             </Form.Select>
+            {touchedFields.term && errors.term && (
+              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                {errors.term}
+              </span>
+            )}
           </Col>
         </Form.Group>
 
@@ -252,13 +338,22 @@ const CreateClass = ({ goBack, onSuccess }) => {
             <Form.Control
               type="text"
               value={newClass.room}
-              onChange={(e) =>
-                setNewClass({ ...newClass, room: e.target.value })
-              }
+              onChange={(e) => {
+                const value = e.target.value;
+                setNewClass({ ...newClass, room: value });
+                const fieldErrors = validateField("room", value); 
+                setErrors((prevErrors) => ({ ...prevErrors, room: fieldErrors.room }));
+              }}
+              onBlur={(e) => handleBlur("room", e.target.value)}
               placeholder="Enter Room"
               className="form-control"
               required
             />
+            {touchedFields.room && errors.room && (
+              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                {errors.room}
+              </span>
+            )}
           </Col>
         </Form.Group>
 
@@ -278,11 +373,23 @@ const CreateClass = ({ goBack, onSuccess }) => {
                   {day}
                 </Button>
               ))}
-            </div>
+            </div> 
           </Col>
         </Form.Group>
 
-        {/* Time Picker */}
+        <Form.Group as={Row}>
+          <Col sm="3"></Col>
+          
+          <Col sm="9">
+            {touchedFields.days && newClass.days.length === 0 && (
+              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                {errors.days}
+              </span>
+            )}
+          </Col>
+        </Form.Group>
+        
+          {/* Time Picker */}
         <Form.Group as={Row} controlId="formTimeRange" className="mt-3">
           <Form.Label column sm="3" className="form-label fw-bold">
             Time:
@@ -291,6 +398,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
             <RangePicker
               value={timeRange}
               onChange={handleTimeChange}
+              onBlur={handleBlur}
               format="hh:mm A"
               minuteStep={30}
               showTime={{
@@ -301,7 +409,43 @@ const CreateClass = ({ goBack, onSuccess }) => {
               style={{ width: "100%" }}
               getPopupContainer={(trigger) => trigger.parentNode}
               required
+              disabledTime={(current) => {
+                if (!current) return {};
+                
+                const startHour = timeRange && timeRange[0] ? timeRange[0].hour() : null;
+
+                return {
+                  disabledHours: () => {
+                    const disabled = [...Array(7).keys(), ...Array.from({ length: 3 }, (_, i) => i + 21)];
+                    // If start time exists, disable hours before the selected start time for end picker
+                    if (startHour !== null) {
+                      return disabled.concat(Array.from({ length: startHour }, (_, i) => i));
+                    }
+                    return disabled;
+                  },
+                  disabledMinutes: (selectedHour) => {
+                    const startMinute = timeRange && timeRange[0] ? timeRange[0].minute() : null;
+                    if (selectedHour === 7) {
+                      return [0, 15]; // Disable minutes before 7:30 AM
+                    }
+                    if (selectedHour === 20) {
+                      return [45, 59]; // Disable minutes after 8:30 PM
+                    }
+                    // If selected hour matches start hour, disable minutes earlier than the start time
+                    if (startHour !== null && selectedHour === startHour && startMinute !== null) {
+                      return Array.from({ length: startMinute + 1 }, (_, i) => i); // Disable minutes before the start minute
+                    }
+                    return [];
+                  },
+                };
+              }}
             />
+
+            {touchedFields.time && errors.time && (
+              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+                {errors.time}
+               </span>
+            )}
           </Col>
         </Form.Group>
 
@@ -314,174 +458,10 @@ const CreateClass = ({ goBack, onSuccess }) => {
           >
             Create Class
           </Button>
-          <Button
-            variant="danger"
-            onClick={handleCancel}
-            className="custom-button cancel-button"
-          >
-            Cancel
-          </Button>
         </div>
       </Form>
 
-         {/* Cancel Confirmation Modal */}
-      
-      <Modal
-        show={showCancelConfirmation}
-        onHide={handleCloseCancelConfirmation}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Cancel Class Creation</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to cancel?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseCancelConfirmation}>
-            NO
-          </Button>
-          <Button variant="danger" onClick={handleConfirmCancel}>
-            YES
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </Container>
-    
-      // Schedule Modal
-      // <Modal
-      //   show={showScheduleModal}
-      //   onHide={() => setShowScheduleModal(false)}
-      //   centered
-      // >
-      //   <Modal.Header closeButton>
-      //     <Modal.Title>Select Schedule</Modal.Title>
-      //   </Modal.Header>
-      //   <Modal.Body>
-      //     {/* Schedule Picker */}
-      //     <div className="schedule-picker">
-      //       {["M", "T", "W", "TH", "F", "S"].map((day) => (
-      //         <Button
-      //           key={day}
-      //           variant={newClass.days.includes(day) ? "primary" : "outline-primary"}
-      //           className={`m-1 ${newClass.days.includes(day) ? "selected" : "unselected"}`}
-      //           onClick={() => handleScheduleChange(day)}
-      //           required
-      //         >
-      //           {day}
-      //         </Button>
-      //       ))}
-      //     </div>
-      //     {/*Time Picker*/}
-      //     <Form.Group as={Row} controlId="formTimeRange" className="mt-3">
-      //       {" "}
-      //       {/* Add margin-top for spacing */}
-      //       <Form.Label column sm="3" className="form-label">
-      //         Time:
-      //       </Form.Label>
-      //       <Col sm="9">
-      //         <RangePicker
-      //           value={timeRange}
-      //           onChange={handleTimeChange}
-      //           format="hh:mm A"
-      //           minuteStep={30}
-      //           showTime={{
-      //             format: "hh:mm A",
-      //             use12Hours: true,
-      //             minuteStep: 30,
-      //           }}
-      //           style={{ width: "100%" }}
-      //           getPopupContainer={(trigger) => trigger.parentNode}
-      //           required
-      //         />
-      //       </Col>
-      //     </Form.Group>
-      //   </Modal.Body>
-
-      //   <Modal.Footer className="modal-footer">
-      //     <Button
-      //       variant="danger"
-      //       onClick={() => setShowScheduleModal(false)}
-      //       className="custom-button"
-      //     >
-      //       Cancel
-      //     </Button>
-      //     <Button
-      //       variant="success"
-      //       onClick={() => setShowScheduleModal(false)}
-      //       className="custom-button"
-      //     >
-      //       OK
-      //     </Button>
-      //   </Modal.Footer>
-      // </Modal> /}
-
-      // Confirmation Modal
-      /* <Modal show={showConfirmation} onHide={handleCloseConfirmation} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Class Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            <strong>Class Code:</strong> {newClass.classCode}
-          </p>
-          <p>
-            <strong>Course Number:</strong> {newClass.courseNumber}
-          </p>
-          <p>
-            <strong>Subject:</strong> {newClass.subject}
-          </p>
-          <p>
-            <strong>Academic Year:</strong> {newClass.academicYear}
-          </p>
-          <p>
-            <strong>Term:</strong> {newClass.term} {newClass.term === "Short" ? "Term" : "Semester"}
-          </p>
-          <p>
-            <strong>Room:</strong> {newClass.room}
-          </p>
-          <p>
-            <strong>Schedule: </strong> 
-            {newClass.days} {" "}
-            {timeRange
-              ? timeRange.map((time) => time.format("hh:mm A")).join(" - ")
-              : "N/A"}
-          </p>
-        </Modal.Body>
-        <Modal.Footer className="modal-footer">
-          <Button
-            variant="secondary"
-            onClick={handleCloseConfirmation}
-            className="custom-button"
-          >
-            Edit
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleCreateClass}
-            className="custom-button"
-          >
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal> */
-
-      /* Success Modal */
-      /* <Modal show={showSuccessModal} onHide={handleCloseSuccessModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Success</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Your class has been successfully created!</p>
-        </Modal.Body>
-        <Modal.Footer className="modal-footer">
-          <Button
-            variant="primary"
-            onClick={handleCloseSuccessModal}
-            className="custom-button"
-          >
-            OK
-          </Button>
-        </Modal.Footer>
-      </Modal> */
   );
 };
 
