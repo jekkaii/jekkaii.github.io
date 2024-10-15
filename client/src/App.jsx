@@ -19,6 +19,8 @@ import Sidebar from "./components/Sidebar";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
 import ClassList from "./components/teacher/ClassList";
 import SpinnerLoader from "./components/SpinnerLoader";
+import ProfileDropdown from "./components/teacher/Dropdown";
+import Profile from "./components/teacher/Profile";
 import { Layout, Switch, ConfigProvider, Flex } from "antd";
 const { Content, Header: HeaderLayout } = Layout;
 
@@ -88,6 +90,7 @@ function App() {
                   onChangeTheme={(value) => setTheme(value ? "dark" : "light")}
                 />
               )}
+
               <Layout>
                 {/* Main Content */}
                 <Content
@@ -99,41 +102,66 @@ function App() {
                     overflow: "initial",
                     borderRadius: "10px",
                     boxShadow: "5px 5px 10px 0px rgba(0, 0, 0, 0.1)",
-                  }}
+                  }} 
                 >
-                  <Routes>
-                    {/* Login Route */}
-                    <Route
-                      path="/"
-                      element={
-                        <RedirectToHome>
-                          <LoginForm />
-                        </RedirectToHome>
-                      }
-                    ></Route>
-                    {/* Protected Routes */}
-                    {/* Teacher Routes */}
-                    <Route
-                      path="/teacher"
-                      element={
+                <div style={{ float: 'right', marginRight: '16px', marginTop: '15px'}}>
+                    <ProfileDropdown/>
+                </div>
+
+                <Routes>
+                  {/* Login Route */}
+                  <Route
+                    path="/"
+                    element={
+                      <RedirectToHome>
+                        <LoginForm />
+                      </RedirectToHome>
+                    }
+                  ></Route>
+                  
+                  {/* Profile Route */}
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <Profile/>
+                      </ProtectedRoute>
+                    }
+                  ></Route>
+                  
+                  {/* Teacher Routes */}
+                  <Route
+                    path="/teacher"
+                    element={
+                      <ProtectedRoute>
+                        <ClassList />
+                      </ProtectedRoute>
+                    }
+                  ></Route>
+                  
+                  <Route
+                    path="/teacher/attendance"
+                    element={
+                      isLoading ? (
+                        <SpinnerLoader />
+                      ) : (
                         <ProtectedRoute>
-                          <LogoutButton />
-                          <ClassList />
+                          <AttendanceTabs />
                         </ProtectedRoute>
-                      }
-                    ></Route>
-                    <Route
-                      path="/teacher/attendance"
-                      element={
-                        isLoading ? (
-                          <SpinnerLoader />
-                        ) : (
-                          <ProtectedRoute>
-                            <AttendanceTabs />
-                          </ProtectedRoute>
-                        )
-                      }
-                    ></Route>
+                      )
+                    }
+                  ></Route>
+                  
+                  {/* Logout Route */}
+                  <Route
+                    path="/"
+                    element={
+                      <RedirectToHome>
+                        <LoginForm />
+                      </RedirectToHome>
+                    }
+                  ></Route>
+                    
 
                     {/* Admin Routes */}
                     <Route

@@ -143,31 +143,6 @@ function Sidebar() {
               )}
             />
 
-            {/* Divider and Logout Button */}
-            <Flex style={{ margin: "10px 10px 0px 10px" }}>
-              <Divider />
-            </Flex>
-
-            <Flex justify="center" style={{ padding: "10px 12px 10px 12px" }}>
-              {/* Logout Button Styling */}
-              <Button
-                type="primary"
-                icon={<FaSignOutAlt style={{ fontSize: "16px" }} />}
-                onClick={handleLogout}
-                style={{
-                  display: "flex",
-                  alignItems: "left",
-                  justifyContent: "center",
-                  transition: "width 0.6s",
-                  whiteSpace: "nowrap",
-                  ...(collapsed
-                    ? { width: "50px", height: "auto", padding: "10px" }
-                    : { width: "auto", height: "40px", padding: "10px 50px" }),
-                }}
-              >
-                {!collapsed && "Logout"}
-              </Button>
-            </Flex>
           </Flex>
         </Sider>
       </ConfigProvider>
