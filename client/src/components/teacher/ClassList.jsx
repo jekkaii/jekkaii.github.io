@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import '../css/style.css';
-import { FaArchive, FaTrash } from 'react-icons/fa';
-import Confirmation from './Confirmation'; 
-import CreateClass from './CreateClass';
-import Notification from './Notification'; // Import the notification component
-import { useClassStore } from "../../stores/classStore"; 
+import React, { useEffect, useState } from "react";
+import "../css/style.css";
+import { FaArchive, FaTrash } from "react-icons/fa";
+import Confirmation from "./Confirmation";
+import CreateClass from "./CreateClass";
+import Notification from "./Notification"; // Import the notification component
+import { useClassStore } from "../../stores/classStore";
+import { Button, Flex } from "antd";
+import { Link } from "react-router-dom";
+import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
 
 const ClassList = () => {
-  const { getClasses, classes, isLoading, error, deleteClass, archiveClass } = useClassStore();
+  const { getClasses, classes, isLoading, error, deleteClass, archiveClass } =
+    useClassStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
   const [showCreateClass, setShowCreateClass] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState('');
-  const [notificationType, setNotificationType] = useState(''); // 'success' or 'error'
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationType, setNotificationType] = useState(""); // 'success' or 'error'
 
   useEffect(() => {
     getClasses();
@@ -32,7 +36,7 @@ const ClassList = () => {
     setSelectedAction(action);
     setSelectedClass(classCode);
     setModalMessage(
-      action === 'archive'
+      action === "archive"
         ? `Are you sure you want to archive the class with code ${classCode}?`
         : `Are you sure you want to delete the class with code ${classCode}?`
     );
@@ -41,34 +45,34 @@ const ClassList = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalMessage('');
+    setModalMessage("");
   };
 
   const closeNotification = () => {
-    setNotificationMessage('');
-    setNotificationType('');
+    setNotificationMessage("");
+    setNotificationType("");
   };
 
   const confirmAction = async () => {
     try {
-      if (selectedAction === 'archive') {
+      if (selectedAction === "archive") {
         await archiveClass(selectedClass); // Call the archiveClass function
-        setNotificationMessage('Class archived successfully!'); // Set success message
-        setNotificationType('success');
-      } else if (selectedAction === 'delete') {
+        setNotificationMessage("Class archived successfully!"); // Set success message
+        setNotificationType("success");
+      } else if (selectedAction === "delete") {
         await deleteClass(selectedClass); // Call the deleteClass function
-        setNotificationMessage('Class deleted successfully!'); // Set success message
-        setNotificationType('success');
+        setNotificationMessage("Class deleted successfully!"); // Set success message
+        setNotificationType("success");
       }
       await getClasses(); // Refresh the classes after action
     } catch (error) {
-      console.error('Error performing action on class:', error);
-      setNotificationMessage('An error occurred. Please try again.'); // Set error message
-      setNotificationType('error');
+      console.error("Error performing action on class:", error);
+      setNotificationMessage("An error occurred. Please try again."); // Set error message
+      setNotificationType("error");
     }
     closeModal(); // Close the modal
   };
-  
+
   // Group classes by subject
   const groupedClasses = classes.reduce((acc, cls) => {
     const subject = cls.subject;
@@ -89,12 +93,13 @@ const ClassList = () => {
           </div>
         </>
       )}
-
       <div className="menu-create-btn-container">
         {!showCreateClass && (
-          <button className="create-class-btn" onClick={handleShowCreateClass}>
-            + Create Class
-          </button>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={handleShowCreateClass}
+          ></Button>
         )}
 
         {showCreateClass && (
@@ -106,7 +111,6 @@ const ClassList = () => {
           />
         )}
       </div>
-
       {!showCreateClass && (
         <>
           {isLoading ? (
@@ -126,19 +130,35 @@ const ClassList = () => {
                           <p>Room: {cls.room}</p>
                           <p>Academic Year: {cls.academicYear}</p>
                           <p>Term: {cls.term}</p>
-                          <p>Schedule: {cls.days.join(', ')} {cls.startTime} - {cls.endTime}</p>
+                          <p>
+                            Schedule: {cls.days.join(", ")} {cls.startTime} -{" "}
+                            {cls.endTime}
+                          </p>
                         </div>
-                        <div className="class-actions">
-                          <button className="visit-class-btn">View Class</button>
-                          <FaArchive
-                            className="archive-icon"
-                            onClick={() => handleActionClick('archive', cls.classCode)}
-                          />
-                          <FaTrash
-                            className="trash-icon"
-                            onClick={() => handleActionClick('delete', cls.classCode)}
-                          />
-                        </div>
+                        <Flex justify="space-between">
+                          <Link to={`/teacher/attendance/${cls.classCode}`}>
+                            <Button type="primary" icon={<EyeOutlined />}>
+                              View Class
+                            </Button>
+                          </Link>
+
+                          <Flex>
+                            <Button
+                              type="text"
+                              icon={<FaArchive />}
+                              onClick={() =>
+                                handleActionClick("archive", cls.classCode)
+                              }
+                            />
+                            <Button
+                              type="text"
+                              icon={<FaTrash />}
+                              onClick={() =>
+                                handleActionClick("delete", cls.classCode)
+                              }
+                            />
+                          </Flex>
+                        </Flex>
                       </div>
                     ))}
                   </div>
@@ -157,10 +177,10 @@ const ClassList = () => {
           />
 
           {notificationMessage && (
-            <Notification 
-              message={notificationMessage} 
-              type={notificationType} 
-              onClose={closeNotification} 
+            <Notification
+              message={notificationMessage}
+              type={notificationType}
+              onClose={closeNotification}
             />
           )}
         </>

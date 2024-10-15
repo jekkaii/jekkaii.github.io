@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import axios from "axios";
-import {importFile, updateStudentStatus } from "../../../server/controller/studentController";
+import {
+  importFile,
+  updateStudentStatus,
+} from "../../../server/controller/studentController";
 
 const API_URL = "http://localhost:3001/api/teacher";
 
@@ -13,10 +16,12 @@ export const useStudentStore = create((set) => ({
   message: null,
   isLoading: false,
   getStudents: async () => {
+    const url = window.location.href;
+    const id = url.split("/")[url.split("/").length - 1];
     set({ isLoading: true });
     try {
       //   await new Promise((resolve) => setTimeout(resolve, 1000));
-      const response = await axios.get(`${API_URL}/students`);
+      const response = await axios.get(`${API_URL}/students/${id}`);
       if (response.status === 200) {
         const { students } = response.data;
         set({ students, isLoading: false, error: null });
@@ -117,6 +122,4 @@ export const useStudentStore = create((set) => ({
       set({ error, isLoading: false });
     }
   },
-  
 }));
-

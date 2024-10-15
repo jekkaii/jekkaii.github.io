@@ -79,9 +79,15 @@ function App() {
         <Router>
           <Layout>
             {authenticated && (
-              <HeaderLayout
-                style={{ backgroundColor: "#ffffff" }}
-              ></HeaderLayout>
+              <HeaderLayout style={{ backgroundColor: "#ffffff" }}>
+                <Flex
+                  style={{ padding: "20px", width: "100%" }}
+                  align="center"
+                  justify="end"
+                >
+                  <ProfileDropdown />
+                </Flex>
+              </HeaderLayout>
             )}
             <Layout>
               {/* Sidebar Component */}
@@ -102,73 +108,67 @@ function App() {
                     overflow: "initial",
                     borderRadius: "10px",
                     boxShadow: "5px 5px 10px 0px rgba(0, 0, 0, 0.1)",
-                  }} 
+                  }}
                 >
-                <div style={{ float: 'right', marginRight: '16px', marginTop: '15px'}}>
-                    <ProfileDropdown/>
-                </div>
+                  <Routes>
+                    {/* Login Route */}
+                    <Route
+                      path="/"
+                      element={
+                        <RedirectToHome>
+                          <LoginForm />
+                        </RedirectToHome>
+                      }
+                    ></Route>
 
-                <Routes>
-                  {/* Login Route */}
-                  <Route
-                    path="/"
-                    element={
-                      <RedirectToHome>
-                        <LoginForm />
-                      </RedirectToHome>
-                    }
-                  ></Route>
-                  
-                  {/* Profile Route */}
-                  <Route
-                    path="/profile"
-                    element={
-                      <ProtectedRoute>
-                        <Profile/>
-                      </ProtectedRoute>
-                    }
-                  ></Route>
-                  
-                  {/* Teacher Routes */}
-                  <Route
-                    path="/teacher"
-                    element={
-                      <ProtectedRoute>
-                        <ClassList />
-                      </ProtectedRoute>
-                    }
-                  ></Route>
-                  
-                  <Route
-                    path="/teacher/attendance"
-                    element={
-                      isLoading ? (
-                        <SpinnerLoader />
-                      ) : (
+                    {/* Profile Route */}
+                    <Route
+                      path="/profile"
+                      element={
                         <ProtectedRoute>
-                          <AttendanceTabs />
+                          <Profile />
                         </ProtectedRoute>
-                      )
-                    }
-                  ></Route>
-                  
-                  {/* Logout Route */}
-                  <Route
-                    path="/"
-                    element={
-                      <RedirectToHome>
-                        <LoginForm />
-                      </RedirectToHome>
-                    }
-                  ></Route>
-                    
+                      }
+                    ></Route>
+
+                    {/* Teacher Routes */}
+                    <Route
+                      path="/teacher"
+                      element={
+                        <ProtectedRoute>
+                          <ClassList />
+                        </ProtectedRoute>
+                      }
+                    ></Route>
+
+                    <Route
+                      path="/teacher/attendance/:code"
+                      element={
+                        isLoading ? (
+                          <SpinnerLoader />
+                        ) : (
+                          <ProtectedRoute>
+                            <AttendanceTabs />
+                          </ProtectedRoute>
+                        )
+                      }
+                    ></Route>
+
+                    {/* Logout Route */}
+                    <Route
+                      path="/"
+                      element={
+                        <RedirectToHome>
+                          <LoginForm />
+                        </RedirectToHome>
+                      }
+                    ></Route>
 
                     {/* Admin Routes */}
                     <Route
                       path="/admin"
                       element={
                         <ProtectedRoute>
-                          <LogoutButton />
                           <ManageUsers />
                         </ProtectedRoute>
                       }

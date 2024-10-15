@@ -1,4 +1,6 @@
 import { StudentModel } from "../model/Student.js";
+import { ClassModel } from "../model/Class.js";
+
 // import * as xlsx from 'xlsx';
 //import multer from 'multer';
 
@@ -43,21 +45,15 @@ export const addStudent = async (req, res) => {
 };
 export const getStudents = async (req, res) => {
   try {
-    // Fetch all students from the database
-    const students = await StudentModel.find();
+    const classCode = req.params.id;
+    const foundClass = await ClassModel.findOne({ classCode }).populate(
+      "students"
+    );
 
-    // Check if there are any students
-    if (!students) {
-      return res.status(404).json({
-        success: false,
-        message: "No students found",
-      });
-    }
+    const students = foundClass.students;
 
-    // Return the students as a JSON response
     return res.status(200).json({
       success: true,
-      message: "Students fetched successfully",
       students,
     });
   } catch (error) {
@@ -184,14 +180,12 @@ export const importFile = async (req, res) => {
       existingIds.includes(item.idNumber)
     );
     if (duplicateIds.length) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: `The following idNumbers are already in the database: ${duplicateIds
-            .map((item) => item.idNumber)
-            .join(", ")}`,
-        });
+      return res.status(400).json({
+        success: false,
+        message: `The following idNumbers are already in the database: ${duplicateIds
+          .map((item) => item.idNumber)
+          .join(", ")}`,
+      });
     }
 
     await StudentModel.insertMany(data);
