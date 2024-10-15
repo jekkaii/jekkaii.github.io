@@ -128,6 +128,8 @@ export const useAuthStore = create((set) => ({
     } catch (error) {
       // If there is an error, set the error state
       set({
+        user: null,
+        token: null,
         success: false,
         error: error.response.data.message,
         isLoading: false,

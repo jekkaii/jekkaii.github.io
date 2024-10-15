@@ -12,23 +12,15 @@ import { useAuthStore } from "./stores/authStore";
 import LoginForm from "./components/LoginForm";
 import LogoutButton from "./components/LogoutButton";
 import { createContext, useEffect, useState } from "react";
-import axios from "axios";
-import CreateClass from "./components/teacher/CreateClass";
-import EditStudent from "./components/teacher/EditStudent";
 import ManageUsers from "./components/admin/ManageUsers";
 import Header from "./components/admin/Header";
 import Footer from "./components/Footer";
-import AddStudent from "./components/teacher/AddStudent";
-import UploadClassPicture from "./components/teacher/UploadClassPicture";
-import Profile from "./components/teacher/Profile";
 import Sidebar from "./components/Sidebar";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
 import ClassList from "./components/teacher/ClassList";
-import ManageStudents from "./components/teacher/ManageStudents";
-import Confirmation from "./components/teacher/Confirmation";
-import ManageModels from "./components/admin/ManageModels";
 import SpinnerLoader from "./components/SpinnerLoader";
-import Dash from "./components/teacher/Dash";
+import { Layout, Switch, ConfigProvider, Flex } from "antd";
+const { Content, Header: HeaderLayout } = Layout;
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -55,6 +47,7 @@ const RedirectToHome = ({ children }) => {
 function App() {
   const { checkAuthentication } = useAuthStore();
   const { isLoading, setLoading, authenticated } = useAuthStore();
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     checkAuthentication();
@@ -66,62 +59,104 @@ function App() {
 
   return (
     <>
-      <Router>
-        <div className="container-fluid p-0">
-          <div className="d-flex flex-row bd-highlight mb-3">
-            {authenticated && <Sidebar />}
-            {/* Main Content */}
-            <div className="flex col">
-              <Routes>
-                {/* Login Route */}
-                <Route
-                  path="/"
-                  element={
-                    <RedirectToHome>
-                      <LoginForm />
-                    </RedirectToHome>
-                  }
-                ></Route>
-                {/* Protected Routes */}
-                {/* Teacher Routes */}
-                <Route
-                  path="/teacher"
-                  element={
-                    <ProtectedRoute>
-                      <LogoutButton />
-                      <ClassList />
-                    </ProtectedRoute>
-                  }
-                ></Route>
-                <Route
-                  path="/teacher/attendance"
-                  element={
-                    isLoading ? (
-                      <SpinnerLoader />
-                    ) : (
-                      <ProtectedRoute>
-                        <AttendanceTabs />
-                      </ProtectedRoute>
-                    )
-                  }
-                ></Route>
+      <ConfigProvider
+        theme={{
+          token: {
+            // Seed Token
+            colorPrimary: "#3628A3",
+            colorLink: "#2a1f7e",
+            colorLinkActive: "#2a1f7e",
+            colorLinkHover: "#2a1f7e",
+            colorText: "gray",
 
-                {/* Admin Routes */}
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute>
-                      <LogoutButton />
-                      <ManageUsers />
-                    </ProtectedRoute>
-                  }
-                ></Route>
-              </Routes>
-            </div>
-          </div>
-          {authenticated && <Footer />}
-        </div>
-      </Router>
+            // Alias Token
+            colorBgContainer: "#ffffff",
+          },
+        }}
+      >
+        <Router>
+          <Layout>
+            {authenticated && (
+              <HeaderLayout
+                style={{ backgroundColor: "#ffffff" }}
+              ></HeaderLayout>
+            )}
+            <Layout>
+              {/* Sidebar Component */}
+              {authenticated && (
+                <Sidebar
+                  onChangeTheme={(value) => setTheme(value ? "dark" : "light")}
+                />
+              )}
+              <Layout>
+                {/* Main Content */}
+                <Content
+                  style={{
+                    margin: "24px 16px",
+                    padding: 24,
+                    minHeight: 280,
+                    background: "#fff",
+                    overflow: "initial",
+                    borderRadius: "10px",
+                    boxShadow: "5px 5px 10px 0px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  <Routes>
+                    {/* Login Route */}
+                    <Route
+                      path="/"
+                      element={
+                        <RedirectToHome>
+                          <LoginForm />
+                        </RedirectToHome>
+                      }
+                    ></Route>
+                    {/* Protected Routes */}
+                    {/* Teacher Routes */}
+                    <Route
+                      path="/teacher"
+                      element={
+                        <ProtectedRoute>
+                          <LogoutButton />
+                          <ClassList />
+                        </ProtectedRoute>
+                      }
+                    ></Route>
+                    <Route
+                      path="/teacher/attendance"
+                      element={
+                        isLoading ? (
+                          <SpinnerLoader />
+                        ) : (
+                          <ProtectedRoute>
+                            <AttendanceTabs />
+                          </ProtectedRoute>
+                        )
+                      }
+                    ></Route>
+
+                    {/* Admin Routes */}
+                    <Route
+                      path="/admin"
+                      element={
+                        <ProtectedRoute>
+                          <LogoutButton />
+                          <ManageUsers />
+                        </ProtectedRoute>
+                      }
+                    ></Route>
+                    <Route
+                      path="*"
+                      element={<Navigate to="/" replace />}
+                    ></Route>
+                  </Routes>
+                </Content>
+              </Layout>
+            </Layout>
+            {authenticated && <Footer />}
+          </Layout>
+        </Router>
+      </ConfigProvider>
     </>
   );
 }

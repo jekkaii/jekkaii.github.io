@@ -3,13 +3,21 @@ import React, { Component } from "react";
 import logo from "../components/resources/face.png";
 
 import "../components/css/style.css"; // Update the path to your logo image
+import { Divider, Flex } from "antd";
 
 export default class Footer extends Component {
   render() {
     return (
-      <footer className="container-fluid p-0">
+      <Flex
+        vertical
+        style={{
+          padding: 24,
+          background: "#fff",
+          boxShadow: "5px 5px 10px 0px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         {/* Top section of the footer containing logo and nav links */}
-        <div className="d-flex justify-content-between align-items-center py-3">
+        <Flex justify="space-between">
           <div className="footer-logo">
             <div className="profile-image mb-3 text-center">
               <img src={logo} alt="face" width="160" />
@@ -26,10 +34,11 @@ export default class Footer extends Component {
               CONTACT US
             </a>
           </nav>
-        </div>
+        </Flex>
+        <Divider style={{ margin: "0" }} />
 
         {/* Bottom section of the footer containing copyright and contact info */}
-        <div className="d-flex justify-content-between align-items-center py-3 border-top">
+        <Flex justify="space-between" style={{ marginTop: 24 }}>
           <p className="mb-0">
             &copy; 2024 Cogito Creatio. All rights reserved
           </p>
@@ -37,8 +46,8 @@ export default class Footer extends Component {
             <i className="headset-icon me-2"></i>
             <strong className="ms-2">(+63) 912 3456 789</strong>
           </div>
-        </div>
-      </footer>
+        </Flex>
+      </Flex>
     );
   }
 }

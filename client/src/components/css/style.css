@@ -8,11 +8,17 @@
     url("../resources/source-serif-pro-regular.ttf") format("truetype");
 }
 
-body {
-  font-family: "Inter", sans-serif;
+body,
+p {
+  font-family: "Source-Serif-Pro", sans-serif;
 }
 
-h2 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Inter", sans-serif;
 }
 
@@ -1434,10 +1440,17 @@ hr {
   height: 5px;
 }
 
-hr::after {
-  background: #fff;
-  content: "Or login with";
+hr.signinwith::after {
+  background: #ffffff;
+  content: "OR";
   padding: 0 4px;
   position: relative;
   top: -13px;
+}
+
+.siderStyle {
+  text-align: "center";
+  line-height: "120px";
+  color: "#fff";
+  background: "#1677ff";
 }
