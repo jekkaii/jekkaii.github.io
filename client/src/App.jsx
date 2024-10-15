@@ -10,10 +10,8 @@ import {
 import { useAuthStore } from "./stores/authStore";
 
 import LoginForm from "./components/LoginForm";
-import LogoutButton from "./components/LogoutButton";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ManageUsers from "./components/admin/ManageUsers";
-import Header from "./components/admin/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
@@ -22,8 +20,8 @@ import SpinnerLoader from "./components/SpinnerLoader";
 import ProfileDropdown from "./components/teacher/Dropdown";
 import Profile from "./components/teacher/Profile";
 import { Layout, Switch, ConfigProvider, Flex, Typography } from "antd";
+import Dashboard from "./components/Dashboard";
 const { Content, Header: HeaderLayout } = Layout;
-const { Paragraph, Text } = Typography;
 
 const ProtectedRoute = ({ children }) => {
   const { authenticated } = useAuthStore();
@@ -38,10 +36,10 @@ const RedirectToHome = ({ children }) => {
   if (authenticated) {
     if (isAdmin) {
       console.log(isAdmin);
-      return <Navigate to="/admin" />;
+      return <Navigate to="/home" />;
     }
     if (isTeacher) {
-      return <Navigate to="/teacher" />;
+      return <Navigate to="/home" />;
     }
   }
 
@@ -135,7 +133,7 @@ function App() {
                   style={{
                     margin: "24px 16px 0",
                     padding: 24,
-                    minHeight: 280,
+                    minHeight: 600,
                     background: "#fff",
                     overflow: "initial",
                     borderRadius: "10px",
@@ -159,6 +157,16 @@ function App() {
                       element={
                         <ProtectedRoute>
                           <Profile />
+                        </ProtectedRoute>
+                      }
+                    ></Route>
+
+                    {/* Dashboard Route */}
+                    <Route
+                      path="/home"
+                      element={
+                        <ProtectedRoute>
+                          <Dashboard />
                         </ProtectedRoute>
                       }
                     ></Route>

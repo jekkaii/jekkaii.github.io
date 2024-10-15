@@ -7,6 +7,7 @@ axios.defaults.withCredentials = true; // For secure cookie handling
 
 export const useClassStore = create((set) => ({
   classes: [],
+  classCount: 0,
   error: null,
   isLoading: false,
 
@@ -84,6 +85,23 @@ export const useClassStore = create((set) => ({
       }
     } catch (error) {
       set({ error: error.message, isLoading: false });
+    }
+  },
+
+  countClass: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`${API_URL}/count`);
+
+      if (response.status === 200) {
+        const { count } = response.data;
+        set({ classCount: count, isLoading: false, error: null });
+      } else {
+        throw new Error("Failed to fetch count");
+      }
+    } catch (error) {
+      console.error("Error fetching count:", error);
+      set({ error: error.response?.data || error.message, isLoading: false });
     }
   },
 }));

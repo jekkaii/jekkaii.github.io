@@ -65,6 +65,26 @@ export const getStudents = async (req, res) => {
   }
 };
 
+export const countStudents = async (req, res) => {
+  try {
+    const classCode = req.params.id;
+    const foundClass = await ClassModel.findOne({ classCode }).populate(
+      "students"
+    );
+    const count = foundClass.students.length;
+    return res.status(200).json({
+      success: true,
+      count,
+    });
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
 export const updatePassword = async (req, res) => {
   try {
     const { idNumber, password } = req.body;

@@ -6,6 +6,7 @@ import {
   getClass,
   updateClass,
   readClasses,
+  countClasses,
 } from "../controller/classController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
@@ -18,5 +19,6 @@ router.get("/classes/:id", getClass);
 router.put("/classes/:id", updateClass);
 router.get("/classes", verifyToken, readClasses);
 router.patch("/classes/archive", archiveClass);
+router.get("/count", verifyToken, countClasses);
 
 export default router;

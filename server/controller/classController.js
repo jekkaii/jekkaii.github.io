@@ -128,6 +128,29 @@ export const updateClass = async (req, res) => {
   }
 };
 
+export const countClasses = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ _id: req.userId }).select(
+      "-password"
+    );
+    const numberOfClasses = await ClassModel.aggregate([
+      { $match: { teacherId: user._id } },
+      { $count: "count" },
+    ]);
+
+    if (numberOfClasses.length === 0) {
+      return res.status(200).json({ success: true, count: 0 });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, count: numberOfClasses[0].count });
+  } catch (error) {
+    console.error("Error counting classes:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export const getClass = async (req, res) => {
   try {
     const { classCode } = req.body;
