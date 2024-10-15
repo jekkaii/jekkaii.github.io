@@ -13,7 +13,6 @@ export const addClass = async (req, res) => {
       days,
       startTime,
       endTime,
-      teacherId,
       students = [],
     } = req.body;
 
@@ -32,6 +31,7 @@ export const addClass = async (req, res) => {
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
+
     const user = await UserModel.findOne({ _id: req.userId }).select(
       "-password"
     );
@@ -57,7 +57,9 @@ export const addClass = async (req, res) => {
       teacherId: user._id,
       students,
     });
-    await newClass.save();
+    const savedClass = await newClass.save();
+    user.classes.push(savedClass._id);
+    await user.save();
     return res
       .status(200)
       .json({ success: true, message: "Class created successfully" });
