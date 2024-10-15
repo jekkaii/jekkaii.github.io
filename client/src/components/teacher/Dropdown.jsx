@@ -7,10 +7,11 @@ const ProfileDropdown = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState('John Doe'); // Default username for display
   const [userAvatar, setUserAvatar] = useState(null); // Placeholder for user image URL
+  const [isHovered, setIsHovered] = useState(false); // State to track hover status
 
   useEffect(() => {
     // Fetch user data (e.g., from local storage or an API) and update state
-    const storedUserName = localStorage.getItem('userName') || 'John Doe';
+    const storedUserName = localStorage.getItem('userName') || 'Juan Dela Cruz';
     const storedUserAvatar = localStorage.getItem('userAvatar'); // URL of user avatar if available
     setUserName(storedUserName);
     setUserAvatar(storedUserAvatar);
@@ -37,7 +38,18 @@ const ProfileDropdown = () => {
 
   return (
     <Dropdown overlay={menu} trigger={['click']}>
-      <Button type="text" style={{ display: 'flex', alignItems: 'center', padding: '5px' }}>
+      <Button
+        type="text"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: '5px',
+          backgroundColor: isHovered ? '#a7a7a7' : 'transparent', // Change background color on hover
+          border: 'none',
+        }}
+        onMouseEnter={() => setIsHovered(true)} // Set hover state to true on mouse enter
+        onMouseLeave={() => setIsHovered(false)} // Set hover state to false on mouse leave
+      >
         <Avatar src={userAvatar} icon={!userAvatar && <UserOutlined />} />
         <Typography.Text style={{ marginLeft: 8, marginRight: 8 }}>{userName}</Typography.Text>
         <DownOutlined />
