@@ -37,6 +37,7 @@ const RedirectToHome = ({ children }) => {
 
   if (authenticated) {
     if (isAdmin) {
+      console.log(isAdmin);
       return <Navigate to="/admin" />;
     }
     if (isTeacher) {
@@ -175,13 +176,9 @@ function App() {
                     <Route
                       path="/teacher/attendance/:code"
                       element={
-                        isLoading ? (
-                          <SpinnerLoader />
-                        ) : (
-                          <ProtectedRoute>
-                            <AttendanceTabs />
-                          </ProtectedRoute>
-                        )
+                        <ProtectedRoute>
+                          <AttendanceTabs />
+                        </ProtectedRoute>
                       }
                     ></Route>
 

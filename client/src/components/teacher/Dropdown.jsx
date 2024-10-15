@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { Dropdown, Avatar, Button, Typography, Flex } from "antd";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
@@ -7,7 +8,6 @@ import { useAuthStore } from "../../stores/authStore";
 const ProfileDropdown = () => {
   const [userName, setUserName] = useState("John Doe"); // Default username for display
   const [userAvatar, setUserAvatar] = useState(null); // Placeholder for user image URL
-  const [isHovered, setIsHovered] = useState(false); // State to track hover status
   const { logout, user } = useAuthStore();
 
   useEffect(() => {

@@ -29,7 +29,7 @@ export const useAuthStore = create((set) => ({
         password,
       });
       const { user, token } = response.data;
-      if (user.role === "admin") {
+      if (user.role === "Admin") {
         // If the user is an admin, set the corresponding state
         set({
           user,
@@ -101,7 +101,7 @@ export const useAuthStore = create((set) => ({
       const response = await axios.get(`${API_URL}/check-auth`);
       if (response.status === 200) {
         const { user, token } = response.data;
-        if (user.role === "admin") {
+        if (user.role === "Admin") {
           // If the user is an admin, set the corresponding state
           set({
             user,
