@@ -49,11 +49,6 @@ const ClassSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    teacherId: {
-      type: Schema.Types.ObjectId,
-      ref: "Teacher", // Reference to the teacher who owns the class
-      required: true,
-    },
     students: [
       {
         type: Schema.Types.ObjectId,

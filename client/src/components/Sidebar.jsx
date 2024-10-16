@@ -46,7 +46,11 @@ function Sidebar() {
         className="text-decoration-none"
         to={`/teacher/attendance/${item.classCode}`}
       >
-        {item.classCode}
+        <Flex vertical style={{ margin: 0, padding: 0 }}>
+          <Typography.Text style={{ fontSize: 13 }}>
+            {item.classCode}
+          </Typography.Text>
+        </Flex>
       </Link>
     ),
     key: item.classCode,
@@ -72,12 +76,13 @@ function Sidebar() {
           components: {
             Menu: {
               collapsedIconSize: 17,
+              itemHeight: 50,
             },
           },
         }}
       >
         <Sider
-          width={180}
+          width={200}
           collapsedWidth={75}
           trigger={null}
           theme={theme}
@@ -142,7 +147,7 @@ function Sidebar() {
 
             {/* Menu Items */}
             <Menu
-              style={{ padding: "0 10px 20px 10px" }}
+              style={{ padding: "0 10px 0px 5px" }}
               theme={theme}
               mode="inline"
               defaultSelectedKeys={["1"]}
@@ -160,9 +165,12 @@ function Sidebar() {
                   children: [
                     {
                       key: "1",
-                      icon: <AppstoreOutlined />,
+                      icon: <AppstoreOutlined style={{ fontSize: 21 }} />,
                       label: (
-                        <Link className="text-decoration-none" to="/dashboard">
+                        <Link
+                          className="text-decoration-none font-weight-bold h6 m-0"
+                          to="/dashboard"
+                        >
                           Dashboard
                         </Link>
                       ),

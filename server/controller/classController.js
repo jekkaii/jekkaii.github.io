@@ -54,7 +54,6 @@ export const addClass = async (req, res) => {
       days,
       startTime,
       endTime,
-      teacherId: user._id,
       students,
     });
     const savedClass = await newClass.save();
@@ -133,18 +132,10 @@ export const countClasses = async (req, res) => {
     const user = await UserModel.findOne({ _id: req.userId }).select(
       "-password"
     );
-    const numberOfClasses = await ClassModel.aggregate([
-      { $match: { teacherId: user._id } },
-      { $count: "count" },
-    ]);
 
-    if (numberOfClasses.length === 0) {
-      return res.status(200).json({ success: true, count: 0 });
-    }
+    const count = user.classes.length;
 
-    return res
-      .status(200)
-      .json({ success: true, count: numberOfClasses[0].count });
+    return res.status(200).json({ success: true, count });
   } catch (error) {
     console.error("Error counting classes:", error);
     return res.status(500).json({ success: false, message: error.message });
@@ -177,7 +168,12 @@ export const readClasses = async (req, res) => {
     const user = await UserModel.findOne({ _id: req.userId }).select(
       "-password"
     );
-    const classes = await ClassModel.find({ teacherId: user._id });
+
+    const userId = user._id;
+    const existingClass = await UserModel.findOne(userId).populate("classes");
+
+    const classes = existingClass.classes;
+
     return res.status(200).json({ success: true, classes });
   } catch (error) {
     console.error("Error reading classes:", error);

@@ -52,6 +52,13 @@ export const getStudents = async (req, res) => {
 
     const students = foundClass.students;
 
+    if (!students) {
+      return res.status(404).json({
+        success: false,
+        message: "No students found",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       students,
@@ -72,6 +79,14 @@ export const countStudents = async (req, res) => {
       "students"
     );
     const count = foundClass.students.length;
+
+    if (!count) {
+      return res.status(404).json({
+        success: false,
+        message: "No students found",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       count,
