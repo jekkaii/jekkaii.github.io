@@ -35,7 +35,6 @@ const RedirectToHome = ({ children }) => {
 
   if (authenticated) {
     if (isAdmin) {
-      console.log(isAdmin);
       return <Navigate to="/home" />;
     }
     if (isTeacher) {

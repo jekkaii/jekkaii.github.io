@@ -17,6 +17,7 @@ import {
   ConfigProvider,
   Divider,
   Typography,
+  Switch,
 } from "antd";
 const { Sider } = Layout;
 import {
@@ -40,17 +41,17 @@ function Sidebar() {
   const [collapsed, setCollapsed] = useState(true);
   const [theme, setTheme] = useState("light");
 
+  const changeTheme = (value) => {
+    setTheme(value ? "dark" : "light");
+  };
+
   const items = classes.map((item) => ({
     label: (
       <Link
-        className="text-decoration-none"
+        className="text-decoration-none font-weight-bold h6 m-0"
         to={`/teacher/attendance/${item.classCode}`}
       >
-        <Flex vertical style={{ margin: 0, padding: 0 }}>
-          <Typography.Text style={{ fontSize: 13 }}>
-            {item.classCode}
-          </Typography.Text>
-        </Flex>
+        {item.classCode}
       </Link>
     ),
     key: item.classCode,
@@ -75,15 +76,18 @@ function Sidebar() {
         theme={{
           components: {
             Menu: {
-              collapsedIconSize: 17,
-              itemHeight: 50,
+              iconSize: 20,
+              collapsedIconSize: 30,
+              itemHeight: collapsed ? 50 : 45,
+              itemMarginInline: 15,
+              itemMarginBlock: 5,
             },
           },
         }}
       >
         <Sider
           width={200}
-          collapsedWidth={75}
+          collapsedWidth={90}
           trigger={null}
           theme={theme}
           style={{
@@ -147,7 +151,7 @@ function Sidebar() {
 
             {/* Menu Items */}
             <Menu
-              style={{ padding: "0 10px 0px 5px" }}
+              // style={{ padding: "0px 14px 0px 20px" }}
               theme={theme}
               mode="inline"
               defaultSelectedKeys={["1"]}
@@ -165,7 +169,18 @@ function Sidebar() {
                   children: [
                     {
                       key: "1",
-                      icon: <AppstoreOutlined style={{ fontSize: 21 }} />,
+                      icon: (
+                        <AppstoreOutlined
+                          style={
+                            collapsed
+                              ? {
+                                  marginLeft: -7,
+                                  marginTop: 10,
+                                }
+                              : undefined
+                          }
+                        />
+                      ),
                       label: (
                         <Link
                           className="text-decoration-none font-weight-bold h6 m-0"
@@ -177,27 +192,69 @@ function Sidebar() {
                     },
                     isTeacher && {
                       key: "2",
-                      icon: <BookOutlined />,
+                      icon: (
+                        <BookOutlined
+                          style={
+                            collapsed
+                              ? {
+                                  marginLeft: -7,
+                                  marginTop: 10,
+                                }
+                              : undefined
+                          }
+                        />
+                      ),
                       label: (
-                        <Link className="text-decoration-none" to="/teacher">
+                        <Link
+                          className="text-decoration-none font-weight-bold h6 m-0"
+                          to="/teacher"
+                        >
                           Classes
                         </Link>
                       ),
                     },
                     isAdmin && {
                       key: "2",
-                      icon: <UsergroupAddOutlined />,
+                      icon: (
+                        <UsergroupAddOutlined
+                          style={
+                            collapsed
+                              ? {
+                                  marginLeft: -7,
+                                  marginTop: 10,
+                                }
+                              : undefined
+                          }
+                        />
+                      ),
                       label: (
-                        <Link className="text-decoration-none" to="/admin">
+                        <Link
+                          className="text-decoration-none font-weight-bold h6 m-0"
+                          to="/admin"
+                        >
                           Manage Users
                         </Link>
                       ),
                     },
                     isAdmin && {
                       key: "3",
-                      icon: <RobotOutlined />,
+                      icon: (
+                        <RobotOutlined
+                          style={
+                            collapsed
+                              ? {
+                                  marginLeft: -7,
+                                  marginTop: 10,
+                                }
+                              : undefined
+                          }
+                        />
+                      ),
                       label: (
-                        <Link className="text-decoration-none" to="">
+                        <Link
+                          className="text-decoration-none font-weight-bold h6 m-0"
+                          to=""
+                        >
                           Manage Models
                         </Link>
                       ),
@@ -219,6 +276,12 @@ function Sidebar() {
               ].filter(Boolean)}
             />
           </Flex>
+          {/* <Switch
+            checked={theme === "dark"}
+            onChange={changeTheme}
+            checkedChildren="Dark"
+            unCheckedChildren="Light"
+          /> */}
         </Sider>
       </ConfigProvider>
     </>
