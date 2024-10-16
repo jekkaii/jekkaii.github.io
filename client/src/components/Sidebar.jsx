@@ -21,7 +21,8 @@ import {
 } from "antd";
 const { Sider } = Layout;
 import {
-  LeftOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
   UsergroupAddOutlined,
   AppstoreOutlined,
   RobotOutlined,
@@ -48,6 +49,7 @@ function Sidebar() {
   const items = classes.map((item) => ({
     label: (
       <Link
+        onClick={getStudents}
         className="text-decoration-none font-weight-bold h6 m-0"
         to={`/teacher/attendance/${item.classCode}`}
       >
@@ -77,7 +79,7 @@ function Sidebar() {
           components: {
             Menu: {
               iconSize: 20,
-              collapsedIconSize: 30,
+              collapsedIconSize: 25,
               itemHeight: collapsed ? 50 : 45,
               itemMarginInline: 15,
               itemMarginBlock: 5,
@@ -86,12 +88,12 @@ function Sidebar() {
         }}
       >
         <Sider
-          width={200}
+          width={260}
           collapsedWidth={90}
           trigger={null}
           theme={theme}
           style={{
-            boxShadow: "1px 0px 5px 0px rgba(0, 0, 0, 0.1)",
+            boxShadow: "2px 0 1px 0 rgba(0, 0, 0, 0.05)",
           }}
           collapsible
           collapsed={collapsed}
@@ -100,45 +102,71 @@ function Sidebar() {
           <Flex vertical>
             <Flex
               gap={10}
-              justify="center"
+              justify="space-between"
               align="middle"
-              style={{ marginTop: 24, marginBottom: 5 }}
+              style={{ margin: "17px 17px 0 17px" }}
             >
-              <img
-                src={theme === "light" ? faceImage : faceImageInverted}
-                alt="face"
-                style={{
-                  transition:
-                    "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), display 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                  display: collapsed ? "none" : "block",
-                  width: collapsed ? 0 : 100,
-                  overflow: "hidden",
-                }}
-              />
-              <Button
-                size={collapsed ? "large" : "small"}
-                type="primary"
-                style={{
-                  margin: 0,
-                  padding: "0px 4px",
-                }}
-                onClick={() => setCollapsed(!collapsed)}
-              >
-                {collapsed ? (
+              <Flex align="middle" gap={10}>
+                <Button
+                  type="primary"
+                  size="medium"
+                  style={{
+                    padding: "22px 5px",
+                    borderRadius: "10px",
+                    pointerEvents: collapsed ? "auto" : "none",
+                  }}
+                  onClick={() => setCollapsed(!collapsed)}
+                >
                   <img
                     src={faceLogo}
                     style={{
                       transition:
                         "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), display 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                      display: collapsed ? "block" : "none",
-                      width: collapsed ? 35 : 0,
+                      display: collapsed ? "none" : "block",
+                      width: 40,
                       overflow: "hidden",
                     }}
                   />
-                ) : (
-                  <LeftOutlined />
-                )}
-              </Button>
+                  {collapsed && (
+                    <MenuUnfoldOutlined
+                      style={{ fontSize: "20px", color: "#f0c751", width: 40 }}
+                      onClick={() => setCollapsed(!collapsed)}
+                    />
+                  )}
+                </Button>
+
+                <Flex
+                  style={{
+                    width: 90,
+                    overflow: "hidden",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "width 0.5s ease-out, display 0.5s ease-out",
+                  }}
+                >
+                  <img
+                    src={faceImage}
+                    style={{
+                      transition: "width 0.5s ease-out, display 0.5s ease-out",
+
+                      display: collapsed ? "none" : "block",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Flex>
+              </Flex>
+              {!collapsed && (
+                <MenuFoldOutlined
+                  style={{
+                    fontSize: "22px",
+                    color: "gray",
+                    transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                  onClick={() => setCollapsed(!collapsed)}
+                />
+              )}
             </Flex>
 
             <Flex
@@ -174,8 +202,8 @@ function Sidebar() {
                           style={
                             collapsed
                               ? {
-                                  marginLeft: -7,
-                                  marginTop: 10,
+                                  marginLeft: -4,
+                                  marginTop: 12,
                                 }
                               : undefined
                           }
@@ -197,8 +225,8 @@ function Sidebar() {
                           style={
                             collapsed
                               ? {
-                                  marginLeft: -7,
-                                  marginTop: 10,
+                                  marginLeft: -4,
+                                  marginTop: 12,
                                 }
                               : undefined
                           }
@@ -220,8 +248,8 @@ function Sidebar() {
                           style={
                             collapsed
                               ? {
-                                  marginLeft: -7,
-                                  marginTop: 10,
+                                  marginLeft: -4,
+                                  marginTop: 12,
                                 }
                               : undefined
                           }
@@ -243,8 +271,8 @@ function Sidebar() {
                           style={
                             collapsed
                               ? {
-                                  marginLeft: -7,
-                                  marginTop: 10,
+                                  marginLeft: -4,
+                                  marginTop: 12,
                                 }
                               : undefined
                           }

@@ -12,6 +12,7 @@ import ManageStudents from "./ManageStudents";
 import { FaCamera } from "react-icons/fa6";
 import UploadClassPicture from "./UploadClassPicture";
 import { useStudentStore } from "../../stores/studentStore";
+import { Skeleton, Flex } from "antd";
 
 const AttendanceTabs = () => {
   const [key, setKey] = useState("daily");
@@ -90,112 +91,126 @@ const AttendanceTabs = () => {
   // });
 
   return (
-    <Tabs
-      id="controlled-tab-example"
-      activeKey={key}
-      onSelect={(k) => setKey(k)}
-      className="mb-3"
-    >
-      {/* Daily Attendance Tab */}
-      <Tab eventKey="daily" title="Daily Attendance">
-        <div id="tabsTitle">
-          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-          <p className="mb-0 text-center">
-            <b>Schedule: </b>
-            {sched}
-          </p>
-          <div id="datePickerDiv">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                value={dateValue}
-                onChange={handleDateChange}
-                disableFuture={true}
-                renderInput={(params) => <input {...params.inputProps} />}
-              ></DatePicker>
-            </LocalizationProvider>
-          </div>
-        </div>
-
-        <Row className="align-items-end mb-0 mt-5">
-          <Col xs={8} className="p-0"></Col>
-
-          <Col xs={4} className="d-flex justify-content-end p-0">
-            <InputGroup className="search-bar">
-              <Form.Control
-                placeholder="Search by ID Number or Name"
-                className="custom-search-input"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+    <Flex vertical style={{ width: "100%" }}>
+      <Flex></Flex>
+      {/* Tabs */}
+      <Flex
+        vertical
+        style={{
+          // margin: "30px 30px 0",
+          padding: 24,
+          backgroundColor: "#fff",
+          borderRadius: "10px",
+          boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
+          width: "100%",
+        }}
+      >
+        <Tabs
+          id="controlled-tab-example"
+          activeKey={key}
+          onSelect={(k) => setKey(k)}
+          className="mb-3"
+        >
+          {/* Daily Attendance Tab */}
+          <Tab eventKey="daily" title="Daily Attendance">
+            <Row className="align-items-end mb-0 mt-5">
+              <Col xs={8} className="p-0"></Col>
+              <Col xs={4} className="d-flex justify-content-end p-0">
+                <InputGroup className="search-bar">
+                  <Form.Control
+                    placeholder="Search by ID Number or Name"
+                    className="custom-search-input"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </InputGroup>
+                <Button className="me-2" id="camera">
+                  <FaCamera className="fs-4" />
+                </Button>
+                <UploadClassPicture
+                  date={formattedDate}
+                  subjectAndCode={subjectAndCode}
+                  schedule={sched}
+                ></UploadClassPicture>
+              </Col>
+            </Row>
+            {isLoading ? (
+              <>
+                <Skeleton active />
+                <Skeleton active />
+                <Skeleton active />
+              </>
+            ) : (
+              <DailyAttendance
+                handleManualAttendance={handleManualAttendance}
+                sortedData={sortedData}
               />
-            </InputGroup>
-
-            <Button className="me-2" id="camera">
-              <FaCamera className="fs-4" />
-            </Button>
-
-            <UploadClassPicture
-              date={formattedDate}
-              subjectAndCode={subjectAndCode}
-              schedule={sched}
-            ></UploadClassPicture>
-          </Col>
-        </Row>
-
-        <DailyAttendance
-          handleManualAttendance={handleManualAttendance}
-          sortedData={sortedData}
-        />
-      </Tab>
-
-      {/* Attendance Summary Tab  */}
-      <Tab eventKey="summary" title="Attendance Summary">
-        <div id="tabsTitle">
-          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-          <p className="mb-0 text-center">
-            <b>Schedule: </b>
-            {sched}
-          </p>
-          <p className="mb-5 text-center">
-            <b>Date: </b>
-            {date}
-          </p>
-
-          <Row className="mb-0 justify-content-end">
-            <Col xs={3}>
-              <InputGroup>
-                <Form.Control
-                  placeholder="Search by ID Number or Name"
-                  className="custom-search-input"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </InputGroup>
-            </Col>
-          </Row>
-        </div>
-
-        <AttendanceSummary info={sortedData}></AttendanceSummary>
-      </Tab>
-
-      {/* Manage Students Tab */}
-      <Tab eventKey="manage" title="Manage Students">
-        <div id="tabsTitle">
-          <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-          <p className="mb-0 text-center">
-            <b>Schedule: </b>
-            {sched}
-          </p>
-          <p className="mb-0 text-center">
-            <b>Date: </b>
-            {date}
-          </p>
-        </div>
-        <ManageStudents
-          sortedData={sortedData}
-          attendanceData={attendanceData}
-        ></ManageStudents>
-      </Tab>
-    </Tabs>
+            )}
+          </Tab>
+          {/* Attendance Summary Tab  */}
+          <Tab eventKey="summary" title="Attendance Summary">
+            <div id="tabsTitle">
+              <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
+              <p className="mb-0 text-center">
+                <b>Schedule: </b>
+                {sched}
+              </p>
+              <p className="mb-5 text-center">
+                <b>Date: </b>
+                {date}
+              </p>
+              <Row className="mb-0 justify-content-end">
+                <Col xs={3}>
+                  <InputGroup>
+                    <Form.Control
+                      placeholder="Search by ID Number or Name"
+                      className="custom-search-input"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </InputGroup>
+                </Col>
+              </Row>
+            </div>
+            {isLoading ? (
+              <>
+                <Skeleton active />
+                <Skeleton active />
+                <Skeleton active />
+              </>
+            ) : (
+              <AttendanceSummary info={sortedData}></AttendanceSummary>
+            )}
+          </Tab>
+          {/* Manage Students Tab */}
+          <Tab eventKey="manage" title="Manage Students">
+            <div id="tabsTitle">
+              <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
+              <p className="mb-0 text-center">
+                <b>Schedule: </b>
+                {sched}
+              </p>
+              <p className="mb-0 text-center">
+                <b>Date: </b>
+                {date}
+              </p>
+            </div>
+            {isLoading ? (
+              <>
+                <Skeleton active />
+                <Skeleton active />
+                <Skeleton active />
+              </>
+            ) : (
+              <ManageStudents
+                sortedData={sortedData}
+                attendanceData={attendanceData}
+              ></ManageStudents>
+            )}
+          </Tab>
+        </Tabs>
+      </Flex>
+    </Flex>
   );
 };
 

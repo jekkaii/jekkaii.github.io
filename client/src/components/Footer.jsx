@@ -16,7 +16,7 @@ export default class Footer extends Component {
           background: "#fff",
           overflow: "initial",
           borderRadius: "10px",
-          boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0px 2px 2px 0px rgba(0, 0, 0, 0.1)",
         }}
       >
         {/* Top section of the footer containing logo and nav links */}

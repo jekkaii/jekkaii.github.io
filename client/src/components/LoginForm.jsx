@@ -5,7 +5,15 @@ import { useAuthStore } from "../stores/authStore";
 import facelogo from "../components/resources/face.png"; // Update the path to your logo image
 import "../components/css/style.css"; // Import the CSS file
 import loginpreloader from "../components/resources/preloader-logov3.svg";
-import { Button, ConfigProvider, Input, Form, Flex, Alert } from "antd";
+import {
+  Button,
+  ConfigProvider,
+  Input,
+  Form,
+  Flex,
+  Alert,
+  Typography,
+} from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import google from "../components/resources/google.png";
 
@@ -29,21 +37,37 @@ export default function LoginForm() {
         },
       }}
     >
-      <MDBContainer className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100 no-shadow">
+      <Flex
+        vertical
+        justify="space-between"
+        align="center"
+        style={{
+          margin: "70px 30px",
+          // borderRadius: "20px",
+          // boxShadow:
+          //   "0px 4px 24px 0px rgba(0, 0, 0, 0.1), 0px 0px 1px 0px rgba(0, 0, 0, 0.01), 0px 4px 5px -3px rgba(0, 0, 0, 0.3)",
+          // width: "500px",
+        }}
+      >
         {/* Logo */}
-        <div className="d-flex w-100 mb-4" style={{ maxWidth: "400px" }}>
+        <div className="d-flex w-100 mb-4 mt-5" style={{ maxWidth: "400px" }}>
           <img src={facelogo} alt="University Logo" className="img-fluid" />
         </div>
 
         {/* Login header */}
         <div
-          className="d-flex w-100 text-center row mb-4"
+          className="d-flex w-100 text-center row mb-3"
           style={{ maxWidth: "400px" }}
         >
-          <h1 className="p-0">Welcome Back!</h1>
-          <h6 className="p-0 fw-normal" style={{ color: "gray" }}>
+          <Typography.Title level={1} className=" m-0">
+            Welcome Back!
+          </Typography.Title>
+          <Typography.Text
+            className=" fw-normal fs-6"
+            style={{ color: "gray" }}
+          >
             Login with your credentials
-          </h6>
+          </Typography.Text>
         </div>
 
         {/* Login form */}
@@ -58,7 +82,7 @@ export default function LoginForm() {
           }}
         >
           {error && !isLoggingIn && (
-            <Alert className="mb-4" message={error} type="error" showIcon />
+            <Alert className="mb-3" message={error} type="error" showIcon />
           )}
 
           {/* Username input */}
@@ -82,6 +106,7 @@ export default function LoginForm() {
           {/* Password input */}
           <Form.Item
             label="Password"
+            style={{ marginBottom: "10px" }}
             name="password"
             rules={[
               {
@@ -108,7 +133,7 @@ export default function LoginForm() {
           </Flex>
 
           {/* Login button */}
-          <Form.Item className="mb-5">
+          <Form.Item className="mb-3">
             <Button block type="primary" htmlType="submit" size="large">
               {isLoggingIn ? (
                 <img src={loginpreloader} alt="preloader-logo" width="25" />
@@ -123,10 +148,9 @@ export default function LoginForm() {
             <h6>
               By signing in, you agree to our
               <Link className="text-decoration-none ms-1 fw-bold" to="#">
-                {" "}
                 Terms of Service
-              </Link>{" "}
-              and{" "}
+              </Link>
+              &nbsp;and&nbsp;
               <Link className="text-decoration-none ms-1 fw-bold" to="#">
                 Privacy Policy
               </Link>
@@ -142,7 +166,7 @@ export default function LoginForm() {
             </Button>
           </div>
         </Form>
-      </MDBContainer>
+      </Flex>
     </ConfigProvider>
   );
 }

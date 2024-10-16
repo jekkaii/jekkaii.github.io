@@ -130,13 +130,13 @@ function App() {
                 {/* Main Content */}
                 <Content
                   style={{
-                    margin: "30px 30px 0",
-                    padding: 24,
-                    minHeight: 600,
-                    background: "#fff",
+                    margin: authenticated ? "30px 30px 0" : 0,
+                    justifyContent: "center",
+                    display: authenticated ? "block" : "flex",
+                    background: !authenticated ? "white" : "none",
                     overflow: "initial",
-                    borderRadius: "10px",
-                    boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
+                    // borderRadius: "30px",
+                    // boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <Routes>

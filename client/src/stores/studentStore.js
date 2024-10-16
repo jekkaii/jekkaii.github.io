@@ -20,7 +20,7 @@ export const useStudentStore = create((set) => ({
     const id = url.split("/")[url.split("/").length - 1];
     set({ isLoading: true });
     try {
-      //   await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.get(`${API_URL}/students/${id}`);
       if (response.status === 200) {
         const { students } = response.data;
