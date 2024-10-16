@@ -5,7 +5,7 @@ import { Tabs, Tab, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import AttendanceSummaryTable from "./AttendanceSummary";
+import AttendanceSummary from "./AttendanceSummary";
 import DailyAttendance from "./DailyAttendance";
 import "../css/style.css";
 import ManageStudents from "./ManageStudents";
@@ -80,14 +80,14 @@ const AttendanceTabs = () => {
     );
   };
 
-  // Filter the info based on the searchTerm
-  const filteredInfo = sortedData.filter((entry) => {
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    return (
-      entry.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-      entry.idNumber.includes(lowerCaseSearchTerm)
-    );
-  });
+  // // Filter the info based on the searchTerm
+  // const filteredInfo = sortedData.filter((entry) => {
+  //   const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  //   return (
+  //     entry.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+  //     entry.idNumber.includes(lowerCaseSearchTerm)
+  //   );
+  // });
 
   return (
     <Tabs
@@ -143,12 +143,12 @@ const AttendanceTabs = () => {
 
         <DailyAttendance
           handleManualAttendance={handleManualAttendance}
-          filteredInfo={filteredInfo}
+          sortedData={sortedData}
         />
       </Tab>
 
-      {/* Attendance Summary Tab */}
-      {/* <Tab eventKey="summary" title="Attendance Summary">
+      {/* Attendance Summary Tab  */}
+      <Tab eventKey="summary" title="Attendance Summary">
         <div id="tabsTitle">
           <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
           <p className="mb-0 text-center">
@@ -174,8 +174,8 @@ const AttendanceTabs = () => {
           </Row>
         </div>
 
-        <AttendanceSummaryTable info={filteredInfo}></AttendanceSummaryTable>
-      </Tab> */}
+        <AttendanceSummary info={sortedData}></AttendanceSummary>
+      </Tab>
 
       {/* Manage Students Tab */}
       <Tab eventKey="manage" title="Manage Students">

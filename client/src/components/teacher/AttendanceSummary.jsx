@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Button, Table } from "react-bootstrap";
+import { IoCaretDownCircle, IoCaretUpCircle } from "react-icons/io5";
 
 // Custom Hook for controlling open/close state
 const useOpenController = (initialState = false) => {
@@ -14,31 +15,32 @@ const useOpenController = (initialState = false) => {
 
 // ExpandableButton component
 const ExpandableButton = ({ isOpen, toggle, absencesDates }) => {
-  // Disable toggle and rotation if absencesDates is empty
-  const isDisabled = absencesDates.length === 0;
+  // Disable toggle and rotation if absencesDates is empty or undefined
+  const isDisabled = !Array.isArray(absencesDates) || absencesDates.length === 0;
 
   return (
     <Button
-      variant="outline-secondary"
       onClick={!isDisabled ? toggle : undefined}
-      style={{
-        padding: "0.25rem 0.5rem",
-        fontSize: "1rem",
-        transition: "all 0.25s",
-      }}
       disabled={isDisabled}
+      className="fs-4"
+      style={{
+        backgroundColor: "transparent",
+        border: "none",
+        color: "#2a1f7e",
+        width: "50px", 
+        height: "30px",
+        padding: "0",
+      }}
     >
-      <span
-        style={{
-          display: "inline-block",
-          transform: isDisabled ? "none" : `rotate(${isOpen ? 180 : 0}deg)`,
-        }}
-      >
-        &#x25BC; {/* Unicode for down arrow */}
-      </span>
+      {isOpen ? (
+        <IoCaretUpCircle style={{ transform: "rotate(180deg)", transition: "transform 0.3s" }} />
+      ) : (
+        <IoCaretDownCircle style={{ transform: "rotate(0deg)", transition: "transform 0.3s" }} />
+      )}
     </Button>
   );
 };
+
 
 // TableSection component
 const TableSection = ({ entry }) => {
@@ -46,30 +48,30 @@ const TableSection = ({ entry }) => {
 
   return (
     <>
+     <tr>
+      <td>{entry.idNumber}</td>
+      <td>{entry.name}</td>
+      <td>{Array.isArray(entry.absencesDates) ? entry.absencesDates.length : 0}</td>
+      <td>
+        <ExpandableButton
+          isOpen={isOpen[entry.idNumber]} 
+          toggle={() => toggle(entry.idNumber)}
+          absencesDates={entry.absencesDates}
+        />
+      </td>
+    </tr>
+    {isOpen[entry.idNumber] && Array.isArray(entry.absencesDates) && entry.absencesDates.length > 0 && (
       <tr>
-        <td>{entry.idNumber}</td>
-        <td>{entry.name}</td>
-        <td>{entry.absencesDates.length}</td>
-        <td>
-          <ExpandableButton
-            isOpen={isOpen}
-            toggle={toggle}
-            absencesDates={entry.absencesDates}
-          />
+        <td colSpan={2}></td>
+        <td colSpan={2}>
+          <ul className="text-start ms-0 m-2">
+            {entry.absencesDates.map((date, index) => (
+              <li key={index}>{date}</li>
+            ))}
+          </ul>
         </td>
       </tr>
-      {isOpen && entry.absencesDates.length > 0 && (
-        <tr>
-          <td colSpan={2}></td>
-          <td colSpan={2}>
-            <ul className="text-start ms-0 m-2">
-              {entry.absencesDates.map((date, index) => (
-                <li key={index}>{date}</li>
-              ))}
-            </ul>
-          </td>
-        </tr>
-      )}
+    )}
     </>
   );
 };

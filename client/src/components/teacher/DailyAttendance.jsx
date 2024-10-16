@@ -4,7 +4,7 @@ import React from "react";
 import { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 
-const DailyAttendance = ({ handleManualAttendance, filteredInfo }) => {
+const DailyAttendance = ({ handleManualAttendance, sortedData }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
@@ -24,7 +24,7 @@ const DailyAttendance = ({ handleManualAttendance, filteredInfo }) => {
           </tr>
         </thead>
         <tbody>
-          {filteredInfo.map((entry) => (
+          {sortedData.map((entry) => (
             <tr key={entry.id}>
               <td>{entry.idNumber}</td>
               <td>{entry.name}</td>

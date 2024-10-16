@@ -132,8 +132,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
       };
     });
   };
-  
-  
+    
   const handleTimeChange = (newTimeRange) => {
     setTimeRange(newTimeRange);
   
@@ -151,40 +150,27 @@ const CreateClass = ({ goBack, onSuccess }) => {
     }));
   };
   
-  const handleCancel = () => {
-    setShowCancelConfirmation(true);
-  };
-
-  const handleConfirmCancel = () => {
-    setNewClass("");
-    setShowCancelConfirmation(false);
-  };
-
-  const handleCloseCancelConfirmation = () => setShowCancelConfirmation(false);
-
   return (
     <Container
       className="attendance-container"
       style={{ height: "100vh", position: "relative" }}
     >
- {/* Navigation Buttons */}
-<Button
-  variant="link"
-  onClick={goBack}
-  style={{
-    position: "absolute",
-    top: "20px",
-    left: "25px",
-    fontSize: "35px",
-    textDecoration: "none",
-    color: "#191970",
-    padding: "1px 5px",
-  }}
->
-  <IoCaretBackCircleSharp />
-</Button>
-
-
+      {/* Navigation Buttons */}
+      <Button
+        variant="link"
+        onClick={goBack}
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "25px",
+          fontSize: "35px",
+          textDecoration: "none",
+          color: "#191970",
+          padding: "1px 5px",
+        }}
+      >
+        <IoCaretBackCircleSharp />
+      </Button>
 
       {/* Create Class Form */}
       <Form className="attendance-form">
@@ -214,7 +200,6 @@ const CreateClass = ({ goBack, onSuccess }) => {
               </span>
             )}
           </Col>
-
         </Form.Group>
 
         <Form.Group as={Row} controlId="formcourseNumber">
@@ -460,7 +445,6 @@ const CreateClass = ({ goBack, onSuccess }) => {
           </Button>
         </div>
       </Form>
-
     </Container>
   );
 };
