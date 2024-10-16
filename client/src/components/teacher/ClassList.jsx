@@ -152,41 +152,41 @@ const ClassList = () => {
                 style={{ flex: "1 1 450px", minWidth: "450px", maxWidth: "500px", padding: "12px" }}
               >
                 <Card
-  title={
-    <Flex justify="start" align="center" style={{ gap: '10px', padding: '0 10px' }}>
-      {/* Hamburger Icon */}
-      <div className="hamburger-menu">
-        <FaEllipsisV
-          className="hamburger-icon"
-          onClick={() => toggleMenu(cls.classCode)}
-          style={{ cursor: 'pointer', fontSize: '16px', paddingRight: '10px' }} // Adjust icon size if needed
-        />
-        {openMenu === cls.classCode && (
-          <div className="menu-options">
-            <button onClick={() => handleEditClick(cls)}>Edit</button>
-            <button onClick={() => handleActionClick('archive', cls.classCode)}>Archive</button>
-            <button onClick={() => handleActionClick('delete', cls.classCode)}>Delete</button>
-          </div>
-        )}
-      </div>
+                  title={
+                    <Flex justify="start" align="center" style={{ gap: '10px', padding: '0 10px' }}>
+                      {/* Hamburger Icon */}
+                      <div className="hamburger-menu">
+                        <FaEllipsisV
+                          className="hamburger-icon"
+                          onClick={() => toggleMenu(cls.classCode)}
+                          style={{ cursor: 'pointer', fontSize: '16px', paddingRight: '10px' }} // Adjust icon size if needed
+                        />
+                        {openMenu === cls.classCode && (
+                          <div className="menu-options">
+                            <button onClick={() => handleEditClick(cls)}>Edit</button>
+                            <button onClick={() => handleActionClick('archive', cls.classCode)}>Archive</button>
+                            <button onClick={() => handleActionClick('delete', cls.classCode)}>Delete</button>
+                          </div>
+                        )}
+                      </div>
 
-      {/* Class Title */}
-      <Typography.Title level={4} strong style={{ margin: 0, display: 'block' }}>
-        {cls.subject}
-      </Typography.Title>
-    </Flex>
-  }
-  style={{ minWidth: 450, maxWidth: 500, boxShadow: "0px 2px 5px 0px rgba(0, 0, 0, 0.1)", padding: "10px" }}
->
-
+                      {/* Class Title */}
+                      <Typography.Title level={4} strong style={{ margin: 0, display: 'block' }}>
+                        {cls.subject}
+                      </Typography.Title>
+                    </Flex>
+                  }
+                  style={{ minWidth: 450, maxWidth: 500, boxShadow: "0px 2px 5px 0px rgba(0, 0, 0, 0.1)", padding: "10px" }}
+                >
+                  
                   <Flex vertical key={cls.classCode} style={{ position: "relative" }}>
                     <div className="class-info">
-                      <p>Class Code: {cls.classCode}</p>
-                      <p>Room: {cls.room}</p>
-                      <p>Academic Year: {cls.academicYear}</p>
-                      <p>Term: {cls.term}</p>
+                      <p><strong>Class Code:</strong> {cls.classCode}</p>
+                      <p><strong>Room:</strong> {cls.room}</p>
+                      <p><strong>Academic Year:</strong> {cls.academicYear}</p>
+                      <p><strong>Term:</strong> {cls.term}</p>
                       <p>
-                        Schedule: {cls.days.join(", ")} {cls.startTime} - {cls.endTime}
+                        <strong>Schedule:</strong> {cls.days.join(", ")} {cls.startTime} - {cls.endTime}
                       </p>
                     </div>
                     <Flex justify="space-between">
