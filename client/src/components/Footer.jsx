@@ -11,12 +11,12 @@ export default class Footer extends Component {
       <Flex
         vertical
         style={{
-          margin: "24px 16px",
+          margin: "30px 30px",
           padding: 24,
           background: "#fff",
           overflow: "initial",
           borderRadius: "10px",
-          boxShadow: "5px 5px 10px 0px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
         }}
       >
         {/* Top section of the footer containing logo and nav links */}

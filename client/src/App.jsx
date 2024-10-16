@@ -131,13 +131,13 @@ function App() {
                 {/* Main Content */}
                 <Content
                   style={{
-                    margin: "24px 16px 0",
+                    margin: "30px 30px 0",
                     padding: 24,
                     minHeight: 600,
                     background: "#fff",
                     overflow: "initial",
                     borderRadius: "10px",
-                    boxShadow: "5px 5px 10px 0px rgba(0, 0, 0, 0.1)",
+                    boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <Routes>

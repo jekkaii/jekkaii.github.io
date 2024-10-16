@@ -21,8 +21,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-app.use("/api/teacher", studentRoutes);
-app.use("/api", classRoutes);
+app.use("/api/teacher", studentRoutes, classRoutes);
 app.use("/api/admin", userRoutes);
 
 app.listen(process.env.PORT, () => {

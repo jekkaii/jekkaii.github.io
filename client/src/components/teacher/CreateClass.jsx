@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Button, Form, Container, Row, Col, Modal} from "react-bootstrap";
+import { Button, Form, Container, Row, Col, Modal } from "react-bootstrap";
 import { IoCaretBackCircleSharp } from "react-icons/io5";
-import { TimePicker } from "antd";import { useClassStore } from "../../stores/classStore";
+import { TimePicker } from "antd";
+import { useClassStore } from "../../stores/classStore";
 import Confirmation from "./Confirmation";
 
 const { RangePicker } = TimePicker;
@@ -12,21 +13,21 @@ const CreateClass = ({ goBack, onSuccess }) => {
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
 
-  const [newClass, setNewClass] = useState({ 
+  const [newClass, setNewClass] = useState({
     classCode: "",
     courseNumber: "",
     subject: "",
     academicYear: "",
-    term: "", 
+    term: "",
     room: "",
     days: [],
     startTime: "",
-    endTime: "" 
+    endTime: "",
   });
 
   // Get the current year and set the starting year to one year prior to the current year
   const currentYear = new Date().getFullYear();
-  const startYear = currentYear - 1; 
+  const startYear = currentYear - 1;
 
   // Generate the academic years
   const years = Array.from({ length: 3 }, (_, index) => {
@@ -36,18 +37,31 @@ const CreateClass = ({ goBack, onSuccess }) => {
 
   const validateField = (name, value) => {
     const validationErrors = {};
-    const formattedName = typeof name === 'string' ? name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^([a-z])/g, (match) => match.toUpperCase()) : name; 
+    const formattedName =
+      typeof name === "string"
+        ? name
+            .replace(/([a-z])([A-Z])/g, "$1 $2")
+            .replace(/^([a-z])/g, (match) => match.toUpperCase())
+        : name;
 
-    if (name === "classCode" && !(/^\d{4}[A-Z]?$/.test(value))) {
-      validationErrors.classCode = "Class code must be 4 digits, optionally followed by a capital letter (e.g., 9400 or 9400C).";
+    if (name === "classCode" && !/^\d{4}[A-Z]?$/.test(value)) {
+      validationErrors.classCode =
+        "Class code must be 4 digits, optionally followed by a capital letter (e.g., 9400 or 9400C).";
     }
 
-    if ((name === "courseNumber" || name === "subject" || name === "academicYear" || name === "term") && !value.trim()) {
+    if (
+      (name === "courseNumber" ||
+        name === "subject" ||
+        name === "academicYear" ||
+        name === "term") &&
+      !value.trim()
+    ) {
       validationErrors[name] = `${formattedName} is required.`;
     }
 
-    if (name === "room" && !(/^[A-Z]\d{3}$/.test(value))) {
-      validationErrors.room = "Room must be 1 capital letter followed by 3 digits (e.g., D515).";
+    if (name === "room" && !/^[A-Z]\d{3}$/.test(value)) {
+      validationErrors.room =
+        "Room must be 1 capital letter followed by 3 digits (e.g., D515).";
     }
 
     if (name === "days" && newClass.days.length === 0) {
@@ -63,16 +77,16 @@ const CreateClass = ({ goBack, onSuccess }) => {
 
   const handleBlur = (name, value) => {
     setTouchedFields((prevTouched) => ({ ...prevTouched, [name]: true }));
-  
+
     const fieldErrors = validateField(name, value);
     setErrors((prevErrors) => ({ ...prevErrors, ...fieldErrors }));
   };
-  
+
   const handleCreateClass = async (e) => {
     e.preventDefault();
-  
-    const validationErrors = {}
-  
+
+    const validationErrors = {};
+
     // Validate fields when submitting
     Object.keys(newClass).forEach((key) => {
       const fieldErrors = validateField(key, newClass[key]);
@@ -80,7 +94,7 @@ const CreateClass = ({ goBack, onSuccess }) => {
     });
 
     setErrors(validationErrors);
-  
+
     if (Object.keys(validationErrors).length === 0) {
       // const capitalizedSubject = newClass.subject.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
 
@@ -89,21 +103,21 @@ const CreateClass = ({ goBack, onSuccess }) => {
       //   ...newClass,
       //   subject: capitalizedSubject,
       // };
-  
+
       // await addClass(updatedClass);
-      
+
       await addClass(newClass);
 
-      setNewClass({ 
-          classCode: "",
-          courseNumber: "",
-          subject: "",
-          academicYear: "",
-          term: "", 
-          room: "",
-          days: [],
-          startTime: "",
-          endTime: ""
+      setNewClass({
+        classCode: "",
+        courseNumber: "",
+        subject: "",
+        academicYear: "",
+        term: "",
+        room: "",
+        days: [],
+        startTime: "",
+        endTime: "",
       });
       setShowConfirmation(false);
       onSuccess();
@@ -116,40 +130,43 @@ const CreateClass = ({ goBack, onSuccess }) => {
       const updatedDays = prevClass.days.includes(day)
         ? prevClass.days.filter((d) => d !== day)
         : [...prevClass.days, day];
-      
+
       if (updatedDays.length > 0) {
         setErrors((prevErrors) => {
           const { days, ...restErrors } = prevErrors;
           return restErrors;
         });
       } else {
-        setErrors((prevErrors) => ({ ...prevErrors, days: "Days are required." }));
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          days: "Days are required.",
+        }));
       }
-      
+
       return {
         ...prevClass,
-        days: updatedDays
+        days: updatedDays,
       };
     });
   };
-    
+
   const handleTimeChange = (newTimeRange) => {
     setTimeRange(newTimeRange);
-  
+
     if (newTimeRange && newTimeRange.length === 2) {
       setErrors((prevErrors) => {
         const { time, ...rest } = prevErrors;
         return rest;
       });
     }
-  
+
     setNewClass((prevClass) => ({
       ...prevClass,
       startTime: newTimeRange ? newTimeRange[0]?.format("hh:mm A") : "",
       endTime: newTimeRange ? newTimeRange[1]?.format("hh:mm A") : "",
     }));
   };
-  
+
   return (
     <Container
       className="attendance-container"
@@ -188,14 +205,24 @@ const CreateClass = ({ goBack, onSuccess }) => {
               onChange={(e) => {
                 const value = e.target.value;
                 setNewClass({ ...newClass, classCode: value });
-                const fieldErrors = validateField("classCode", value); 
-                setErrors((prevErrors) => ({ ...prevErrors, classCode: fieldErrors.classCode }));
+                const fieldErrors = validateField("classCode", value);
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  classCode: fieldErrors.classCode,
+                }));
               }}
               onBlur={(e) => handleBlur("classCode", e.target.value)}
               required
             />
             {touchedFields.classCode && errors.classCode && (
-              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+              <span
+                style={{
+                  color: "red",
+                  paddingBottom: "30px",
+                  display: "block",
+                  fontSize: "14px",
+                }}
+              >
                 {errors.classCode}
               </span>
             )}
@@ -214,14 +241,24 @@ const CreateClass = ({ goBack, onSuccess }) => {
               onChange={(e) => {
                 const value = e.target.value;
                 setNewClass({ ...newClass, courseNumber: value });
-                const fieldErrors = validateField("courseNumber", value); 
-                setErrors((prevErrors) => ({ ...prevErrors, courseNumber: fieldErrors.courseNumber }));
+                const fieldErrors = validateField("courseNumber", value);
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  courseNumber: fieldErrors.courseNumber,
+                }));
               }}
               onBlur={(e) => handleBlur("courseNumber", e.target.value)}
               required
             />
             {touchedFields.courseNumber && errors.courseNumber && (
-              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+              <span
+                style={{
+                  color: "red",
+                  paddingBottom: "30px",
+                  display: "block",
+                  fontSize: "14px",
+                }}
+              >
                 {errors.courseNumber}
               </span>
             )}
@@ -238,8 +275,11 @@ const CreateClass = ({ goBack, onSuccess }) => {
               onChange={(e) => {
                 const value = e.target.value;
                 setNewClass({ ...newClass, subject: value });
-                const fieldErrors = validateField("subject", value); 
-                setErrors((prevErrors) => ({ ...prevErrors, subject: fieldErrors.subject}));
+                const fieldErrors = validateField("subject", value);
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  subject: fieldErrors.subject,
+                }));
               }}
               onBlur={(e) => handleBlur("subject", e.target.value)}
               placeholder="Enter Subject"
@@ -247,7 +287,14 @@ const CreateClass = ({ goBack, onSuccess }) => {
               required
             />
             {touchedFields.subject && errors.subject && (
-              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+              <span
+                style={{
+                  color: "red",
+                  paddingBottom: "30px",
+                  display: "block",
+                  fontSize: "14px",
+                }}
+              >
                 {errors.subject}
               </span>
             )}
@@ -264,22 +311,32 @@ const CreateClass = ({ goBack, onSuccess }) => {
               onChange={(e) => {
                 const value = e.target.value;
                 setNewClass({ ...newClass, academicYear: value });
-                const fieldErrors = validateField("academicYear", value); 
-                setErrors((prevErrors) => ({ ...prevErrors, academicYear: fieldErrors.academicYear }));
+                const fieldErrors = validateField("academicYear", value);
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  academicYear: fieldErrors.academicYear,
+                }));
               }}
               onBlur={(e) => handleBlur("academicYear", e.target.value)}
               className="form-select"
               required
             >
               <option value="">Select Academic Year</option>
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
             </Form.Select>
             {touchedFields.academicYear && errors.academicYear && (
-              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+              <span
+                style={{
+                  color: "red",
+                  paddingBottom: "30px",
+                  display: "block",
+                  fontSize: "14px",
+                }}
+              >
                 {errors.academicYear}
               </span>
             )}
@@ -292,11 +349,14 @@ const CreateClass = ({ goBack, onSuccess }) => {
           </Form.Label>
           <Col sm="9">
             <Form.Select
-               onChange={(e) => {
+              onChange={(e) => {
                 const value = e.target.value;
                 setNewClass({ ...newClass, term: value });
-                const fieldErrors = validateField("term", value); 
-                setErrors((prevErrors) => ({ ...prevErrors, term: fieldErrors.term }));
+                const fieldErrors = validateField("term", value);
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  term: fieldErrors.term,
+                }));
               }}
               onBlur={(e) => handleBlur("term", e.target.value)}
               className="form-select"
@@ -308,7 +368,14 @@ const CreateClass = ({ goBack, onSuccess }) => {
               <option value="Short">Short Term</option>
             </Form.Select>
             {touchedFields.term && errors.term && (
-              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+              <span
+                style={{
+                  color: "red",
+                  paddingBottom: "30px",
+                  display: "block",
+                  fontSize: "14px",
+                }}
+              >
                 {errors.term}
               </span>
             )}
@@ -326,8 +393,11 @@ const CreateClass = ({ goBack, onSuccess }) => {
               onChange={(e) => {
                 const value = e.target.value;
                 setNewClass({ ...newClass, room: value });
-                const fieldErrors = validateField("room", value); 
-                setErrors((prevErrors) => ({ ...prevErrors, room: fieldErrors.room }));
+                const fieldErrors = validateField("room", value);
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  room: fieldErrors.room,
+                }));
               }}
               onBlur={(e) => handleBlur("room", e.target.value)}
               placeholder="Enter Room"
@@ -335,7 +405,14 @@ const CreateClass = ({ goBack, onSuccess }) => {
               required
             />
             {touchedFields.room && errors.room && (
-              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+              <span
+                style={{
+                  color: "red",
+                  paddingBottom: "30px",
+                  display: "block",
+                  fontSize: "14px",
+                }}
+              >
                 {errors.room}
               </span>
             )}
@@ -351,30 +428,41 @@ const CreateClass = ({ goBack, onSuccess }) => {
               {["M", "T", "W", "TH", "F", "S"].map((day) => (
                 <Button
                   key={day}
-                  variant={newClass.days.includes(day) ? "primary" : "outline-primary"}
-                  className={`m-0 my-1 py-1 ${newClass.days.includes(day) ? "selected" : "unselected"} w-100`}
+                  variant={
+                    newClass.days.includes(day) ? "primary" : "outline-primary"
+                  }
+                  className={`m-0 my-1 py-1 ${
+                    newClass.days.includes(day) ? "selected" : "unselected"
+                  } w-100`}
                   onClick={() => handleScheduleChange(day)}
                 >
                   {day}
                 </Button>
               ))}
-            </div> 
+            </div>
           </Col>
         </Form.Group>
 
         <Form.Group as={Row}>
           <Col sm="3"></Col>
-          
+
           <Col sm="9">
             {touchedFields.days && newClass.days.length === 0 && (
-              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+              <span
+                style={{
+                  color: "red",
+                  paddingBottom: "30px",
+                  display: "block",
+                  fontSize: "14px",
+                }}
+              >
                 {errors.days}
               </span>
             )}
           </Col>
         </Form.Group>
-        
-          {/* Time Picker */}
+
+        {/* Time Picker */}
         <Form.Group as={Row} controlId="formTimeRange" className="mt-3">
           <Form.Label column sm="3" className="form-label fw-bold">
             Time:
@@ -396,20 +484,27 @@ const CreateClass = ({ goBack, onSuccess }) => {
               required
               disabledTime={(current) => {
                 if (!current) return {};
-                
-                const startHour = timeRange && timeRange[0] ? timeRange[0].hour() : null;
+
+                const startHour =
+                  timeRange && timeRange[0] ? timeRange[0].hour() : null;
 
                 return {
                   disabledHours: () => {
-                    const disabled = [...Array(7).keys(), ...Array.from({ length: 3 }, (_, i) => i + 21)];
+                    const disabled = [
+                      ...Array(7).keys(),
+                      ...Array.from({ length: 3 }, (_, i) => i + 21),
+                    ];
                     // If start time exists, disable hours before the selected start time for end picker
                     if (startHour !== null) {
-                      return disabled.concat(Array.from({ length: startHour }, (_, i) => i));
+                      return disabled.concat(
+                        Array.from({ length: startHour }, (_, i) => i)
+                      );
                     }
                     return disabled;
                   },
                   disabledMinutes: (selectedHour) => {
-                    const startMinute = timeRange && timeRange[0] ? timeRange[0].minute() : null;
+                    const startMinute =
+                      timeRange && timeRange[0] ? timeRange[0].minute() : null;
                     if (selectedHour === 7) {
                       return [0, 15]; // Disable minutes before 7:30 AM
                     }
@@ -417,8 +512,15 @@ const CreateClass = ({ goBack, onSuccess }) => {
                       return [45, 59]; // Disable minutes after 8:30 PM
                     }
                     // If selected hour matches start hour, disable minutes earlier than the start time
-                    if (startHour !== null && selectedHour === startHour && startMinute !== null) {
-                      return Array.from({ length: startMinute + 1 }, (_, i) => i); // Disable minutes before the start minute
+                    if (
+                      startHour !== null &&
+                      selectedHour === startHour &&
+                      startMinute !== null
+                    ) {
+                      return Array.from(
+                        { length: startMinute + 1 },
+                        (_, i) => i
+                      ); // Disable minutes before the start minute
                     }
                     return [];
                   },
@@ -427,9 +529,16 @@ const CreateClass = ({ goBack, onSuccess }) => {
             />
 
             {touchedFields.time && errors.time && (
-              <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+              <span
+                style={{
+                  color: "red",
+                  paddingBottom: "30px",
+                  display: "block",
+                  fontSize: "14px",
+                }}
+              >
                 {errors.time}
-               </span>
+              </span>
             )}
           </Col>
         </Form.Group>

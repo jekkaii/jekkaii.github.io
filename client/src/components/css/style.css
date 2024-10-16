@@ -743,7 +743,6 @@
 }
 
 .attendance-form {
-  background-color: #f9f8f8;
   padding: 40px;
   max-width: 1000px;
   width: 100%;
@@ -955,7 +954,6 @@
   max-width: 1200px;
   margin: 0 auto;
   height: calc(100vh - 80px);
-
 }
 
 .heading-container {
