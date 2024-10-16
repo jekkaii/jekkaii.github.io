@@ -39,7 +39,7 @@ function Sidebar() {
     setSelectedClass(item.subject); // Update the state when the button is clicked
   };
   // Include logout from authStore
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [theme, setTheme] = useState("light");
 
   const changeTheme = (value) => {
@@ -67,11 +67,6 @@ function Sidebar() {
     getStudents();
   }, [getStudents]);
 
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    await logout(); // Call logout from the auth store
-  };
-
   return (
     <>
       <ConfigProvider
@@ -88,7 +83,7 @@ function Sidebar() {
         }}
       >
         <Sider
-          width={260}
+          width={240}
           collapsedWidth={90}
           trigger={null}
           theme={theme}
@@ -129,7 +124,7 @@ function Sidebar() {
                   />
                   {collapsed && (
                     <MenuUnfoldOutlined
-                      style={{ fontSize: "20px", color: "#f0c751", width: 40 }}
+                      style={{ fontSize: "19px", color: "#f0c751", width: 40 }}
                       onClick={() => setCollapsed(!collapsed)}
                     />
                   )}
@@ -160,7 +155,7 @@ function Sidebar() {
               {!collapsed && (
                 <MenuFoldOutlined
                   style={{
-                    fontSize: "22px",
+                    fontSize: "19px",
                     color: "gray",
                     transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
