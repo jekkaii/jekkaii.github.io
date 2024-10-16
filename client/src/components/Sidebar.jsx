@@ -8,6 +8,7 @@ import faceImageInverted from "../components/resources/face-inverted.png";
 import { useAuthStore } from "../stores/authStore";
 import { useClassStore } from "../stores/classStore";
 import { useStudentStore } from "../stores/studentStore";
+import faceLogo from "../components/resources/face-logo-inverted.png";
 import {
   Layout,
   Menu,
@@ -106,69 +107,102 @@ function Sidebar() {
                 }}
               />
               <Button
-                size={collapsed ? "medium" : "small"}
+                size={collapsed ? "large" : "small"}
                 type="primary"
+                style={{
+                  margin: 0,
+                  padding: "0px 4px",
+                }}
                 onClick={() => setCollapsed(!collapsed)}
               >
-                {collapsed ? <RightOutlined /> : <LeftOutlined />}
+                {collapsed ? (
+                  <img
+                    src={faceLogo}
+                    style={{
+                      transition:
+                        "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), display 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      display: collapsed ? "block" : "none",
+                      width: collapsed ? 35 : 0,
+                      overflow: "hidden",
+                    }}
+                  />
+                ) : (
+                  <LeftOutlined />
+                )}
               </Button>
             </Flex>
 
-            <Flex style={{ margin: "10px 10px 20px 10px" }}>
+            <Flex
+              style={{
+                margin: collapsed ? "10px 0px 0px 0px" : "10px 10px 20px 10px",
+              }}
+            >
               <Divider style={{ margin: 0 }} />
             </Flex>
 
             {/* Menu Items */}
             <Menu
-              style={{ padding: "0 10px 0 10px" }}
+              style={{ padding: "0 10px 20px 10px" }}
               theme={theme}
               mode="inline"
               defaultSelectedKeys={["1"]}
               items={[
                 {
-                  key: "1",
-                  icon: <AppstoreOutlined />,
+                  key: "grp1",
+                  type: "group",
                   label: (
-                    <Link className="text-decoration-none" to="/dashboard">
-                      Dashboard
-                    </Link>
+                    <Typography.Text
+                      style={{ margin: 0, padding: 0, color: "gray" }}
+                    >
+                      {collapsed ? null : "Overview"}
+                    </Typography.Text>
                   ),
+                  children: [
+                    {
+                      key: "1",
+                      icon: <AppstoreOutlined />,
+                      label: (
+                        <Link className="text-decoration-none" to="/dashboard">
+                          Dashboard
+                        </Link>
+                      ),
+                    },
+                    isTeacher && {
+                      key: "2",
+                      icon: <BookOutlined />,
+                      label: (
+                        <Link className="text-decoration-none" to="/teacher">
+                          Classes
+                        </Link>
+                      ),
+                    },
+                    isAdmin && {
+                      key: "3",
+                      icon: <RobotOutlined />,
+                      label: (
+                        <Link
+                          className="text-decoration-none"
+                          to="/admin/manage-models"
+                        >
+                          Manage Models
+                        </Link>
+                      ),
+                    },
+                  ].filter(Boolean),
                 },
-                {
-                  key: "2",
-                  icon: <BookOutlined />,
+                !collapsed && {
+                  key: "grp2",
                   label: (
-                    <Link className="text-decoration-none" to="/teacher">
+                    <Typography.Text
+                      style={{ margin: 0, padding: 0, color: "gray" }}
+                    >
                       Classes
-                    </Link>
+                    </Typography.Text>
                   ),
+                  type: "group",
                   children: items,
                 },
-                isAdmin && {
-                  key: "3",
-                  icon: <RobotOutlined />,
-                  label: (
-                    <Link
-                      className="text-decoration-none"
-                      to="/admin/manage-models"
-                    >
-                      Manage Models
-                    </Link>
-                  ),
-                },
-                isAdmin && {
-                  key: "4",
-                  icon: <RobotOutlined />,
-                  label: (
-                    <Link
-                      className="text-decoration-none"
-                      to="/admin/manage-users"
-                    >
-                      Manage Users
-                    </Link>
-                  ),
-                },
-              ]}
+              ].filter(Boolean)}
             />
           </Flex>
         </Sider>
