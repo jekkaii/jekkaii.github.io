@@ -2,6 +2,33 @@ import bcrypt from "bcrypt";
 import { UserModel } from "../model/User.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 
+export const getUsers = async (req, res) => {
+  try {
+    // Fetch all students from the database
+    const users = await UserModel.find();
+
+    // Check if there are any students 
+    if (!users) {
+      return res.status(404).json({
+        success: false,
+        message: "No users found",
+      });
+    }
+    // Return the students as a JSON response
+    return res.status(200).json({
+      success: true,
+      message: "Users fetched successfully",
+      users,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
 export const addUser = async (req, res) => {
   try {
     validateAddUserInput(req);

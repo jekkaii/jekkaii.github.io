@@ -5,6 +5,7 @@ import { connectToDatabase } from "./database/dbConnection.js";
 import authRoutes from "./routes/authRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import classRoutes from "./routes/classRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -20,7 +21,9 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-app.use("/api/teacher", studentRoutes, classRoutes);
+app.use("/api/teacher", studentRoutes);
+app.use("/api", classRoutes);
+app.use("/api/admin", userRoutes);
 
 app.listen(process.env.PORT, () => {
   connectToDatabase();

@@ -1,65 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, setUser } from "react";
 import "../css/style.css";
 import { Button, Table, Form, Modal } from "react-bootstrap";
 import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 
 const initialUsers = [
-  {
-    id: 1,
-    firstName: "Jekka",
-    lastName: "Hufalar",
-    email: "2216683@slu.edu.ph",
-    role: "Admin",
-    status: true,
-  },
-  {
-    id: 2,
-    firstName: "Nelle Angela",
-    lastName: "Ramat",
-    email: "nramat@slu.edu.ph",
-    role: "Faculty",
-    status: true,
-  },
-  {
-    id: 3,
-    firstName: "Cedric",
-    lastName: "Camio",
-    email: "cedcamio@slu.edu.ph",
-    role: "Faculty",
-    status: true,
-  },
-  {
-    id: 4,
-    firstName: "George",
-    lastName: "De Guzman",
-    email: "georgedg@slu.edu.ph",
-    role: "Faculty",
-    status: true,
-  },
-  {
-    id: 5,
-    firstName: "Mika",
-    lastName: "Dela Cruz",
-    email: "mikadelacruz@slu.edu.ph",
-    role: "Admin",
-    status: true,
-  },
-  {
-    id: 6,
-    firstName: "Rhiannon",
-    lastName: "Friedman",
-    email: "rfriedman@slu.edu.ph",
-    role: "Admin",
-    status: false,
-  },
-  {
-    id: 7,
-    firstName: "Kurt",
-    lastName: "Glenn",
-    email: "kgelnn@slu.edu.ph",
-    role: "Faculty",
-    status: false,
-  },
 ];
 
 const ConfirmationModal = ({ isOpen, message, onConfirm, onCancel }) => (
