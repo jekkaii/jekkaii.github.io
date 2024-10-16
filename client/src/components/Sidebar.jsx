@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../components/css/style.css";
 import faceImage from "../components/resources/face.png";
 import faceImageInverted from "../components/resources/face-inverted.png";
 import { useAuthStore } from "../stores/authStore";
+import { useClassStore } from "../stores/classStore";
+import { useStudentStore } from "../stores/studentStore";
 import {
   Layout,
   Menu,
@@ -25,9 +27,37 @@ import {
 } from "@ant-design/icons";
 
 function Sidebar() {
-  const { isAdmin, isTeacher, logout } = useAuthStore(); // Include logout from authStore
+  const { isAdmin, isTeacher, logout } = useAuthStore();
+  const { getClasses, classes } = useClassStore();
+  const { getStudents, students } = useStudentStore();
+  const [selectedClass, setSelectedClass] = useState(null);
+
+  const handleClick = (item) => {
+    setSelectedClass(item.subject); // Update the state when the button is clicked
+  };
+  // Include logout from authStore
   const [collapsed, setCollapsed] = useState(true);
   const [theme, setTheme] = useState("light");
+
+  const items = classes.map((item) => ({
+    label: (
+      <Link
+        className="text-decoration-none"
+        to={`/teacher/attendance/${item.classCode}`}
+      >
+        {item.classCode}
+      </Link>
+    ),
+    key: item.classCode,
+  }));
+
+  useEffect(() => {
+    getClasses();
+  }, [getClasses]);
+
+  useEffect(() => {
+    getStudents();
+  }, [getStudents]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -104,8 +134,7 @@ function Sidebar() {
                     </Link>
                   ),
                 },
-              ].concat(
-                isTeacher && {
+                {
                   key: "2",
                   icon: <BookOutlined />,
                   label: (
@@ -113,15 +142,7 @@ function Sidebar() {
                       Classes
                     </Link>
                   ),
-                },
-                isAdmin && {
-                  key: "2",
-                  icon: <BookOutlined />,
-                  label: (
-                    <Link className="text-decoration-none" to="/admin">
-                      Manage Users
-                    </Link>
-                  ),
+                  children: items,
                 },
                 isAdmin && {
                   key: "3",
@@ -134,8 +155,20 @@ function Sidebar() {
                       Manage Models
                     </Link>
                   ),
-                }
-              )}
+                },
+                isAdmin && {
+                  key: "4",
+                  icon: <RobotOutlined />,
+                  label: (
+                    <Link
+                      className="text-decoration-none"
+                      to="/admin/manage-users"
+                    >
+                      Manage Users
+                    </Link>
+                  ),
+                },
+              ]}
             />
           </Flex>
         </Sider>
