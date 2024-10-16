@@ -21,7 +21,7 @@ import {
 const { Sider } = Layout;
 import {
   LeftOutlined,
-  RightOutlined,
+  UsergroupAddOutlined,
   AppstoreOutlined,
   RobotOutlined,
   BookOutlined,
@@ -185,13 +185,19 @@ function Sidebar() {
                       ),
                     },
                     isAdmin && {
+                      key: "2",
+                      icon: <UsergroupAddOutlined />,
+                      label: (
+                        <Link className="text-decoration-none" to="/admin">
+                          Manage Users
+                        </Link>
+                      ),
+                    },
+                    isAdmin && {
                       key: "3",
                       icon: <RobotOutlined />,
                       label: (
-                        <Link
-                          className="text-decoration-none"
-                          to="/admin/manage-models"
-                        >
+                        <Link className="text-decoration-none" to="">
                           Manage Models
                         </Link>
                       ),
