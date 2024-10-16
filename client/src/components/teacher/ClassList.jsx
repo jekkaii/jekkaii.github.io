@@ -1,18 +1,18 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "../css/style.css";
-import { FaArchive, FaTrash } from "react-icons/fa";
+import { FaEllipsisV } from "react-icons/fa"; // Hamburger Icon
 import Confirmation from "./Confirmation";
 import CreateClass from "./CreateClass";
-import Notification from "./Notification"; // Import the notification component
+import Notification from "./Notification";
+import EditClass from "./EditClass";
 import { useClassStore } from "../../stores/classStore";
-import { Button, Divider, Flex, Typography, Row, Col, Card } from "antd";
+import { Button, Divider, Flex, Typography, Row, Col, Card, Input, Modal } from "antd";
 import { Link } from "react-router-dom";
-import { DownOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
+import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
 
 const ClassList = () => {
-  const { getClasses, classes, isLoading, error, deleteClass, archiveClass } =
-    useClassStore();
+  const { getClasses, classes, isLoading, error, deleteClass, archiveClass } = useClassStore();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
@@ -20,6 +20,9 @@ const ClassList = () => {
   const [showCreateClass, setShowCreateClass] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [notificationType, setNotificationType] = useState(""); // 'success' or 'error'
+  const [openMenu, setOpenMenu] = useState(null); // Track which menu is open
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [showEditClass, setShowEditClass] = useState(false); // Manage EditClass modal
 
   useEffect(() => {
     getClasses();
@@ -31,6 +34,15 @@ const ClassList = () => {
 
   const handleBackButtonClick = () => {
     setShowCreateClass(false);
+  };
+
+  const toggleMenu = (classCode) => {
+    setOpenMenu((prev) => (prev === classCode ? null : classCode));
+  };
+
+  const handleEditClick = (cls) => {
+    setSelectedClass(cls); // Set the selected class for editing
+    setShowEditClass(true); // Open the edit modal
   };
 
   const handleActionClick = (action, classCode) => {
@@ -57,32 +69,28 @@ const ClassList = () => {
   const confirmAction = async () => {
     try {
       if (selectedAction === "archive") {
-        await archiveClass(selectedClass); // Call the archiveClass function
-        setNotificationMessage("Class archived successfully!"); // Set success message
+        await archiveClass(selectedClass);
+        setNotificationMessage("Class archived successfully!");
         setNotificationType("success");
       } else if (selectedAction === "delete") {
-        await deleteClass(selectedClass); // Call the deleteClass function
-        setNotificationMessage("Class deleted successfully!"); // Set success message
+        await deleteClass(selectedClass);
+        setNotificationMessage("Class deleted successfully!");
         setNotificationType("success");
       }
-      await getClasses(); // Refresh the classes after action
+      await getClasses(); // Refresh the classes
     } catch (error) {
       console.error("Error performing action on class:", error);
-      setNotificationMessage("An error occurred. Please try again."); // Set error message
+      setNotificationMessage("An error occurred. Please try again.");
       setNotificationType("error");
     }
-    closeModal(); // Close the modal
+    closeModal();
   };
 
-  // Group classes by subject
-  const groupedClasses = classes.reduce((acc, cls) => {
-    const subject = cls.subject;
-    if (!acc[subject]) {
-      acc[subject] = [];
-    }
-    acc[subject].push(cls);
-    return acc;
-  }, {});
+  // Filter classes based on search query
+  const filteredClasses = classes.filter((cls) =>
+    cls.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    cls.classCode.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <Flex vertical style={{ margin: 10 }}>
@@ -103,14 +111,15 @@ const ClassList = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={handleShowCreateClass}
-            ></Button>
+            />
           )}
           {showCreateClass && (
             <CreateClass
               goBack={handleBackButtonClick}
-              onSuccess={() => {
-                window.alert("Class is created successfully! Refreshing page.");
-                window.location.reload();
+              onSuccess={async () => {
+                await getClasses(); // Refresh classes after successful creation
+                setNotificationMessage("Class is created successfully!");
+                setNotificationType("success");
               }}
             />
           )}
@@ -119,52 +128,58 @@ const ClassList = () => {
       <Divider />
 
       {!showCreateClass && (
-        <Flex>
-          <Row
-            gutter={[24, 24]}
-            wrap={true}
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-            }}
-          >
-            {Object.keys(groupedClasses).map((subject) => (
-              <Col
-                key={subject}
-                xs={24}
-                sm={24}
-                md={12}
-                lg={8}
-                xl={6}
-                style={{
-                  flex: "1 1 450px",
-                  minWidth: "450px", // Minimum width of each card
-                  maxWidth: "500px", // Maximum width of each card
-                  padding: "12px",
-                }}
-              >
-                <Card
-                  title={
-                    <Typography.Title level={4} strong>
-                      {subject}
-                    </Typography.Title>
-                  }
-                  style={{
-                    minWidth: 450,
-                    maxWidth: 500,
-                    boxShadow: "0px 2px 5px 0px rgba(0, 0, 0, 0.1)",
-                  }}
+        <>
+          {/* Search Input in the Middle */}
+          <Flex justify="center" style={{ marginBottom: 20, paddingLeft: '80%' }}>
+            <Input
+              placeholder="Search classes..."
+              style={{ width: 300 }} // Adjust width as needed
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Flex>
+
+          <Flex>
+            <Row gutter={[24, 24]} wrap style={{ display: "flex", flexWrap: "wrap" }}>
+              {filteredClasses.map((cls) => (
+                <Col
+                  key={cls.classCode}
+                  xs={24}
+                  sm={24}
+                  md={12}
+                  lg={8}
+                  xl={6}
+                  style={{ flex: "1 1 450px", minWidth: "450px", maxWidth: "500px", padding: "12px" }}
                 >
-                  {groupedClasses[subject].map((cls) => (
-                    <Flex vertical key={cls.classCode}>
+                  <Card
+                    title={
+                      <Typography.Title level={4} strong>
+                        {cls.subject}
+                      </Typography.Title>
+                    }
+                    style={{ minWidth: 450, maxWidth: 500, boxShadow: "0px 2px 5px 0px rgba(0, 0, 0, 0.1)" }}
+                  >
+                    <Flex vertical key={cls.classCode} style={{ position: "relative" }}>
+                      <div className="hamburger-menu">
+                        <FaEllipsisV
+                          className="hamburger-icon"
+                          onClick={() => toggleMenu(cls.classCode)}
+                        />
+                        {openMenu === cls.classCode && (
+                          <div className="menu-options">
+                            <button onClick={() => handleEditClick(cls)}>Edit</button>
+                            <button onClick={() => handleActionClick('archive', cls.classCode)}>Archive</button>
+                            <button onClick={() => handleActionClick('delete', cls.classCode)}>Delete</button>
+                          </div>
+                        )}
+                      </div>
                       <div className="class-info">
                         <p>Class Code: {cls.classCode}</p>
                         <p>Room: {cls.room}</p>
                         <p>Academic Year: {cls.academicYear}</p>
                         <p>Term: {cls.term}</p>
                         <p>
-                          Schedule: {cls.days.join(", ")} {cls.startTime} -{" "}
-                          {cls.endTime}
+                          Schedule: {cls.days.join(", ")} {cls.startTime} - {cls.endTime}
                         </p>
                       </div>
                       <Flex justify="space-between">
@@ -173,45 +188,47 @@ const ClassList = () => {
                             View Class
                           </Button>
                         </Link>
-                        <Flex>
-                          <Button
-                            type="text"
-                            icon={<FaArchive />}
-                            onClick={() =>
-                              handleActionClick("archive", cls.classCode)
-                            }
-                          />
-                          <Button
-                            type="text"
-                            icon={<FaTrash />}
-                            onClick={() =>
-                              handleActionClick("delete", cls.classCode)
-                            }
-                          />
-                        </Flex>
                       </Flex>
                     </Flex>
-                  ))}
-                </Card>
-              </Col>
-            ))}
-          </Row>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
 
-          <Confirmation
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            onConfirm={confirmAction}
-            message={modalMessage}
-          />
-
-          {notificationMessage && (
-            <Notification
-              message={notificationMessage}
-              type={notificationType}
-              onClose={closeNotification}
+            <Confirmation
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              onConfirm={confirmAction}
+              message={modalMessage}
             />
-          )}
-        </Flex>
+
+            {notificationMessage && (
+              <Notification
+                message={notificationMessage}
+                type={notificationType}
+                onClose={closeNotification}
+              />
+            )}
+
+            {/* Edit Class Modal */}
+            <Modal
+              title="Edit Class"
+              visible={showEditClass}
+              onCancel={() => setShowEditClass(false)}
+              footer={null} // No default footer
+            >
+              <EditClass 
+                existingClass={selectedClass} // Pass the selected class to edit
+                onSuccess={async () => {
+                  await getClasses(); // Refresh classes after successful editing
+                  setNotificationMessage("Class edited successfully!");
+                  setNotificationType("success");
+                  setShowEditClass(false); // Close the modal after success
+                }}
+              />
+            </Modal>
+          </Flex>
+        </>
       )}
     </Flex>
   );
