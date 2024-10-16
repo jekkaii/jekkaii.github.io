@@ -17,8 +17,7 @@ const ClassList = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
-  const [showCreateClass, setShowCreateClass] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(false);
   const [notificationType, setNotificationType] = useState(""); // 'success' or 'error'
   const [openMenu, setOpenMenu] = useState(null); // Track which menu is open
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
@@ -27,14 +26,6 @@ const ClassList = () => {
   useEffect(() => {
     getClasses();
   }, [getClasses]);
-
-  const handleShowCreateClass = () => {
-    setShowCreateClass(true);
-  };
-
-  const handleBackButtonClick = () => {
-    setShowCreateClass(false);
-  };
 
   const toggleMenu = (classCode) => {
     setOpenMenu((prev) => (prev === classCode ? null : classCode));
@@ -95,7 +86,6 @@ const ClassList = () => {
   return (
     <Flex vertical style={{ margin: 10 }}>
       <Flex justify="space-between" align="center">
-        {!showCreateClass && (
           <Flex vertical>
             <Typography.Title level={2} style={{ marginBottom: 0 }}>
               Class List
@@ -104,30 +94,16 @@ const ClassList = () => {
               Here are the list of the classes you handle
             </Typography.Text>
           </Flex>
-        )}
-        <Flex>
-          {!showCreateClass && (
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={handleShowCreateClass}
-            />
-          )}
-          {showCreateClass && (
             <CreateClass
-              goBack={handleBackButtonClick}
               onSuccess={async () => {
-                await getClasses(); // Refresh classes after successful creation
                 setNotificationMessage("Class is created successfully!");
                 setNotificationType("success");
+                window.location.reload();
               }}
             />
-          )}
-        </Flex>
       </Flex>
       <Divider />
 
-      {!showCreateClass && (
         <>
           {/* Search Input in the Middle */}
           <Flex justify="center" style={{ marginBottom: 20, paddingLeft: '80%' }}>
@@ -236,7 +212,6 @@ const ClassList = () => {
             </Modal>
           </Flex>
         </>
-      )}
     </Flex>
   );
 };
