@@ -132,7 +132,7 @@ const ClassList = () => {
           />
 
           <CreateClass
-            onSuccess={async () => {
+            onSuccess={() => {
               setNotificationMessage("Class is created successfully!");
               setNotificationType("success");
               window.location.reload();
@@ -284,22 +284,17 @@ const ClassList = () => {
           )}
 
           {/* Edit Class Modal */}
-          <Modal
-            title="Edit Class"
-            visible={showEditClass}
-            onCancel={() => setShowEditClass(false)}
-            footer={null} // No default footer
-          >
             <EditClass
               existingClass={selectedClass} // Pass the selected class to edit
-              onSuccess={async () => {
-                await getClasses(); // Refresh classes after successful editing
+              open={showEditClass}
+              close={() => setShowEditClass(false)}
+              selectedClass={selectedClass}
+              onSuccess={() => {
                 setNotificationMessage("Class edited successfully!");
                 setNotificationType("success");
-                setShowEditClass(false); // Close the modal after success
+                // setShowEditClass(false); // Close the modal after success
               }}
             />
-          </Modal>
         </Flex>
       </>
     </Flex>

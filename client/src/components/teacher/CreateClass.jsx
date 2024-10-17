@@ -3,13 +3,13 @@ import { Button, Modal } from "antd";
 import { Form, Row, Col } from "react-bootstrap";
 import { TimePicker } from "antd";
 import { useClassStore } from "../../stores/classStore";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons"
 import "../css/style.css";
 
 const { RangePicker } = TimePicker;
 
 const CreateClass = ({ onSuccess }) => {
-  const [timeRange, setTimeRange] = useState(null);
+  const [timeRange, setTimeRange] = useState([]);
   const { addClass } = useClassStore();
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
@@ -68,17 +68,6 @@ const CreateClass = ({ onSuccess }) => {
       validationErrors.days = "Days are required.";
     }
 
-    // Check if the timeRange is null or incomplete (less than 2 items)
-    if (timeRange === null || timeRange.length < 2) {
-      validationErrors.time = "Time is required.";
-    } else {
-      // Check if start time and end time are the same
-      const [startTime, endTime] = timeRange;
-      if (startTime.isSame(endTime)) {
-        validationErrors.time = "Start time and end time must not be the same.";
-      }
-    }
-
     return validationErrors;
   };
 
@@ -121,19 +110,7 @@ const CreateClass = ({ onSuccess }) => {
       };
 
       await addClass(updatedClass);
-
-      setNewClass({
-        classCode: "",
-        courseNumber: "",
-        subject: "",
-        academicYear: "",
-        term: "",
-        room: "",
-        days: [],
-        startTime: "",
-        endTime: "",
-      });
-      setShowConfirmation(false);
+      handleCancel();
       onSuccess();
     }
   };
@@ -165,35 +142,26 @@ const CreateClass = ({ onSuccess }) => {
   };
 
   const handleTimeChange = (newTimeRange) => {
-    setTimeRange(newTimeRange);
-  
-    // Clear error if valid time range is selected
     if (newTimeRange && newTimeRange.length === 2) {
-      const [startTime, endTime] = newTimeRange;
+      let [startTime, endTime] = newTimeRange;
   
-      // Clear time error if time range is valid
-      if (!startTime.isSame(endTime)) {
-        setErrors((prevErrors) => {
-          const { time, ...rest } = prevErrors;
-          return rest;
-        });
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          time: "Start time and end time must not be the same.",
-        }));
+      // Check if start time and end time are the same
+      if (startTime.isSame(endTime)) {
+        // Add 1 hour to the end time if they are the same
+        endTime = endTime.add(1, 'hour');
+        newTimeRange = [startTime, endTime];  // Update timeRange with the new endTime
       }
-    }
   
-    setNewClass((prevClass) => ({
-      ...prevClass,
-      startTime: newTimeRange ? newTimeRange[0]?.format("hh:mm A") : "",
-      endTime: newTimeRange ? newTimeRange[1]?.format("hh:mm A") : "",
-    }));
-
-    console.log(`Start Time: ${newTimeRange[0].format("hh:mm A")}`);
-    console.log(`End Time: ${newTimeRange[1].format("hh:mm A")}`);
+      setTimeRange(newTimeRange);
+  
+      setNewClass((prevClass) => ({
+        ...prevClass,
+        startTime: startTime.format("hh:mm A"),
+        endTime: endTime.format("hh:mm A"),
+      }));
+    }
   };
+  
   
   const [open, setOpen] = useState(false);
 
@@ -228,7 +196,7 @@ const CreateClass = ({ onSuccess }) => {
       >
         Add Class
       </Button>
-      
+
       <Modal
         open={open}
         onCancel={handleCancel}
@@ -577,18 +545,6 @@ const CreateClass = ({ onSuccess }) => {
                   }}
                 />
 
-                {touchedFields.time && errors.time && (
-                  <span
-                    style={{
-                      color: "red",
-                      paddingBottom: "20px",
-                      display: "block",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {errors.time}
-                  </span>
-                )}
               </Col>
             </Form.Group>
 

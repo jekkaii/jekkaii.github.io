@@ -36,7 +36,7 @@ const ClassSchema = new mongoose.Schema(
     },
     days: {
       type: [String],
-      enum: ["M", "T", "W", "Th", "F", "S"],
+      enum: ["M", "T", "W", "TH", "F", "S"],
       required: true,
     },
     startTime: {
