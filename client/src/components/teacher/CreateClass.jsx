@@ -166,14 +166,25 @@ const CreateClass = ({ onSuccess }) => {
 
   const handleTimeChange = (newTimeRange) => {
     setTimeRange(newTimeRange);
-
+  
+    // Clear error if valid time range is selected
     if (newTimeRange && newTimeRange.length === 2) {
-      setErrors((prevErrors) => {
-        const { time, ...rest } = prevErrors;
-        return rest;
-      });
+      const [startTime, endTime] = newTimeRange;
+  
+      // Clear time error if time range is valid
+      if (!startTime.isSame(endTime)) {
+        setErrors((prevErrors) => {
+          const { time, ...rest } = prevErrors;
+          return rest;
+        });
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          time: "Start time and end time must not be the same.",
+        }));
+      }
     }
-
+  
     setNewClass((prevClass) => ({
       ...prevClass,
       startTime: newTimeRange ? newTimeRange[0]?.format("hh:mm A") : "",
@@ -183,7 +194,7 @@ const CreateClass = ({ onSuccess }) => {
     console.log(`Start Time: ${newTimeRange[0].format("hh:mm A")}`);
     console.log(`End Time: ${newTimeRange[1].format("hh:mm A")}`);
   };
-
+  
   const [open, setOpen] = useState(false);
 
   const showModal = () => {
@@ -214,8 +225,10 @@ const CreateClass = ({ onSuccess }) => {
         type="primary"
         icon={<PlusOutlined />}
         onClick={showModal}
-      />
-
+      >
+        Add Class
+      </Button>
+      
       <Modal
         open={open}
         onCancel={handleCancel}
