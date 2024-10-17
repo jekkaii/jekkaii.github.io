@@ -10,7 +10,7 @@ class FaceLoading:
         self.X = []
         self.Y = []
         self.detector = MTCNN()
-        self.confidence_threshold = 0.95  
+        self.confidence_threshold = 0.90  
 
     def extract_faces(self, filename, multiple=False):
         img = cv.imread(filename)

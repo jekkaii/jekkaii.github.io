@@ -24,18 +24,20 @@ class FaceRecognitionModel:
 
     def predict(self, faces):
         X_test_embeddings = self.embed_faces(faces)
-        predictions = []
-        
+        predictions = {}
+
         for test_embedding in X_test_embeddings:
             closest_label, similarity = self.find_closest_label(test_embedding)
-            similarity_percentage = similarity * 100  
+            similarity_percentage = similarity * 100
 
-            if similarity < self.similarity_threshold:
-                predictions.append(("Unknown", similarity_percentage))
+            if closest_label in predictions:
+                if similarity_percentage > predictions[closest_label][1]:
+                    predictions[closest_label] = (closest_label, similarity_percentage)
             else:
-                predictions.append((closest_label, similarity_percentage))
+                if similarity >= self.similarity_threshold:
+                    predictions[closest_label] = (closest_label, similarity_percentage)
         
-        return predictions
+        return list(predictions.values())
     
     def find_closest_label(self, test_embedding):
         known_embeddings = self.model.support_vectors_  

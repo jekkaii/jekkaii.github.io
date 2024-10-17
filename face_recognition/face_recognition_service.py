@@ -17,7 +17,7 @@ class FaceRecognitionService:
         self.face_recognition_model.train_model(X_train_embeddings, y_train)
         self.model_trained = True  
 
-        return {"status": "Training completed"}
+        return {"message": "Training completed"}
 
     def test(self):
         test_directory = os.path.join(os.getcwd(), f'cc_pictures/test')
