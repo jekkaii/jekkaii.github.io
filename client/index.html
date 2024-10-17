@@ -4,11 +4,28 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml"
       href="./src/components/resources/favicon-16x16.png" />
+    <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
+    <link rel="manifest" href="/manifest.json">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FACE</title>
   </head>
   <body>
     <div id="root"></div>
+    <script>
+    </script>
     <script type="module" src="/src/main.jsx"></script>
+    <script> 
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/serviceWorker.js").then((reg) => {
+            console.log("Worker Registered.",reg);
+          }).catch((err) => {
+            console.log('Error in service worker',err);
+          });
+         
+        })
+      }
+    </script>
   </body>
 </html>
