@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "../css/style.css";
 import { FaEllipsisV } from "react-icons/fa"; // Hamburger Icon
@@ -15,11 +16,10 @@ import {
   Col,
   Card,
   Input,
-  Modal,
 } from "antd";
 const { Search } = Input;
 import { Link } from "react-router-dom";
-import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
+import { EyeOutlined, PlusOutlined, BookOutlined } from "@ant-design/icons";
 
 const ClassList = () => {
   const { getClasses, classes, isLoading, error, deleteClass, archiveClass } =
@@ -97,7 +97,7 @@ const ClassList = () => {
   );
 
   return (
-    <Flex vertical style={{ margin: 10 }} gap={23}>
+    <Flex vertical gap={23}>
       <Flex
         justify="space-between"
         gap={23}
@@ -175,7 +175,7 @@ const ClassList = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  minWidth: "420px",
+                  minWidth: "430px",
                 }}
               >
                 {isLoading ? (

@@ -2,8 +2,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Tabs, Tab, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import AttendanceSummary from "./AttendanceSummary";
 import DailyAttendance from "./DailyAttendance";
@@ -12,8 +10,13 @@ import ManageStudents from "./ManageStudents";
 import { FaCamera } from "react-icons/fa6";
 import UploadClassPicture from "./UploadClassPicture";
 import { useStudentStore } from "../../stores/studentStore";
-import { Skeleton, Flex } from "antd";
-import { useParams } from "react-router-dom";
+import { Skeleton, Flex, Breadcrumb } from "antd";
+import { Link, useParams } from "react-router-dom";
+import {
+  BookOutlined,
+  ContactsOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
 
 const AttendanceTabs = () => {
   // Use parameter
@@ -97,77 +100,74 @@ const AttendanceTabs = () => {
   // });
 
   return (
-    <Flex vertical style={{ width: "100%" }}>
-      <Flex></Flex>
-      {/* Tabs */}
-      <Flex
-        vertical
-        style={{
-          // margin: "30px 30px 0",
-          padding: 24,
-          backgroundColor: "#fff",
-          borderRadius: "10px",
-          boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
-          width: "100%",
-        }}
-      >
-        <Tabs
-          id="controlled-tab-example"
-          activeKey={key}
-          onSelect={(k) => setKey(k)}
-          className="mb-3"
-        >
-          {/* Daily Attendance Tab */}
-          <Tab eventKey="daily" title="Daily Attendance">
-            <Row className="align-items-end mb-0 mt-5">
-              <Col xs={8} className="p-0"></Col>
-              <Col xs={4} className="d-flex justify-content-end p-0">
-                <InputGroup className="search-bar">
-                  <Form.Control
-                    placeholder="Search by ID Number or Name"
-                    className="custom-search-input"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </InputGroup>
-                <Button className="me-2" id="camera">
-                  <FaCamera className="fs-4" />
-                </Button>
-                <UploadClassPicture
-                  date={formattedDate}
-                  subjectAndCode={subjectAndCode}
-                  schedule={sched}
-                ></UploadClassPicture>
-              </Col>
-            </Row>
-            {isLoading ? (
+    <>
+      <Breadcrumb
+        separator=">"
+        className="text-decoration-none"
+        items={[
+          {
+            title: (
               <>
-                <Skeleton active />
-                <Skeleton active />
-                <Skeleton active />
+                <Link className="text-decoration-none" to="/teacher">
+                  <BookOutlined style={{ marginRight: "5px" }} />
+                  Classes
+                </Link>
               </>
-            ) : (
-              <DailyAttendance
-                handleManualAttendance={handleManualAttendance}
-                sortedData={sortedData}
-              />
-            )}
-          </Tab>
-          {/* Attendance Summary Tab  */}
-          <Tab eventKey="summary" title="Attendance Summary">
-            <div id="tabsTitle">
-              <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-              <p className="mb-0 text-center">
-                <b>Schedule: </b>
-                {sched}
-              </p>
-              <p className="mb-5 text-center">
-                <b>Date: </b>
-                {date}
-              </p>
-              <Row className="mb-0 justify-content-end">
-                <Col xs={3}>
-                  <InputGroup>
+            ),
+          },
+          {
+            title: (
+              <>
+                <span>
+                  <ContactsOutlined
+                    style={{ fontSize: "16px", marginRight: "5px" }}
+                  />
+                  {params.classcode}
+                </span>
+              </>
+            ),
+          },
+          {
+            title: (
+              <>
+                <span>
+                  <TeamOutlined
+                    style={{ fontSize: "16px", marginRight: "5px" }}
+                  />
+                  Students List
+                </span>
+              </>
+            ),
+          },
+        ]}
+      />
+      <br />
+      <Flex vertical style={{ width: "100%" }}>
+        <Flex></Flex>
+        {/* Tabs */}
+        <Flex
+          vertical
+          style={{
+            // margin: "30px 30px 0",
+            padding: 24,
+            backgroundColor: "#fff",
+            borderRadius: "10px",
+            boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
+            width: "100%",
+          }}
+        >
+          <Tabs
+            id="controlled-tab-example"
+            activeKey={key}
+            onSelect={(k) => setKey(k)}
+            className="mb-3"
+          >
+            {/* Daily Attendance Tab */}
+            <Tab eventKey="daily" title="Daily Attendance">
+              <Row className="align-items-end mb-0 mt-5">
+                <Col xs={8} className="p-0"></Col>
+                <Col xs={4} className="d-flex justify-content-end p-0">
+                  <InputGroup className="search-bar">
                     <Form.Control
                       placeholder="Search by ID Number or Name"
                       className="custom-search-input"
@@ -175,48 +175,98 @@ const AttendanceTabs = () => {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </InputGroup>
+                  <Button className="me-2" id="camera">
+                    <FaCamera className="fs-4" />
+                  </Button>
+                  <UploadClassPicture
+                    date={formattedDate}
+                    subjectAndCode={subjectAndCode}
+                    schedule={sched}
+                  ></UploadClassPicture>
                 </Col>
               </Row>
-            </div>
-            {isLoading ? (
-              <>
-                <Skeleton active />
-                <Skeleton active />
-                <Skeleton active />
-              </>
-            ) : (
-              <AttendanceSummary info={sortedData}></AttendanceSummary>
-            )}
-          </Tab>
-          {/* Manage Students Tab */}
-          <Tab eventKey="manage" title="Manage Students">
-            <div id="tabsTitle">
-              <p className="mb-2 fw-bold fs-3 text-center">{subjectAndCode}</p>
-              <p className="mb-0 text-center">
-                <b>Schedule: </b>
-                {sched}
-              </p>
-              <p className="mb-0 text-center">
-                <b>Date: </b>
-                {date}
-              </p>
-            </div>
-            {isLoading ? (
-              <>
-                <Skeleton active />
-                <Skeleton active />
-                <Skeleton active />
-              </>
-            ) : (
-              <ManageStudents
-                sortedData={sortedData}
-                attendanceData={attendanceData}
-              ></ManageStudents>
-            )}
-          </Tab>
-        </Tabs>
+              {isLoading ? (
+                <>
+                  <Skeleton active />
+                  <Skeleton active />
+                  <Skeleton active />
+                </>
+              ) : (
+                <DailyAttendance
+                  handleManualAttendance={handleManualAttendance}
+                  sortedData={sortedData}
+                />
+              )}
+            </Tab>
+            {/* Attendance Summary Tab  */}
+            <Tab eventKey="summary" title="Attendance Summary">
+              <div id="tabsTitle">
+                <p className="mb-2 fw-bold fs-3 text-center">
+                  {subjectAndCode}
+                </p>
+                <p className="mb-0 text-center">
+                  <b>Schedule: </b>
+                  {sched}
+                </p>
+                <p className="mb-5 text-center">
+                  <b>Date: </b>
+                  {date}
+                </p>
+                <Row className="mb-0 justify-content-end">
+                  <Col xs={3}>
+                    <InputGroup>
+                      <Form.Control
+                        placeholder="Search by ID Number or Name"
+                        className="custom-search-input"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </InputGroup>
+                  </Col>
+                </Row>
+              </div>
+              {isLoading ? (
+                <>
+                  <Skeleton active />
+                  <Skeleton active />
+                  <Skeleton active />
+                </>
+              ) : (
+                <AttendanceSummary info={sortedData}></AttendanceSummary>
+              )}
+            </Tab>
+            {/* Manage Students Tab */}
+            <Tab eventKey="manage" title="Manage Students">
+              <div id="tabsTitle">
+                <p className="mb-2 fw-bold fs-3 text-center">
+                  {subjectAndCode}
+                </p>
+                <p className="mb-0 text-center">
+                  <b>Schedule: </b>
+                  {sched}
+                </p>
+                <p className="mb-0 text-center">
+                  <b>Date: </b>
+                  {date}
+                </p>
+              </div>
+              {isLoading ? (
+                <>
+                  <Skeleton active />
+                  <Skeleton active />
+                  <Skeleton active />
+                </>
+              ) : (
+                <ManageStudents
+                  sortedData={sortedData}
+                  attendanceData={attendanceData}
+                ></ManageStudents>
+              )}
+            </Tab>
+          </Tabs>
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
 
