@@ -13,20 +13,33 @@ const urlsToCache = [
   // Add all other essential resources like JS, images, fonts
 ];
 
+// Utility function to generate cache name based on user ID or session token
+function getUserCacheName(userId) {
+  return `pwa-cache-${userId}`;
+}
+
+// Listen to messages sent from the main thread to update user session details
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SET_USER") {
+    self.userId = event.data.userId;
+  }
+});
+
 // Install event - Cache all the files listed above
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("Opened cache and caching all essential files.");
-      return cache.addAll(urlsToCache);  // Cache all necessary resources
+    caches.open(getUserCacheName(self.userId || "default")).then((cache) => {
+      console.log("Opened cache for user:", self.userId || "default");
+      return cache.addAll(urlsToCache); // Cache all necessary resources
     })
   );
 });
 
 // Fetch event - Serve files from cache, fallback to network if needed
 self.addEventListener("fetch", (event) => {
+  const userCacheName = getUserCacheName(self.userId || "default");
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
+    caches.match(event.request, { cacheName: userCacheName }).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;  // Return cached response if available
       }
@@ -34,7 +47,7 @@ self.addEventListener("fetch", (event) => {
       // If resource is not cached, fetch it from the network
       return fetch(event.request)
         .then((networkResponse) => {
-          return caches.open(CACHE_NAME).then((cache) => {
+          return caches.open(userCacheName).then((cache) => {
             cache.put(event.request, networkResponse.clone());  // Cache the newly fetched resource
             return networkResponse;
           });
@@ -51,7 +64,7 @@ self.addEventListener("fetch", (event) => {
 
 // Activate event - Clear old caches
 self.addEventListener("activate", (event) => {
-  const cacheWhiteList = [CACHE_NAME];
+  const cacheWhiteList = [`pwa-cache-${self.userId || "default"}`];
   event.waitUntil(
     caches.keys().then((cacheNames) =>
       Promise.all(
