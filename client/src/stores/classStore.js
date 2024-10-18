@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { unarchiveClass } from "../../../server/controller/classController";
 
 const API_URL = "http://localhost:3001/api/teacher";
 
@@ -77,6 +78,27 @@ export const useClassStore = create((set) => ({
           classes: state.classes.map((classItem) =>
             classItem.classCode === classCode
               ? { ...classItem, archived: true }
+              : classItem
+          ),
+          isLoading: false,
+          error: null,
+        }));
+        alert(response.data.message); // Optionally show a message
+      }
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+    }
+  },
+
+  unarchiveClass: async (classCode) => {
+    set({ isLoading: true });
+    try {
+      const response = await unarchiveClass(classCode);
+      if (response.status === 200) {
+        set((state) => ({
+          classes: state.classes.map((classItem) =>
+            classItem.classCode === classCode
+              ? { ...classItem, archived: false }
               : classItem
           ),
           isLoading: false,
