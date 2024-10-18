@@ -76,8 +76,8 @@ const ClassList = () => {
         setNotificationMessage("Class archived successfully!");
         setNotificationType("success");
       } else if (selectedAction === "delete") {
-        await deleteClass(selectedClass);
-        setNotificationMessage("Class deleted successfully!");
+        await deleteClass(selectedClass); // Ensure this deletes both the class and its object ID.
+        setNotificationMessage("Class and its references deleted successfully!"); // Updated message
         setNotificationType("success");
       }
       await getClasses(); // Refresh the classes
@@ -87,7 +87,7 @@ const ClassList = () => {
       setNotificationType("error");
     }
     closeModal();
-  };
+  };  
 
   // Filter classes based on search query
   const filteredClasses = classes.filter(
@@ -132,8 +132,7 @@ const ClassList = () => {
 
           <CreateClass
             onSuccess={() => {
-              setNotificationMessage("Class is created successfully!");
-              setNotificationType("success");
+              window.alert("Class created successfully!");
               window.location.reload();
             }}
           />
@@ -296,9 +295,8 @@ const ClassList = () => {
             close={() => setShowEditClass(false)}
             selectedClass={selectedClass}
             onSuccess={() => {
-              setNotificationMessage("Class edited successfully!");
-              setNotificationType("success");
-              // setShowEditClass(false); // Close the modal after success
+              window.alert("Class updated successfully!");
+              window.reload();
             }}
           />
         </Flex>
