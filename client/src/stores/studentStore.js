@@ -1,9 +1,5 @@
 import { create } from "zustand";
 import axios from "axios";
-import {
-  importFile,
-  updateStudentStatus,
-} from "../../../server/controller/studentController";
 
 const API_URL = "http://localhost:3001/api/teacher";
 
@@ -15,9 +11,7 @@ export const useStudentStore = create((set) => ({
   success: null,
   message: null,
   isLoading: false,
-  getStudents: async () => {
-    const url = window.location.href;
-    const id = url.split("/")[url.split("/").length - 1];
+  getStudents: async (id) => {
     set({ isLoading: true });
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -89,37 +83,37 @@ export const useStudentStore = create((set) => ({
     }
   },
 
-  updateStudentStatus: async (id, status) => {
-    set({ isLoading: true });
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const response = await updateStudentStatus(id, status);
-      if (response.status === 200) {
-        set({
-          success: true,
-          message: "Student status updated successfully",
-          isLoading: false,
-        });
-      }
-    } catch (error) {
-      set({ error, isLoading: false });
-    }
-  },
+  // updateStudentStatus: async (id, status) => {
+  //   set({ isLoading: true });
+  //   try {
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     const response = await updateStudentStatus(id, status);
+  //     if (response.status === 200) {
+  //       set({
+  //         success: true,
+  //         message: "Student status updated successfully",
+  //         isLoading: false,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     set({ error, isLoading: false });
+  //   }
+  // },
 
-  importFile: async (file) => {
-    set({ isLoading: true });
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const response = await importFile(file);
-      if (response.status === 200) {
-        set({
-          success: true,
-          message: "File imported successfully",
-          isLoading: false,
-        });
-      }
-    } catch (error) {
-      set({ error, isLoading: false });
-    }
-  },
+  // importFile: async (file) => {
+  //   set({ isLoading: true });
+  //   try {
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     const response = await importFile(file);
+  //     if (response.status === 200) {
+  //       set({
+  //         success: true,
+  //         message: "File imported successfully",
+  //         isLoading: false,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     set({ error, isLoading: false });
+  //   }
+  // },
 }));

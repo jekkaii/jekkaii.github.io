@@ -8,7 +8,7 @@ import EditClass from "./EditClass";
 import { useClassStore } from "../../stores/classStore";
 import {
   Button,
-  Divider,
+  Skeleton,
   Flex,
   Typography,
   Row,
@@ -103,22 +103,21 @@ const ClassList = () => {
         gap={23}
         align="center"
         style={{
-          // margin: "30px 30px 0",
-          padding: 24,
+          padding: 30,
           backgroundColor: "#fff",
           borderRadius: "10px",
           boxShadow: "0px 2px 2px 0px rgba(0, 0, 0, 0.1)",
           width: "100%",
         }}
       >
-          <Flex vertical>
-            <Typography.Title level={2} style={{ marginBottom: 0 }}>
-              Class List
-            </Typography.Title>
-            <Typography.Text>
-              Here are the list of the classes you handle
-            </Typography.Text>
-          </Flex>
+        <Flex vertical>
+          <Typography.Title level={2} style={{ marginBottom: 0 }}>
+            Class List
+          </Typography.Title>
+          <Typography.Text>
+            Here are the list of the classes you handle
+          </Typography.Text>
+        </Flex>
 
         <Flex gap={23}>
           {/* Search Input in the Middle */}
@@ -143,127 +142,134 @@ const ClassList = () => {
 
       <>
         <Flex
-          vertical
           style={{
-            padding: 24,
+            padding: 30,
             backgroundColor: "#fff",
             borderRadius: "10px",
             boxShadow: "0px 2px 2px 0px rgba(0, 0, 0, 0.1)",
-
             width: "100%",
           }}
         >
           <Row
             gutter={[24, 24]}
             wrap
-            style={{ display: "flex", flexWrap: "wrap" }}
+            justify={"start"}
+            style={{
+              flexWrap: "wrap",
+              width: "100%",
+              display: "flex",
+              margin: 0,
+            }}
           >
             {filteredClasses.map((cls) => (
               <Col
                 key={cls.classCode}
-                xs={24}
-                sm={24}
-                md={12}
-                lg={8}
-                xl={6}
+                xs={{
+                  span: 12,
+                }}
+                lg={{
+                  span: 4,
+                }}
                 style={{
-                  flex: "1 1 450px",
-                  minWidth: "450px",
-                  maxWidth: "500px",
-                  padding: "12px",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minWidth: "420px",
                 }}
               >
-                <Card
-                  title={
-                    <Flex
-                      justify="start"
-                      align="center"
-                      style={{ gap: "10px", padding: "0 10px" }}
-                    >
-                      {/* Hamburger Icon */}
-                      <div className="hamburger-menu">
-                        <FaEllipsisV
-                          className="hamburger-icon"
-                          onClick={() => toggleMenu(cls.classCode)}
-                          style={{
-                            cursor: "pointer",
-                            fontSize: "16px",
-                            paddingRight: "10px",
-                          }} // Adjust icon size if needed
-                        />
-                        {openMenu === cls.classCode && (
-                          <div className="menu-options">
-                            <button onClick={() => handleEditClick(cls)}>
-                              Edit
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleActionClick("archive", cls.classCode)
-                              }
-                            >
-                              Archive
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleActionClick("delete", cls.classCode)
-                              }
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Class Title */}
-                      <Typography.Title
-                        level={4}
-                        strong
-                        style={{ margin: 0, display: "block" }}
+                {isLoading ? (
+                  <Skeleton.Node active style={{ width: 160 }} />
+                ) : (
+                  <Card
+                    bordered={true}
+                    title={
+                      <Flex
+                        justify="space-between"
+                        align="center"
+                        style={{
+                          gap: "10px",
+                          padding: "0 10px",
+                        }}
                       >
-                        {cls.subject}
-                      </Typography.Title>
-                    </Flex>
-                  }
-                  style={{
-                    minWidth: 450,
-                    maxWidth: 500,
-                    boxShadow: "0px 1px 4px 0px rgba(0, 0, 0, 0.1)",
-
-                    padding: "10px",
-                  }}
-                >
-                  <Flex
-                    vertical
-                    key={cls.classCode}
-                    style={{ position: "relative" }}
+                        {/* Hamburger Icon */}
+                        <div className="hamburger-menu">
+                          <FaEllipsisV
+                            className="hamburger-icon"
+                            onClick={() => toggleMenu(cls.classCode)}
+                            style={{
+                              cursor: "pointer",
+                              fontSize: "16px",
+                              paddingRight: "10px",
+                            }} // Adjust icon size if needed
+                          />
+                          {openMenu === cls.classCode && (
+                            <div className="menu-options">
+                              <button onClick={() => handleEditClick(cls)}>
+                                Edit
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleActionClick("archive", cls.classCode)
+                                }
+                              >
+                                Archive
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleActionClick("delete", cls.classCode)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        {/* Class Title */}
+                        <Typography.Title level={4} strong>
+                          {cls.subject}
+                        </Typography.Title>
+                      </Flex>
+                    }
+                    style={{
+                      boxShadow: "0px 1px 4px 0px rgba(0, 0, 0, 0.1)",
+                      padding: "10px",
+                      width: "100%",
+                    }}
                   >
-                    <div className="class-info">
-                      <p>
-                        <strong>Class Code:</strong> {cls.classCode}
-                      </p>
-                      <p>
-                        <strong>Room:</strong> {cls.room}
-                      </p>
-                      <p>
-                        <strong>Academic Year:</strong> {cls.academicYear}
-                      </p>
-                      <p>
-                        <strong>Term:</strong> {cls.term}
-                      </p>
-                      <p>
-                        <strong>Schedule:</strong> {cls.days.join(", ")}{" "}
-                        {cls.startTime} - {cls.endTime}
-                      </p>
-                    </div>
-                    <Flex justify="space-between">
-                      <Link to={`/teacher/attendance/${cls.classCode}`}>
-                        <Button type="primary" icon={<EyeOutlined />}>
-                          View Class
-                        </Button>
-                      </Link>
+                    <Flex
+                      vertical
+                      key={cls.classCode}
+                      style={{ position: "relative" }}
+                    >
+                      <div className="class-info">
+                        <p>
+                          <strong>Class Code:</strong> {cls.classCode}
+                        </p>
+                        <p>
+                          <strong>Room:</strong> {cls.room}
+                        </p>
+                        <p>
+                          <strong>Academic Year:</strong> {cls.academicYear}
+                        </p>
+                        <p>
+                          <strong>Term:</strong> {cls.term}
+                        </p>
+                        <p>
+                          <strong>Schedule:</strong> {cls.days.join(", ")}{" "}
+                          {cls.startTime} - {cls.endTime}
+                        </p>
+                      </div>
+                      <Flex justify="space-between">
+                        <Link to={`/teacher/attendance/${cls.classCode}`}>
+                          <Button type="primary" icon={<EyeOutlined />}>
+                            View Class
+                          </Button>
+                        </Link>
+                      </Flex>
                     </Flex>
-                  </Flex>
-                </Card>
+                  </Card>
+                )}
               </Col>
             ))}
           </Row>
@@ -284,17 +290,17 @@ const ClassList = () => {
           )}
 
           {/* Edit Class Modal */}
-            <EditClass
-              existingClass={selectedClass} // Pass the selected class to edit
-              open={showEditClass}
-              close={() => setShowEditClass(false)}
-              selectedClass={selectedClass}
-              onSuccess={() => {
-                setNotificationMessage("Class edited successfully!");
-                setNotificationType("success");
-                // setShowEditClass(false); // Close the modal after success
-              }}
-            />
+          <EditClass
+            existingClass={selectedClass} // Pass the selected class to edit
+            open={showEditClass}
+            close={() => setShowEditClass(false)}
+            selectedClass={selectedClass}
+            onSuccess={() => {
+              setNotificationMessage("Class edited successfully!");
+              setNotificationType("success");
+              // setShowEditClass(false); // Close the modal after success
+            }}
+          />
         </Flex>
       </>
     </Flex>

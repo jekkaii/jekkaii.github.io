@@ -181,7 +181,7 @@ function App() {
                     ></Route>
 
                     <Route
-                      path="/teacher/attendance/:code"
+                      path="/teacher/attendance/:classcode"
                       element={
                         <ProtectedRoute>
                           <AttendanceTabs />

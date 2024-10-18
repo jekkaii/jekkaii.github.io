@@ -13,8 +13,12 @@ import { FaCamera } from "react-icons/fa6";
 import UploadClassPicture from "./UploadClassPicture";
 import { useStudentStore } from "../../stores/studentStore";
 import { Skeleton, Flex } from "antd";
+import { useParams } from "react-router-dom";
 
 const AttendanceTabs = () => {
+  // Use parameter
+  const params = useParams();
+
   const [key, setKey] = useState("daily");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -27,8 +31,10 @@ const AttendanceTabs = () => {
     useStudentStore();
 
   useEffect(() => {
-    getStudents();
-  }, [getStudents]);
+    if (params.classcode) {
+      getStudents(params.classcode);
+    }
+  }, [params.classcode, getStudents]);
 
   const [attendanceData, setAttendanceData] = useState(
     students.map((student) => ({

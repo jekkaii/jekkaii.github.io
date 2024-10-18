@@ -30,9 +30,8 @@ import {
 } from "@ant-design/icons";
 
 function Sidebar() {
-  const { isAdmin, isTeacher, logout } = useAuthStore();
+  const { isAdmin, isTeacher } = useAuthStore();
   const { getClasses, classes } = useClassStore();
-  const { getStudents, students } = useStudentStore();
   const [selectedClass, setSelectedClass] = useState(null);
 
   const handleClick = (item) => {
@@ -49,7 +48,6 @@ function Sidebar() {
   const items = classes.map((item) => ({
     label: (
       <Link
-        onClick={getStudents}
         className="text-decoration-none font-weight-bold h6 m-0"
         to={`/teacher/attendance/${item.classCode}`}
       >
@@ -62,10 +60,6 @@ function Sidebar() {
   useEffect(() => {
     getClasses();
   }, [getClasses]);
-
-  useEffect(() => {
-    getStudents();
-  }, [getStudents]);
 
   return (
     <>
