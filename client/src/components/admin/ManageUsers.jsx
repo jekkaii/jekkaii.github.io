@@ -1,9 +1,13 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import React, { useState, setUser } from "react";
 import "../css/style.css";
 import { Button, Table, Form, Modal } from "react-bootstrap";
 import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 
 const initialUsers = [
+
 ];
 
 const ConfirmationModal = ({ isOpen, message, onConfirm, onCancel }) => (

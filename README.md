@@ -76,6 +76,8 @@ _Step 2: Install the needed **dependencies**_
 
     -- npm install or npm i
     -- npm ci
+    -- npm i bcrypt js
+    -- npm i multer
 
 _Step 3: Run the Application_
 

@@ -46,9 +46,14 @@ export const addStudent = async (req, res) => {
 export const getStudents = async (req, res) => {
   try {
     const classCode = req.params.id;
-    const foundClass = await ClassModel.findOne({ classCode }).populate(
-      "students"
-    );
+    const foundClass = await ClassModel.findOne({ classCode }).populate("students");
+
+    if (!foundClass) {
+      return res.status(404).json({
+        success: false,
+        message: "No class found",
+      });
+    }
 
     const students = foundClass.students;
 
