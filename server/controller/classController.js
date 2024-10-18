@@ -69,32 +69,28 @@ export const addClass = async (req, res) => {
 };
 
 export const deleteClass = async (req, res) => {
-  const { classCode } = req.body;
-
   try {
-    // First, find the class by its classCode to get its Object ID
-    const classToDelete = await ClassModel.findOne({ classCode });
-
-    if (!classToDelete) {
-      return res.status(404).json({ message: "Class not found" });
+    const { classCode } = req.body;
+    if (!classCode) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Class code is required" });
     }
-
-    // Remove the class from the Class collection
-    await ClassModel.deleteOne({ _id: classToDelete._id });
-
-    // Now, update any references in other collections, e.g., Teachers
-    await UserModel.updateMany(
-      { classes: classToDelete._id }, // Assuming 'classes' holds an array of Object IDs
-      { $pull: { classes: classToDelete._id } } // Remove the Object ID from the array
-    );
-
-    res.status(200).json({ message: "Class deleted successfully!" });
+    const existingClass = await ClassModel.findOne({ classCode });
+    if (!existingClass) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Class not found" });
+    }
+    await ClassModel.deleteOne({ classCode });
+    return res
+      .status(200)
+      .json({ success: true, message: "Class deleted successfully" });
   } catch (error) {
     console.error("Error deleting class:", error);
-    res.status(500).json({ message: "Error deleting class" });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 export const updateClass = async (req, res) => {
   try {
