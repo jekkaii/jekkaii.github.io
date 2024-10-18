@@ -14,21 +14,7 @@ const FaceRecognitionSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["active", "inactive"],
-      default: "inactive",
-    },
-    model_filepath: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    encoder_filepath: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    date_created: {
-      type: Date,
-      default: Date.now,
+      default: "active",
     },
   },
   { timestamps: true }

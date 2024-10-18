@@ -51,20 +51,34 @@ class FaceRecognitionService:
         return results
     
     def save_model(self, model_name: str):
+        """Saves the trained model with the given model_name."""
         if self.model_trained:
-            self.face_recognition_model.save_model(self.face_recognition_model.model, self.face_recognition_model.encoder, model_name)
-            return {"message": f"Model '{model_name}' has been saved successfully."}
+            try:
+                self.face_recognition_model.save_model(
+                    self.face_recognition_model.model, 
+                    self.face_recognition_model.encoder, 
+                    model_name
+                )
+                return {"message": f"Model '{model_name}' has been saved successfully."}
+            except Exception as e:
+                return {"error": f"An error occurred while saving the model: {str(e)}"}
         else:
             return {"error": "No trained model to save. Please train the model first."}
 
     def load_model(self, model_name: str):
-        load_status = self.face_recognition_model.load_model(model_name)
+        """Loads the model with the given model_name."""
+        try:
+            load_status = self.face_recognition_model.load_model(model_name)
+
+            if load_status is None:
+                return {"error": "Failed to load the model. The model might not exist."}
+
+            if 'error' not in load_status:
+                self.model_loaded = True
+                return {"message": f"Model '{model_name}' has been loaded successfully."}
+
+            # Handle cases where load_status indicates an error
+            return {"error": load_status.get('error', 'An unknown error occurred during loading.')}
         
-        if load_status is None:
-            return {"error": "Failed to load the model"}
-        
-        if 'error' not in load_status:
-            self.model_loaded = True
-            return {"message": f"Model '{model_name}' has been loaded successfully."}
-        
-        return load_status
+        except Exception as e:
+            return {"error": f"An error occurred while loading the model: {str(e)}"}

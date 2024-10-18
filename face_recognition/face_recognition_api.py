@@ -36,7 +36,7 @@ async def create_model(model_name: str = Path(..., description="Provide the name
             "create_model_status": create_model_status,
             "total_test_samples": total_test_samples,
             "correct_predictions": correct_predictions,
-            "accuracy (%)": accuracy,
+            "accuracy": accuracy,
             "save_model_status": save_model_status
         }
     
@@ -88,16 +88,20 @@ async def delete_model(model_name: str):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while deleting the model: {str(e)}")
-    
+
 @app.post("/set-active-model/{model_name}")
 async def set_active_model(model_name: str):
     """Load a specific model and set it as the active model."""
     load_status = service.load_model(model_name)
-    
+
     if "loaded successfully" in load_status.get("message", ""):
         return {"status": load_status}
     else:
-        raise HTTPException(status_code=404, detail=load_status)
+        error_message = load_status.get("message", "Model not found.")
+        error_code = load_status.get("code", 404)  
+        
+        raise HTTPException(status_code=error_code, detail=f"Failed to load model '{model_name}': {error_message}")
+
 
 @app.post("/check-attendance/")
 async def check_attendance(group_photo: UploadFile):
