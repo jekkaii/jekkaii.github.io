@@ -8,6 +8,11 @@ const ClassSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Active",
+    },
     courseNumber: {
       type: String,
       required: true,

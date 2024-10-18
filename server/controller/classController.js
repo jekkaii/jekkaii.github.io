@@ -5,6 +5,7 @@ export const addClass = async (req, res) => {
   try {
     const {
       classCode,
+      status,
       courseNumber,
       subject,
       academicYear,
@@ -18,6 +19,7 @@ export const addClass = async (req, res) => {
 
     if (
       !classCode ||
+      !status ||
       !courseNumber ||
       !subject ||
       !academicYear ||
@@ -46,6 +48,7 @@ export const addClass = async (req, res) => {
 
     const newClass = new ClassModel({
       classCode,
+      status,
       courseNumber,
       subject,
       academicYear,
@@ -183,28 +186,51 @@ export const readClasses = async (req, res) => {
 // Add this new function in your classController.js
 
 export const archiveClass = async (req, res) => {
-  try {
-    const { classCode } = req.body;
-    if (!classCode) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Class code is required" });
+    try {
+        const { classCode } = req.body;
+        if (!classCode) {
+            return res
+                .status(400)
+                .json({ success: false, message: "Class code is required" });
+        }
+        const existingClass = await ClassModel.findOne({ classCode });
+        if (!existingClass) {
+            return res
+                .status(404)
+                .json({ success: false, message: "Class not found" });
+        }
+        existingClass.status = existingClass.status === "Active" ? "Inactive" : "Active";
+        await existingClass.save();
+        return res
+            .status(200)
+            .json({ success: true, message: "Class archived successfully" });
+    } catch (error) {
+        console.error("Error archiving class:", error);
+        return res.status(500).json({ success: false, message: error.message });
     }
-    const existingClass = await ClassModel.findOne({ classCode });
-    if (!existingClass) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Class not found" });
-    }
-
-    existingClass.archived = true; // or whatever logic you need to mark as archived
-    await existingClass.save();
-
-    return res
-      .status(200)
-      .json({ success: true, message: "Class archived successfully" });
-  } catch (error) {
-    console.error("Error archiving class:", error);
-    return res.status(500).json({ success: false, message: error.message });
-  }
 };
+
+export const unarchiveClass = async (req, res) => {
+    try {
+        const { classCode } = req.body;
+        if (!classCode) {
+            return res
+                .status(400)
+                .json({ success: false, message: "Class code is required" });
+        }
+        const existingClass = await ClassModel.findOne({ classCode });
+        if (!existingClass) {
+            return res
+                .status(404)
+                .json({ success: false, message: "Class not found" });
+        }
+        existingClass.status = "Active";
+        await existingClass.save();
+        return res
+            .status(200)
+            .json({ success: true, message: "Class unarchived successfully" });
+    } catch (error) {
+        console.error("Error unarchiving class:", error);
+        return res.status(500).json({ success: false, message: error.message });
+    } 
+  };
