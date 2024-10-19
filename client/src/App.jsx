@@ -12,6 +12,7 @@ import { useAuthStore } from "./stores/authStore";
 import LoginForm from "./components/LoginForm";
 import { useEffect, useState } from "react";
 import ManageUsers from "./components/admin/ManageUsers";
+import ManageModels from "./components/admin/ManageModels";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
@@ -206,6 +207,16 @@ function App() {
                       element={
                         <ProtectedRoute>
                           <ManageUsers />
+                        </ProtectedRoute>
+                      }
+                    ></Route>
+
+                    {/* Model Routes */}
+                    <Route
+                      path="/models"
+                      element={
+                        <ProtectedRoute>
+                          <ManageModels />
                         </ProtectedRoute>
                       }
                     ></Route>

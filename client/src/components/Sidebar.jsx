@@ -270,7 +270,7 @@ function Sidebar() {
                       label: (
                         <Link
                           className="text-decoration-none font-weight-bold h6 m-0"
-                          to=""
+                          to="/models"
                         >
                           Manage Models
                         </Link>
