@@ -1,5 +1,6 @@
 import { StudentModel } from "../model/Student.js";
 import { ClassModel } from "../model/Class.js";
+import { UserModel } from "../model/User.js";
 
 // import * as xlsx from 'xlsx';
 //import multer from 'multer';
@@ -7,6 +8,7 @@ import { ClassModel } from "../model/Class.js";
 export const addStudent = async (req, res) => {
   try {
     const { idNumber, name, course, year } = req.body;
+    const { classCode } = req.params;
 
     if (!idNumber || !name) {
       return res
@@ -14,30 +16,54 @@ export const addStudent = async (req, res) => {
         .json({ success: false, message: "All fields are required" });
     }
 
-    const existingId = await StudentModel.findOne({ idNumber });
+    const existingTeacher = await UserModel.findById(req.userId).populate(
+      "classes"
+    );
 
-    if (existingId) {
+    if (!existingTeacher || existingTeacher.role !== "Teacher") {
       return res
-        .status(400)
-        .json({ success: false, message: "Student already exists" });
+        .status(403)
+        .json({ message: "User is not a teacher or not found" });
     }
 
-    const newStudent = new StudentModel({
-      idNumber,
-      name,
-      course,
-      year,
-    });
+    // Find the class by classCode
+    const classDoc = await ClassModel.findOne({ classCode }); // Find class by classCode
+    if (!classDoc) {
+      return res.status(404).json({ message: "Class not found" });
+    }
 
-    await newStudent.save();
+    let student = await StudentModel.findOne({ idNumber });
+    if (!student) {
+      student = new StudentModel({
+        idNumber,
+        name,
+        course,
+        year,
+      });
+      await student.save(); // Save the new student
+    }
 
-    const responseData = {
-      success: true,
-      message: "Student created successfully",
-      student: newStudent,
-    };
+    if (classDoc.students.includes(student._id)) {
+      return res
+        .status(400)
+        .json({ message: "Student is already enrolled in this class" });
+    }
 
-    return res.status(201).json(responseData);
+    // Add the student to the class's students array
+    classDoc.students.push(student._id);
+    await classDoc.save(); // Save the updated class
+
+    if (!student.classes) {
+      student.classes = [];
+    }
+    if (!student.classes.includes(classDoc._id.toString())) {
+      student.classes.push(classDoc._id);
+      await student.save(); // Save the updated student
+    }
+
+    res
+      .status(200)
+      .json({ message: "Student added to class successfully", student });
   } catch (error) {
     console.error("Error creating user:", error);
     return res.status(400).json({ success: false, message: error.message });
@@ -46,7 +72,9 @@ export const addStudent = async (req, res) => {
 export const getStudents = async (req, res) => {
   try {
     const classCode = req.params.id;
-    const foundClass = await ClassModel.findOne({ classCode }).populate("students");
+    const foundClass = await ClassModel.findOne({ classCode }).populate(
+      "students"
+    );
 
     if (!foundClass) {
       return res.status(404).json({
@@ -180,21 +208,23 @@ export const updateStudentStatus = async (req, res) => {
 
 export const deleteStudents = async (req, res) => {
   try {
-    const { idNumbers } = req.body;
-    if (!idNumbers) {
+    const idNumber = req.params.id;
+
+    if (!idNumber) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
-    const existingUsers = await StudentModel.find({
-      idNumber: { $in: idNumbers },
+
+    const existingStudents = await StudentModel.findOneAndDelete({
+      idNumber,
     });
-    if (!existingUsers.length) {
+
+    if (!existingStudents) {
       return res
         .status(404)
-        .json({ success: false, message: "No users found" });
+        .json({ success: false, message: "No student found" });
     }
-    await StudentModel.deleteMany({ idNumber: { $in: idNumbers } });
     return res.status(200).json({ success: true, message: "Users deleted" });
   } catch (error) {
     console.error("Error deleting users:", error);

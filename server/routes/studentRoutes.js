@@ -13,8 +13,8 @@ import { verifyToken } from "../middleware/verifyToken.js";
 const router = express.Router();
 
 // Student
-router.post("/students", addStudent);
-router.delete("/students", deleteStudents);
+router.post("/students/:classCode", verifyToken, addStudent);
+router.delete("/students/:id", deleteStudents);
 router.get("/students/:id", verifyToken, getStudents);
 router.put("/students/:id", updateStudent);
 router.put("/students/:id/password", updatePassword);
