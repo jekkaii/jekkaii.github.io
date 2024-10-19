@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { unarchiveClass } from "../../../server/controller/classController";
+import { unarchiveClass, updateClass } from "../../../server/controller/classController";
 
 const API_URL = "http://localhost:3001/api/teacher";
 
@@ -82,47 +82,24 @@ export const useClassStore = create((set) => ({
     }
   },
 
-  archiveClass: async (classCode) => {
+  updateClass: async (id, updatedClass) => {
     set({ isLoading: true });
     try {
-      const response = await axios.patch(`${API_URL}/classes/archive`, {
-        classCode,
-      });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await axios.put(
+        `${API_URL}/classes/${id}`,
+        updatedClass
+      );
+      
       if (response.status === 200) {
-        set((state) => ({
-          classes: state.classes.map((classItem) =>
-            classItem.classCode === classCode
-              ? { ...classItem, archived: true }
-              : classItem
-          ),
+        set({
+          success: true,
+          message: "Class updated successfully",
           isLoading: false,
-          error: null,
-        }));
-        alert(response.data.message); // Optionally show a message
+        });
       }
     } catch (error) {
-      set({ error: error.message, isLoading: false });
-    }
-  },
-
-  unarchiveClass: async (classCode) => {
-    set({ isLoading: true });
-    try {
-      const response = await unarchiveClass(classCode);
-      if (response.status === 200) {
-        set((state) => ({
-          classes: state.classes.map((classItem) =>
-            classItem.classCode === classCode
-              ? { ...classItem, archived: false }
-              : classItem
-          ),
-          isLoading: false,
-          error: null,
-        }));
-        alert(response.data.message); // Optionally show a message
-      }
-    } catch (error) {
-      set({ error: error.message, isLoading: false });
+      set({ error, isLoading: false });
     }
   },
 

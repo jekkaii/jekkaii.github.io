@@ -9,7 +9,8 @@ import "../css/style.css";
 const { RangePicker } = TimePicker;
 
 const EditClass = ({ onSuccess, open, close, selectedClass }) => {
-  const { addClass } = useClassStore();
+  const [timeRange, setTimeRange] = useState([]);
+  const { updateClass, readClasses, classes } = useClassStore();
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
   const [newClass, setNewClass] = useState({
@@ -24,7 +25,9 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
     endTime: "",
   });
 
-  const [timeRange, setTimeRange] = useState([]);
+  useEffect(() => {
+    readClasses();
+  }, [readClasses]);
 
   useEffect(() => {
     if (selectedClass) {
@@ -39,14 +42,14 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
     if (selectedClass) {
       setNewClass({
         classCode: selectedClass.classCode || "",
-    courseNumber: selectedClass.courseNumber || "",
-    subject: selectedClass.subject || "",
-    academicYear: selectedClass.academicYear || "",
-    term: selectedClass.term || "",
-    room: selectedClass.room || "",
-    days: selectedClass.days || "",
-    startTime: selectedClass.startTime || "",
-    endTime: selectedClass.endTime || "",
+        courseNumber: selectedClass.courseNumber || "",
+        subject: selectedClass.subject || "",
+        academicYear: selectedClass.academicYear || "",
+        term: selectedClass.term || "",
+        room: selectedClass.room || "",
+        days: selectedClass.days || "",
+        startTime: selectedClass.startTime || "",
+        endTime: selectedClass.endTime || "",
       });
     }
   }, [selectedClass]);  // Runs whenever selectedClass changes
@@ -70,11 +73,6 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
             .replace(/^([a-z])/g, (match) => match.toUpperCase())
         : name;
 
-    if (name === "classCode" && !/^\d{4}[a-zA-Z]?$/.test(value)) {
-      validationErrors.classCode =
-        "Class code must be 4 digits, optionally followed by a letter (e.g., 9400 or 9400C).";
-    }
-
     if (
       (name === "courseNumber" ||
         name === "subject" ||
@@ -85,10 +83,10 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
       validationErrors[name] = `${formattedName} is required.`;
     }
 
-    if (name === "room" && !/^[a-zA-Z]\d{3}$/.test(value)) {
-      validationErrors.room =
-        "Room must be 1 letter followed by 3 digits (e.g., D515).";
-    }
+    // if (name === "room" && !/^[a-zA-Z]\d{3}$/.test(value)) {
+    //   validationErrors.room =
+    //     "Room must be 1 letter followed by 3 digits (e.g., D515).";
+    // }
 
     if (name === "days" && newClass.days.length === 0) {
       validationErrors.days = "Days are required.";
@@ -118,25 +116,24 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      const capitalizedClassCode = selectedClass.classCode.toUpperCase();
-      const capitalizedCourseNumber = selectedClass.courseNumber.toUpperCase();
-      const capitalizedSubject = selectedClass.subject
-        .toLowerCase()
-        .replace(/\b\w/g, char => char.toUpperCase())
-        .replace(/\bIt\b/g, 'IT');
-      const capitalizedRoom = selectedClass.room.toUpperCase();
-
-      // Update the subject field before submitting
       const updatedClass = {
-        classCode: capitalizedClassCode,
-        courseNumber: capitalizedCourseNumber,
-        subject: capitalizedSubject, 
-        room: capitalizedRoom,
+        classCode: newClass.classCode.toUpperCase(),
+        courseNumber: newClass.courseNumber.toUpperCase(),
+        subject: newClass.subject
+          .toLowerCase()
+          .replace(/\b\w/g, char => char.toUpperCase())
+          .replace(/\bIt\b/g, 'IT'),
+        room: newClass.room.toUpperCase(),
+        days: newClass.days,
+        startTime: timeRange[0] ? timeRange[0].format('hh:mm A') : '',
+        endTime: timeRange[1] ? timeRange[1].format('hh:mm A') : '',
+        academicYear: newClass.academicYear,
+        term: newClass.term,
       };
 
-      // ADD HERE FOR UPDATE CLASS
-      // await addClass(updatedClass);
-      // handleCancel(); ++++
+      console.log("Updated class object:", updatedClass); 
+      await updateClass(selectedClass._id, updatedClass);
+      close();
       onSuccess();
     }
   };
@@ -215,34 +212,10 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
               <Col sm="9">
                 <Form.Control
                   type="text"
-                  placeholder="Enter Class Code"
-                  className={`form-control ${touchedFields.classCode && errors.classCode ? 'no-margin' : ''}`}
                   value={newClass.classCode}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setNewClass({ ...newClass, classCode: value });
-                    const fieldErrors = validateField("classCode", value);
-                    setErrors((prevErrors) => ({
-                      ...prevErrors,
-                      classCode: fieldErrors.classCode,
-                    }));
-
-                  }}
-                  onBlur={(e) => handleBlur("classCode", e.target.value)}
                   required
+                  disabled
                 />
-                {touchedFields.classCode && errors.classCode && (
-                  <span
-                    style={{
-                      color: "red",
-                      paddingBottom: "20px",
-                      display: "block",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {errors.classCode}
-                  </span>
-                )}
               </Col>
             </Form.Group>
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Modal } from "antd";
 import { Form, Row, Col } from "react-bootstrap";
 import { TimePicker } from "antd";
@@ -10,7 +10,7 @@ const { RangePicker } = TimePicker;
 
 const CreateClass = ({ onSuccess }) => {
   const [timeRange, setTimeRange] = useState([]);
-  const { addClass, err } = useClassStore();
+  const { addClass, readClasses, classes } = useClassStore();
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
   const [newClass, setNewClass] = useState({
@@ -24,6 +24,10 @@ const CreateClass = ({ onSuccess }) => {
     startTime: "",
     endTime: "",
   });
+
+  useEffect(() => {
+    readClasses();
+  }, [readClasses]);
 
   // Get the current year and set the starting year to one year prior to the current year
   const currentYear = new Date().getFullYear();
@@ -47,6 +51,8 @@ const CreateClass = ({ onSuccess }) => {
     if (name === "classCode" && !/^\d{4}[a-zA-Z]?$/.test(value)) {
       validationErrors.classCode =
         "Class code must be 4 digits, optionally followed by a letter (e.g., 9400 or 9400C).";
+    } else if (name === "classCode" && classes.some((classItem) => classItem.classCode === value)) {
+      validationErrors.classCode = "Class code already exists.";      
     }
 
     if (
