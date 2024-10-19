@@ -19,15 +19,14 @@ import {
 } from "antd";
 const { Search } = Input;
 import { Link } from "react-router-dom";
-import { EyeOutlined, PlusOutlined, BookOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 
 const ClassList = () => {
-  const { readClasses, classes, isLoading, error, deleteClass, archiveClass } =
+  const { readClasses, classes, isLoading, error, deleteClass} =
     useClassStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [selectedAction, setSelectedAction] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [notificationType, setNotificationType] = useState(""); // 'success' or 'error'
@@ -48,14 +47,9 @@ const ClassList = () => {
     setShowEditClass(true); // Open the edit modal
   };
 
-  const handleActionClick = (action, classCode) => {
-    setSelectedAction(action);
+  const handleActionClick = (classCode) => {
     setSelectedClass(classCode);
-    setModalMessage(
-      action === "archive"
-        ? `Are you sure you want to archive the class with code ${classCode}?`
-        : `Are you sure you want to delete the class with code ${classCode}?`
-    );
+    setModalMessage(`Are you sure you want to delete the class with code ${classCode}?`);
     setIsModalOpen(true);
   };
 
@@ -71,16 +65,12 @@ const ClassList = () => {
 
   const confirmAction = async () => {
     try {
-      if (selectedAction === "archive") {
-        await archiveClass(selectedClass);
-        setNotificationMessage("Class archived successfully!");
-        setNotificationType("success");
-      } else if (selectedAction === "delete") {
         await deleteClass(selectedClass);
+        setIsModalOpen(false);
+        setModalMessage("");
         setNotificationMessage("Class deleted successfully!");
         setNotificationType("success");
-      }
-      await readClasses(); // Refresh the classes
+        window.location.reload();
     } catch (error) {
       console.error("Error performing action on class:", error);
       setNotificationMessage("An error occurred. Please try again.");
@@ -132,9 +122,12 @@ const ClassList = () => {
 
           <CreateClass
             onSuccess={() => {
-              setNotificationMessage("Class is created successfully!");
+              setNotificationMessage("Class created successfully!");
               setNotificationType("success");
-              window.location.reload();
+
+              // setTimeout(() => {
+                window.location.reload();
+              // }, 2000); // Reload the page after 2 seconds
             }}
           />
         </Flex>
@@ -210,14 +203,7 @@ const ClassList = () => {
                               </button>
                               <button
                                 onClick={() =>
-                                  handleActionClick("archive", cls.classCode)
-                                }
-                              >
-                                Archive
-                              </button>
-                              <button
-                                onClick={() =>
-                                  handleActionClick("delete", cls.classCode)
+                                  handleActionClick(cls.classCode)
                                 }
                               >
                                 Delete
@@ -225,6 +211,7 @@ const ClassList = () => {
                             </div>
                           )}
                         </div>
+
                         {/* Class Title */}
                         <Typography.Title level={4} strong>
                           {cls.subject}
@@ -296,9 +283,9 @@ const ClassList = () => {
             close={() => setShowEditClass(false)}
             selectedClass={selectedClass}
             onSuccess={() => {
-              setNotificationMessage("Class edited successfully!");
+              setNotificationMessage("Class updated successfully!");
               setNotificationType("success");
-              // setShowEditClass(false); // Close the modal after success
+              window.location.reload();
             }}
           />
         </Flex>

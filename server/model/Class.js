@@ -8,11 +8,6 @@ const ClassSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-    status: {
-      type: String,
-      enum: ["Active", "Inactive"],
-      default: "Active",
-    },
     courseNumber: {
       type: String,
       required: true,
@@ -26,7 +21,7 @@ const ClassSchema = new mongoose.Schema(
     academicYear: {
       type: String,
       required: true,
-      trim: true, // Example format: '2024-2025'
+      trim: true,
     },
     term: {
       type: String,

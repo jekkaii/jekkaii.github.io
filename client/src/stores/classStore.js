@@ -65,7 +65,7 @@ export const useClassStore = create((set) => ({
     set({ isLoading: true });
     try {
       const response = await axios.delete(`${API_URL}/classes`, {
-        data: { classCode },
+        data: { classCode }, // Pass the classCode to the backend
       });
       if (response.status === 200) {
         set((state) => ({

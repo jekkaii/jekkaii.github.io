@@ -10,7 +10,7 @@ const { RangePicker } = TimePicker;
 
 const CreateClass = ({ onSuccess }) => {
   const [timeRange, setTimeRange] = useState([]);
-  const { addClass } = useClassStore();
+  const { addClass, err } = useClassStore();
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
   const [newClass, setNewClass] = useState({
@@ -147,9 +147,15 @@ const CreateClass = ({ onSuccess }) => {
   
       // Check if start time and end time are the same
       if (startTime.isSame(endTime)) {
-        // Add 1 hour to the end time if they are the same
-        endTime = endTime.add(1, 'hour');
-        newTimeRange = [startTime, endTime];  // Update timeRange with the new endTime
+        // Check if the start time is 8:30 PM\
+        console.log(startTime);
+        if (startTime.format("hh:mm A") === "08:30 PM") {
+          startTime = startTime.subtract(1, 'hour');  // Reassign the modified startTime
+          console.log(true);
+        } else {
+          endTime = endTime.add(1, 'hour');  // Reassign the modified endTime
+        }
+        newTimeRange = [startTime, endTime];  // Update timeRange
       }
   
       setTimeRange(newTimeRange);
@@ -161,8 +167,7 @@ const CreateClass = ({ onSuccess }) => {
       }));
     }
   };
-  
-  
+   
   const [open, setOpen] = useState(false);
 
   const showModal = () => {

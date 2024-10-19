@@ -1,22 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Modal } from "antd";
 import { Form, Row, Col } from "react-bootstrap";
 import { TimePicker } from "antd";
 import { useClassStore } from "../../stores/classStore";
+import moment from "moment";
 import "../css/style.css";
 
 const { RangePicker } = TimePicker;
 
 const EditClass = ({ onSuccess, open, close, selectedClass }) => {
-  const [timeRange, setTimeRange] = useState([]);
   const { addClass } = useClassStore();
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
   const [newClass, setNewClass] = useState({
+    classCode: "",
+    courseNumber: "",
+    subject: "",
+    academicYear: "",
+    term: "",
+    room: "",
     days: [],
     startTime: "",
     endTime: "",
   });
+
+  const [timeRange, setTimeRange] = useState([]);
+
+  useEffect(() => {
+    if (selectedClass) {
+      setTimeRange([
+        selectedClass.startTime ? moment(selectedClass.startTime, 'hh:mm A') : null,
+        selectedClass.endTime ? moment(selectedClass.endTime, 'hh:mm A') : null,
+      ]);
+    }
+  }, [selectedClass]);
+
+  useEffect(() => {
+    if (selectedClass) {
+      setNewClass({
+        classCode: selectedClass.classCode || "",
+    courseNumber: selectedClass.courseNumber || "",
+    subject: selectedClass.subject || "",
+    academicYear: selectedClass.academicYear || "",
+    term: selectedClass.term || "",
+    room: selectedClass.room || "",
+    days: selectedClass.days || "",
+    startTime: selectedClass.startTime || "",
+    endTime: selectedClass.endTime || "",
+      });
+    }
+  }, [selectedClass]);  // Runs whenever selectedClass changes
 
   // Get the current year and set the starting year to one year prior to the current year
   const currentYear = new Date().getFullYear();
@@ -85,25 +118,25 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      // const capitalizedClassCode = newClass.classCode.toUpperCase();
-      // const capitalizedCourseNumber = newClass.courseNumber.toUpperCase();
-      // const capitalizedSubject = newClass.subject
-      //   .toLowerCase()
-      //   .replace(/\b\w/g, char => char.toUpperCase())
-      //   .replace(/\bIt\b/g, 'IT');
-      // const capitalizedRoom = newClass.room.toUpperCase();
+      const capitalizedClassCode = selectedClass.classCode.toUpperCase();
+      const capitalizedCourseNumber = selectedClass.courseNumber.toUpperCase();
+      const capitalizedSubject = selectedClass.subject
+        .toLowerCase()
+        .replace(/\b\w/g, char => char.toUpperCase())
+        .replace(/\bIt\b/g, 'IT');
+      const capitalizedRoom = selectedClass.room.toUpperCase();
 
-      // // Update the subject field before submitting
-      // const updatedClass = {
-      //   ...newClass,
-      //   classCode: capitalizedClassCode,
-      //   courseNumber: capitalizedCourseNumber,
-      //   subject: capitalizedSubject, 
-      //   room: capitalizedRoom,
-      // };
+      // Update the subject field before submitting
+      const updatedClass = {
+        classCode: capitalizedClassCode,
+        courseNumber: capitalizedCourseNumber,
+        subject: capitalizedSubject, 
+        room: capitalizedRoom,
+      };
 
+      // ADD HERE FOR UPDATE CLASS
       // await addClass(updatedClass);
-      // handleCancel();
+      // handleCancel(); ++++
       onSuccess();
     }
   };
@@ -140,9 +173,15 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
   
       // Check if start time and end time are the same
       if (startTime.isSame(endTime)) {
-        // Add 1 hour to the end time if they are the same
-        endTime = endTime.add(1, 'hour');
-        newTimeRange = [startTime, endTime];  // Update timeRange with the new endTime
+        // Check if the start time is 8:30 PM\
+        console.log(startTime);
+        if (startTime.format("hh:mm A") === "08:30 PM") {
+          startTime = startTime.subtract(1, 'hour');  // Reassign the modified startTime
+          console.log(true);
+        } else {
+          endTime = endTime.add(1, 'hour');  // Reassign the modified endTime
+        }
+        newTimeRange = [startTime, endTime];  // Update timeRange
       }
   
       setTimeRange(newTimeRange);
@@ -167,6 +206,7 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
         <h2 className="attendance-header">Edit Class</h2>
         
         {/* Create Class Form */}
+          {/* Create Class Form */}
           <Form className="attendance-form">
             <Form.Group as={Row} controlId="formClassCode">
               <Form.Label column sm="3" className="form-label fw-bold">
@@ -177,15 +217,16 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
                   type="text"
                   placeholder="Enter Class Code"
                   className={`form-control ${touchedFields.classCode && errors.classCode ? 'no-margin' : ''}`}
-                  value={selectedClass?.classCode || ""}
+                  value={newClass.classCode}
                   onChange={(e) => {
                     const value = e.target.value;
-                    onClassChange({ ...selectedClass, classCode: value });
+                    setNewClass({ ...newClass, classCode: value });
                     const fieldErrors = validateField("classCode", value);
                     setErrors((prevErrors) => ({
                       ...prevErrors,
                       classCode: fieldErrors.classCode,
                     }));
+
                   }}
                   onBlur={(e) => handleBlur("classCode", e.target.value)}
                   required
@@ -213,10 +254,10 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
                 <Form.Control
                   placeholder="Enter Course Number"
                   className={`form-control ${touchedFields.courseNumber && errors.courseNumber ? 'no-margin' : ''}`}
-                  value={selectedClass?.courseNumber || ""}
+                  value={newClass.courseNumber}
                   onChange={(e) => {
                     const value = e.target.value;
-                    onClassChange({ ...selectedClass, courseNumber: value });
+                    setNewClass({ ...newClass, courseNumber: value });
                     const fieldErrors = validateField("courseNumber", value);
                     setErrors((prevErrors) => ({
                       ...prevErrors,
@@ -226,7 +267,6 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
                   onBlur={(e) => handleBlur("courseNumber", e.target.value)}
                   required
                 />
-
                 {touchedFields.courseNumber && errors.courseNumber && (
                   <span
                     style={{
@@ -248,10 +288,10 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
               </Form.Label>
               <Col sm="9">
                 <Form.Control
-                  value={selectedClass?.subject || ""}
+                  value={newClass.subject}
                   onChange={(e) => {
                     const value = e.target.value;
-                    onClassChange({ ...selectedClass, subject: value });
+                    setNewClass({ ...newClass, subject: value });
                     const fieldErrors = validateField("subject", value);
                     setErrors((prevErrors) => ({
                       ...prevErrors,
@@ -263,7 +303,6 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
                   className={`form-control ${touchedFields.subject && errors.subject ? 'no-margin' : ''}`}
                   required
                 />
-                
                 {touchedFields.subject && errors.subject && (
                   <span
                     style={{
@@ -285,10 +324,10 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
               </Form.Label>
               <Col sm="9">
                 <Form.Select
-                  value={selectedClass?.academicYear || ""}
+                  value={newClass.academicYear}
                   onChange={(e) => {
                     const value = e.target.value;
-                    onClassChange({ ...selectedClass, academicYear: value });
+                    setNewClass({ ...newClass, academicYear: value });
                     const fieldErrors = validateField("academicYear", value);
                     setErrors((prevErrors) => ({
                       ...prevErrors,
@@ -327,17 +366,17 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
               </Form.Label>
               <Col sm="9">
                 <Form.Select
-                 value={selectedClass?.term || ""}
-                 onChange={(e) => {
-                   const value = e.target.value;
-                   onClassChange({ ...selectedClass, term: value });
-                   const fieldErrors = validateField("term", value);
-                   setErrors((prevErrors) => ({
-                     ...prevErrors,
-                     term: fieldErrors.term,
-                   }));
-                 }}
-                 onBlur={(e) => handleBlur("term", e.target.value)}
+                  value={newClass.term}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewClass({ ...newClass, term: value });
+                    const fieldErrors = validateField("term", value);
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      term: fieldErrors.term,
+                    }));
+                  }}
+                  onBlur={(e) => handleBlur("term", e.target.value)}
                   className={`form-select ${touchedFields.term && errors.term ? 'no-margin' : ''}`}
                   required
                 >
@@ -368,10 +407,10 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
               <Col sm="9">
                 <Form.Control
                   type="text"
-                  value={selectedClass?.room || ""}
+                  value={newClass.room}
                   onChange={(e) => {
                     const value = e.target.value;
-                    onClassChange({ ...selectedClass, room: value });
+                    setNewClass({ ...newClass, room: value });
                     const fieldErrors = validateField("room", value);
                     setErrors((prevErrors) => ({
                       ...prevErrors,

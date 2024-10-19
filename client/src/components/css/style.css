@@ -1186,13 +1186,15 @@
   border-radius: 10px;
   font-family: "Inter", sans-serif;
   font-weight: bold;
+  align-items: center;
 }
 
 #statusButton.absent {
   background-color: var(--red);
-  padding: 5px 20px;
+  padding: 5px 22px;
   font-family: "Inter", sans-serif;
   font-weight: bold;
+  align-items: center;
 }
 
 #tabsTitle {
