@@ -65,6 +65,7 @@ function App() {
           token: {
             // Seed Token
             colorPrimary: "#2a1f7e",
+            colorPrimaryBg: "#e2e0e5",
             colorLink: "#2a1f7e",
             colorLinkActive: "#2a1f7e",
             colorLinkHover: "#2a1f7e",

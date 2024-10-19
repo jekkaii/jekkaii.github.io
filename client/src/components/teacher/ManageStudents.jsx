@@ -1,21 +1,133 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
-import { Button, Table, Form, InputGroup, Row, Col } from "react-bootstrap";
-import { TbFileUpload } from "react-icons/tb";
-import { AiOutlineUserDelete } from "react-icons/ai";
-import { useStudentStore } from "../../stores/studentStore";
-import AddStudent from "./AddStudent";
+import React, { act, useState } from "react";
 import "../css/style.css";
 import Confirmation from "./Confirmation";
-import EditStudent from "./EditStudent";
+import { Flex, Table, Button, Input, Dropdown } from "antd";
+import {
+  IdcardOutlined,
+  SearchOutlined,
+  TagOutlined,
+  MoreOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 
 const ManageStudents = ({ sortedData, attendanceData }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [selectValue, setSelectValue] = useState([]);
-  const { de, students, isLoading, error } = useStudentStore();
+
+  // State to track selected row keys
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  // const props = {
+  //   name: "file",
+  //   action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+  //   headers: {
+  //     authorization: "authorization-text",
+  //   },
+  //   onChange(info) {
+  //     if (info.file.status !== "uploading") {
+  //       console.log(info.file, info.fileList);
+  //     }
+  //     if (info.file.status === "done") {
+  //       message.success(`${info.file.name} file uploaded successfully`);
+  //     } else if (info.file.status === "error") {
+  //       message.error(`${info.file.name} file upload failed.`);
+  //     }
+  //   },
+  // };
+
+  // Dropdown menu
+  const actionMenu = [
+    {
+      key: "1",
+      label: "Edit",
+    },
+    {
+      key: "2",
+      label: "Delete",
+    },
+  ];
+
+  // Student data and buttons
+  const items = sortedData.map((Item) => ({
+    key: Item.id,
+    studentId: Item.idNumber,
+    name: Item.name,
+    createdAt: Item.createdAt,
+    updatedAt: (
+      <Flex justify="space-between">
+        <span>{Item.updatedAt}</span>
+        <Dropdown
+          menu={{
+            items: actionMenu,
+          }}
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <MoreOutlined className="fs-5" />
+          </a>
+        </Dropdown>
+      </Flex>
+    ),
+  }));
+
+  // Table columns
+  const columns = [
+    {
+      title: (
+        <>
+          <Flex gap={6}>
+            <IdcardOutlined />
+            <span>ID Number</span>
+          </Flex>
+        </>
+      ),
+      dataIndex: "studentId",
+      key: "studentId",
+      filteredValue: [searchTerm],
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"],
+      onFilter: (value, record) => {
+        return (
+          String(record.studentId)
+            .toLowerCase()
+            .includes(value.toLowerCase()) ||
+          String(record.name).toLowerCase().includes(value.toLowerCase())
+        );
+      },
+    },
+    {
+      title: (
+        <>
+          <Flex gap={6}>
+            <TagOutlined />
+            <span>Name</span>
+          </Flex>
+        </>
+      ),
+      dataIndex: "name",
+      key: "name",
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"],
+    },
+    {
+      title: "Date Created",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"],
+    },
+    {
+      title: "Date Updated",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"],
+    },
+  ];
 
   // Check if all students are selected
   const isAllSelected =
@@ -46,21 +158,18 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+
     console.log("File uploaded:", file);
   };
 
-  const handleSave = () => {
-    console.log("Save Clicked", attendanceData);
-  };
-
   // Handle delete modal confirmation
-  const handleDeleteStudentConfirmation = () => {
+  const handleDeleteStudentConfirmation = (data) => {
     if (isAllSelected) {
       setModalMessage(
         "Are you sure you want to delete all students from this class?"
       );
     } else {
-      const selectedNames = sortedData
+      const selectedNames = data
         .filter((student) => selectValue.includes(student.idNumber))
         .map((student, index) => (
           <React.Fragment key={student.idNumber}>
@@ -79,116 +188,83 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalMessage("");
+  // Row selection configuration
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(selectedRowKeys);
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        "selectedRows: ",
+        selectedRows
+      );
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === "Disabled User", // Disable checkbox for a particular row
+      name: record.name,
+    }),
   };
 
   return (
     <>
       {/* Search, Add, Delete and File Upload buttons */}
-      <Row className="align-items-end mb-0 mt-5">
-        <Col xs={7} className="p-0"></Col>
-        <Col xs={5} className="d-flex justify-content-end p-0">
-          <InputGroup className="search-bar">
-            <Form.Control
-              placeholder="Search by ID Number or Name"
-              className="custom-search-input"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </InputGroup>
+      <Flex gap={10} justify="space-between">
+        <Input
+          placeholder="Input ID Number or Name"
+          allowClear
+          prefix={<SearchOutlined />}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            maxWidth: 450,
+          }}
+        />
 
-          <input
-            type="file"
-            accept=".csv, .xlsx"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-            id="fileUpload"
-          />
+        <Flex>
+          {/* <Upload {...props} on>
+            <Button>
+              <UploadOutlined className="fs-4" />
+            </Button>
+            
+          {/* </Upload> */}
 
-          <Button
-            variant="success"
-            className="me-2 upload-btn"
-            onClick={() => document.getElementById("fileUpload").click()}
-          >
-            <TbFileUpload className="fs-4" />
-          </Button>
-
-          <EditStudent
-            handleEditStudent={handleEditStudent}
-            selectValue={selectValue}
-          />
-
-          <AddStudent
-            onSuccess={() => {
-              console.log("Add student success, refreshing table");
-              window.location.reload();
-            }}
-          />
-
-          <Button
-            variant="danger"
-            className="me-2 delete-student-btn"
-            onClick={handleDeleteStudentConfirmation}
-            disabled={selectValue.length === 0}
-          >
-            <AiOutlineUserDelete className="fs-4" />
-          </Button>
-        </Col>
-      </Row>
+          <Flex gap={10}>
+            <Button type="primary" size="medium">
+              <PlusOutlined className="fs-7" />
+              Add Student
+            </Button>
+            <Button
+              className="m-0 pt-0"
+              size="medium"
+              variant="solid"
+              color="danger"
+              style={{
+                display: selectedRowKeys.length === 0 ? "none" : "block",
+                transition: "display 0.3s ease-in-out",
+              }}
+            >
+              <DeleteOutlined />
+            </Button>
+          </Flex>
+        </Flex>
+      </Flex>
 
       {/* Confirmation Modal */}
       <Confirmation
         isOpen={isModalOpen}
-        onClose={closeModal}
+        // onClose={closeModal}
         message={modalMessage}
       />
 
       {/* Students Table */}
       <Table
-        striped
-        bordered
-        hover
-        className="attendance-table text-center"
-        id="dailyTable"
-      >
-        <thead>
-          <tr>
-            <th>
-              <Form.Check
-                type="checkbox"
-                checked={isAllSelected}
-                onChange={() => handleCheck("all")}
-              />
-            </th>
-            <th>ID Number</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedData
-            .filter((entry) => {
-              return searchTerm.toLowerCase() === ""
-                ? entry
-                : entry.name.toLowerCase().includes(searchTerm) ||
-                    entry.idNumber.includes(searchTerm);
-            })
-            .map((student) => (
-              <tr key={student.idNumber}>
-                <td>
-                  <Form.Check
-                    type="checkbox"
-                    checked={selectValue.includes(student.idNumber)}
-                    onChange={() => handleCheck(student.idNumber)}
-                  />
-                </td>
-                <td>{student.idNumber}</td>
-                <td>{student.name}</td>
-              </tr>
-            ))}
-        </tbody>
-      </Table>
+        className="rounded"
+        dataSource={items}
+        columns={columns}
+        rowSelection={{
+          type: "checkbox",
+          ...rowSelection,
+        }}
+      />
     </>
   );
 };

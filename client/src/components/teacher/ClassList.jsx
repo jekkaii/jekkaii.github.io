@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import { EyeOutlined, PlusOutlined, BookOutlined } from "@ant-design/icons";
 
 const ClassList = () => {
-  const { getClasses, classes, isLoading, error, deleteClass, archiveClass } =
+  const { readClasses, classes, isLoading, error, deleteClass, archiveClass } =
     useClassStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,8 +36,8 @@ const ClassList = () => {
   const [showEditClass, setShowEditClass] = useState(false); // Manage EditClass modal
 
   useEffect(() => {
-    getClasses();
-  }, [getClasses]);
+    readClasses();
+  }, [readClasses]);
 
   const toggleMenu = (classCode) => {
     setOpenMenu((prev) => (prev === classCode ? null : classCode));
@@ -80,7 +80,7 @@ const ClassList = () => {
         setNotificationMessage("Class deleted successfully!");
         setNotificationType("success");
       }
-      await getClasses(); // Refresh the classes
+      await readClasses(); // Refresh the classes
     } catch (error) {
       console.error("Error performing action on class:", error);
       setNotificationMessage("An error occurred. Please try again.");

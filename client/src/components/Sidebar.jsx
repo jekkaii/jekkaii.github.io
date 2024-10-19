@@ -31,7 +31,7 @@ import {
 
 function Sidebar() {
   const { isAdmin, isTeacher } = useAuthStore();
-  const { getClasses, classes } = useClassStore();
+  const { readClasses, classes } = useClassStore();
   const [selectedClass, setSelectedClass] = useState(null);
 
   const handleClick = (item) => {
@@ -58,8 +58,8 @@ function Sidebar() {
   }));
 
   useEffect(() => {
-    getClasses();
-  }, [getClasses]);
+    readClasses();
+  }, [readClasses]);
 
   return (
     <>
@@ -278,18 +278,19 @@ function Sidebar() {
                     },
                   ].filter(Boolean),
                 },
-                !collapsed && {
-                  key: "grp2",
-                  label: (
-                    <Typography.Text
-                      style={{ margin: 0, padding: 0, color: "gray" }}
-                    >
-                      Classes
-                    </Typography.Text>
-                  ),
-                  type: "group",
-                  children: items,
-                },
+                !collapsed &&
+                  isTeacher && {
+                    key: "grp2",
+                    label: (
+                      <Typography.Text
+                        style={{ margin: 0, padding: 0, color: "gray" }}
+                      >
+                        Classes
+                      </Typography.Text>
+                    ),
+                    type: "group",
+                    children: items,
+                  },
               ].filter(Boolean)}
             />
           </Flex>

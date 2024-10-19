@@ -147,7 +147,7 @@ export const countClasses = async (req, res) => {
 
 export const getClass = async (req, res) => {
   try {
-    const { classCode } = req.body;
+    const classCode = req.params.id;
     if (!classCode) {
       return res
         .status(400)
@@ -159,7 +159,7 @@ export const getClass = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Class not found" });
     }
-    return res.status(200).json({ success: true, class: existingClass });
+    return res.status(200).json({ success: true, existingClass });
   } catch (error) {
     console.error("Error getting class:", error);
     return res.status(500).json({ success: false, message: error.message });

@@ -1,20 +1,25 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import { useState, useEffect } from "react";
-import { Tabs, Tab, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
+import { Row, Col, InputGroup, Form } from "react-bootstrap";
 import dayjs from "dayjs";
 import AttendanceSummary from "./AttendanceSummary";
 import DailyAttendance from "./DailyAttendance";
 import "../css/style.css";
 import ManageStudents from "./ManageStudents";
-import { FaCamera } from "react-icons/fa6";
 import UploadClassPicture from "./UploadClassPicture";
 import { useStudentStore } from "../../stores/studentStore";
-import { Skeleton, Flex, Breadcrumb } from "antd";
+import { useClassStore } from "../../stores/classStore";
+import { Skeleton, Flex, Breadcrumb, Tabs, Input, Button } from "antd";
+import moment from "moment";
+
 import { Link, useParams } from "react-router-dom";
-import {
+import Icon, {
   BookOutlined,
+  CalendarOutlined,
+  CameraOutlined,
   ContactsOutlined,
+  FieldTimeOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
 
@@ -25,13 +30,17 @@ const AttendanceTabs = () => {
   const [key, setKey] = useState("daily");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const subjectAndCode = "IT 222 - 9451";
-  const sched = "TThS (7:30 - 9:00 AM)";
-  const date = "April 22, 2024";
-
   // Student Store
   const { getStudents, updateStudentStatus, students, isLoading, error } =
     useStudentStore();
+
+  // Class Store
+  const {
+    getClasses,
+    existingClass,
+    isLoading: classLoading,
+    error: classError,
+  } = useClassStore();
 
   useEffect(() => {
     if (params.classcode) {
@@ -45,6 +54,8 @@ const AttendanceTabs = () => {
       idNumber: student.idNumber,
       name: student.name,
       status: student.status,
+      createdAt: moment(student.createdAt).format("MMM Do YYYY"),
+      updatedAt: moment(student.updatedAt).format("MMMM Do YYYY, h:mm:ss a"),
       attendance: [],
     }))
   );
@@ -56,10 +67,18 @@ const AttendanceTabs = () => {
         idNumber: student.idNumber,
         name: student.name,
         status: student.status,
+        createdAt: moment(student.createdAt).format("MMM Do YYYY"),
+        updatedAt: moment(student.updatedAt).format("MMMM Do YYYY, h:mm:ss a"),
         attendance: [],
       }))
     );
   }, [students]);
+
+  useEffect(() => {
+    if (params.classcode) {
+      getClasses(params.classcode);
+    }
+  }, [params.classcode, getClasses]);
 
   const sortedData = [...attendanceData].sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -98,6 +117,67 @@ const AttendanceTabs = () => {
   //     entry.idNumber.includes(lowerCaseSearchTerm)
   //   );
   // });
+
+  const items = [
+    {
+      key: "1",
+      label: (
+        <Flex gap={4}>
+          <CalendarOutlined className="fs-6 m-0" />
+          <span>Daily Attendance</span>
+        </Flex>
+      ),
+      children: (
+        <>
+          {/* Daily Attendance */}
+          <Flex justify="space-between" vertical gap={14} className="mb-3 mt-2">
+            <DailyAttendance
+              handleManualAttendance={handleManualAttendance}
+              sortedData={sortedData}
+              isLoading={isLoading}
+            />
+          </Flex>
+        </>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Flex gap={4}>
+          <FieldTimeOutlined className="fs-6 m-0" />
+          <span>Attendance Summary</span>
+        </Flex>
+      ),
+      children: (
+        <>
+          {/* Attendance Summary */}
+          <Flex justify="space-between" vertical gap={14} className="mb-3 mt-2">
+            <AttendanceSummary isLoading={isLoading} sortedData={sortedData} />
+          </Flex>
+        </>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <Flex gap={4}>
+          <TeamOutlined className="fs-6 m-0" />
+          <span>Manage Students</span>
+        </Flex>
+      ),
+      children: (
+        <>
+          {/* Manage Students Tab */}
+          <Flex justify="space-between" vertical gap={14} className="mb-3 mt-2">
+            <ManageStudents
+              sortedData={sortedData}
+              attendanceData={attendanceData}
+            />
+          </Flex>
+        </>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -142,8 +222,30 @@ const AttendanceTabs = () => {
         ]}
       />
       <br />
-      <Flex vertical style={{ width: "100%" }}>
-        <Flex></Flex>
+      <Flex vertical gap={23}>
+        <Flex
+          justify="space-between"
+          gap={23}
+          align="center"
+          style={{
+            padding: 30,
+            backgroundColor: "#fff",
+            borderRadius: "10px",
+            boxShadow: "0px 2px 2px 0px rgba(0, 0, 0, 0.1)",
+            width: "100%",
+          }}
+        >
+          <Flex vertical>
+            <p className="mb-2 fw-bold fs-3 text-center">
+              {existingClass.classCode + " " + existingClass.subject}
+            </p>
+            <p className="mb-0 text-center">
+              {existingClass.startTime} - {existingClass.endTime}
+            </p>
+            <p className="mb-0 text-center">{existingClass.days}</p>
+          </Flex>
+          <Flex></Flex>
+        </Flex>
         {/* Tabs */}
         <Flex
           vertical
@@ -156,114 +258,7 @@ const AttendanceTabs = () => {
             width: "100%",
           }}
         >
-          <Tabs
-            id="controlled-tab-example"
-            activeKey={key}
-            onSelect={(k) => setKey(k)}
-            className="mb-3"
-          >
-            {/* Daily Attendance Tab */}
-            <Tab eventKey="daily" title="Daily Attendance">
-              <Row className="align-items-end mb-0 mt-5">
-                <Col xs={8} className="p-0"></Col>
-                <Col xs={4} className="d-flex justify-content-end p-0">
-                  <InputGroup className="search-bar">
-                    <Form.Control
-                      placeholder="Search by ID Number or Name"
-                      className="custom-search-input"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </InputGroup>
-                  <Button className="me-2" id="camera">
-                    <FaCamera className="fs-4" />
-                  </Button>
-                  <UploadClassPicture
-                    date={formattedDate}
-                    subjectAndCode={subjectAndCode}
-                    schedule={sched}
-                  ></UploadClassPicture>
-                </Col>
-              </Row>
-              {isLoading ? (
-                <>
-                  <Skeleton active />
-                  <Skeleton active />
-                  <Skeleton active />
-                </>
-              ) : (
-                <DailyAttendance
-                  handleManualAttendance={handleManualAttendance}
-                  sortedData={sortedData}
-                />
-              )}
-            </Tab>
-            {/* Attendance Summary Tab  */}
-            <Tab eventKey="summary" title="Attendance Summary">
-              <div id="tabsTitle">
-                <p className="mb-2 fw-bold fs-3 text-center">
-                  {subjectAndCode}
-                </p>
-                <p className="mb-0 text-center">
-                  <b>Schedule: </b>
-                  {sched}
-                </p>
-                <p className="mb-5 text-center">
-                  <b>Date: </b>
-                  {date}
-                </p>
-                <Row className="mb-0 justify-content-end">
-                  <Col xs={3}>
-                    <InputGroup>
-                      <Form.Control
-                        placeholder="Search by ID Number or Name"
-                        className="custom-search-input"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                      />
-                    </InputGroup>
-                  </Col>
-                </Row>
-              </div>
-              {isLoading ? (
-                <>
-                  <Skeleton active />
-                  <Skeleton active />
-                  <Skeleton active />
-                </>
-              ) : (
-                <AttendanceSummary info={sortedData}></AttendanceSummary>
-              )}
-            </Tab>
-            {/* Manage Students Tab */}
-            <Tab eventKey="manage" title="Manage Students">
-              <div id="tabsTitle">
-                <p className="mb-2 fw-bold fs-3 text-center">
-                  {subjectAndCode}
-                </p>
-                <p className="mb-0 text-center">
-                  <b>Schedule: </b>
-                  {sched}
-                </p>
-                <p className="mb-0 text-center">
-                  <b>Date: </b>
-                  {date}
-                </p>
-              </div>
-              {isLoading ? (
-                <>
-                  <Skeleton active />
-                  <Skeleton active />
-                  <Skeleton active />
-                </>
-              ) : (
-                <ManageStudents
-                  sortedData={sortedData}
-                  attendanceData={attendanceData}
-                ></ManageStudents>
-              )}
-            </Tab>
-          </Tabs>
+          <Tabs defaultActiveKey="1" addIcon items={items} />
         </Flex>
       </Flex>
     </>

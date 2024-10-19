@@ -7,12 +7,13 @@ const API_URL = "http://localhost:3001/api/teacher";
 axios.defaults.withCredentials = true; // For secure cookie handling
 
 export const useClassStore = create((set) => ({
+  existingClass: [],
   classes: [],
   classCount: 0,
   error: null,
   isLoading: false,
 
-  getClasses: async () => {
+  readClasses: async () => {
     set({ isLoading: true });
     try {
       const response = await axios.get(`${API_URL}/classes`);
@@ -25,6 +26,21 @@ export const useClassStore = create((set) => ({
     } catch (error) {
       console.error("Error fetching classes:", error);
       set({ error: error.response?.data || error.message, isLoading: false });
+    }
+  },
+
+  getClasses: async (id) => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(`${API_URL}/classes/${id}`);
+
+      if (response.status === 200) {
+        const { existingClass } = response.data;
+
+        set({ existingClass, isLoading: false, error: null });
+      }
+    } catch (error) {
+      set({ error, isLoading: false });
     }
   },
 
