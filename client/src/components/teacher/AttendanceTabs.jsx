@@ -29,6 +29,7 @@ const AttendanceTabs = () => {
 
   const [key, setKey] = useState("daily");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClassCode, setselectedClassCode] = useState(params.classcode);
 
   // Student Store
   const { getStudents, updateStudentStatus, students, isLoading, error } =
@@ -171,7 +172,7 @@ const AttendanceTabs = () => {
           <Flex justify="space-between" vertical gap={14} className="mb-3 mt-2">
             <ManageStudents
               sortedData={sortedData}
-              attendanceData={attendanceData}
+              classCode={selectedClassCode}
             />
           </Flex>
         </>

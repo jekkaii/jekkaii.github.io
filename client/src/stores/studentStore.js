@@ -25,11 +25,11 @@ export const useStudentStore = create((set) => ({
     }
   },
 
-  addStudent: async (newStudent) => {
+  addStudent: async (classCode,newStudent) => {
     set({ isLoading: true });
     try {
       // await new Promise((resolve) => setTimeout(resolve, 1000));
-      const response = await axios.post(`${API_URL}/students`, newStudent);
+      const response = await axios.post(`${API_URL}/students/${classCode}`, newStudent);
       if (response.status === 200) {
         const { student } = response.data;
         set({

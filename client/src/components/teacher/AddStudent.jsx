@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { Button, Modal, Col, Form, Row } from "react-bootstrap";
-import { RiUserAddLine } from "react-icons/ri";
+import { Col, Form, Row } from "react-bootstrap";
+import { Button, Modal } from "antd";
 import { useStudentStore } from "../../stores/studentStore";
 import "../css/style.css";
+import {  PlusOutlined } from "@ant-design/icons";
 
-const AddStudent = ({ onSuccess }) => {
+const AddStudent = ({ onSuccess, classCode }) => {
   const [show, setShow] = useState(false);
   const [newStudent, setNewStudent] = useState({ idNumber: "", name: "" });
   const { addStudent } = useStudentStore();
@@ -53,9 +54,10 @@ const AddStudent = ({ onSuccess }) => {
     });
 
     setErrors(validationErrors);
+    console.log(`ClassCode: ${classCode}`);
   
     if (Object.keys(validationErrors).length === 0) {
-      await addStudent(newStudent);
+      await addStudent(classCode,newStudent);
 
       setNewStudent({ idNumber: "", name: "" });
       handleClose();
@@ -65,101 +67,103 @@ const AddStudent = ({ onSuccess }) => {
 
   return (
     <>
-      <Button
-        variant="success"
-        className="me-2 add-student-btn"
-        id="add-student-btn"
-        onClick={handleShow}
-      >
-        <RiUserAddLine className="fs-4" />
-      </Button>
+      <Button type="primary" size="medium" onClick={handleShow}>
+          <PlusOutlined className="fs-7" />
+            Add Student
+        </Button>
 
       <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
+        open={show}
+        onCancel={handleClose}
+        footer={null}
+        width={550}
+        className="add-student-modal"
       >
-        <Modal.Header closeButton></Modal.Header>
-
-        <Modal.Title
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-          className="fs-2 m-3 fw-bold"
-          id="addTitle"
+        <h2 
+          className="attendance-header" 
+          style={{ marginBottom: "30px" }}
         >
           Add Student
-        </Modal.Title>
+        </h2>
 
-        <Modal.Body>
-          <Form id="formBody">
-            <Form.Group as={Row} className="mb-2">
-              <Form.Label className="fw-bold" column sm={4}>
-                ID Number:
-              </Form.Label>
-              <Col sm={8}>
-                <Form.Control
-                  placeholder="Enter ID Number"
-                  id="formInput"
-                  value={newStudent.idNumber}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setNewStudent({ ...newStudent, idNumber: value });
-                    const fieldErrors = validateField("idNumber", value); 
-                    setErrors((prevErrors) => ({ ...prevErrors, idNumber: fieldErrors.idNumber }));
+        <Form id="formBody">
+          <Form.Group as={Row} className="mb-2">
+            <Form.Label className="fw-bold" column sm={3}>
+              ID Number:
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Control
+                placeholder="Enter ID Number"
+                value={newStudent.idNumber}
+                className={`form-control ${touchedFields.idNumber && errors.idNumber ? 'no-margin' : ''}`}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setNewStudent({ ...newStudent, idNumber: value });
+                  const fieldErrors = validateField("idNumber", value); 
+                  setErrors((prevErrors) => ({ ...prevErrors, idNumber: fieldErrors.idNumber }));
+                }}
+                onBlur={(e) => handleBlur("idNumber", e.target.value)}
+                required
+              />
+              {touchedFields.idNumber && errors.idNumber && (
+                <span
+                  style={{
+                  color: "red",
+                  paddingBottom: "20px",
+                  display: "block",
+                  fontSize: "14px",
                   }}
-                  onBlur={(e) => handleBlur("idNumber", e.target.value)}
-                  required
-                />
-                {touchedFields.idNumber && errors.idNumber && (
-                  <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
-                    {errors.idNumber}
-                  </span>
-                )}
-              </Col>
-            </Form.Group>
+                >
+                  {errors.idNumber}
+                </span>
+              )}
+            </Col>
+          </Form.Group>
 
-            <Form.Group as={Row} className="mb-3">
-              <Form.Label className="fw-bold" column sm={4}>
-                Name:
-              </Form.Label>
-              <Col sm={8}>
-                <Form.Control
-                  placeholder="Enter Name"
-                  id="formInput"
-                  value={newStudent.name}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setNewStudent({ ...newStudent, name: value });
-                    const fieldErrors = validateField("name", value); 
-                    setErrors((prevErrors) => ({ ...prevErrors, name: fieldErrors.name }));
-                  }}
-                  onBlur={(e) => handleBlur("name", e.target.value)}
-                  required
-                />
-                {touchedFields.name && errors.name && (
-                <span style={{ color: "red", paddingBottom: "30px", display: "block", fontSize: "14px" }}>
+          <Form.Group as={Row} className="mb-2">
+            <Form.Label className="fw-bold" column sm={3}>
+              Name:
+            </Form.Label>
+            <Col sm={9}>
+              <Form.Control
+                placeholder="Enter Name"
+                className={`form-control ${touchedFields.name && errors.name ? 'no-margin' : ''}`}
+                value={newStudent.name}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setNewStudent({ ...newStudent, name: value });
+                  const fieldErrors = validateField("name", value); 
+                  setErrors((prevErrors) => ({ ...prevErrors, name: fieldErrors.name }));
+                }}
+                onBlur={(e) => handleBlur("name", e.target.value)}
+                required
+              />
+              {touchedFields.name && errors.name && (
+                <span
+                style={{
+                color: "red",
+                paddingBottom: "20px",
+                display: "block",
+                fontSize: "14px",
+                }}
+                >
                   {errors.name}
                 </span>
               )}
-              </Col>
-            </Form.Group>
-          </Form>
+            </Col>
+          </Form.Group>
+        </Form>
 
-          <div id="buttondiv" className="text-center">
-            <Button
-              className="text-white fw-bold mb-4"
-              id="addButton"
-              onClick={handleAddToClass}
-            >
-              Add to Class
-            </Button>
-          </div>
-        </Modal.Body>
+        <div id="button-container" className="text-center">
+          <Button
+            variant="primary"
+            type="submit"
+            className="add-button"
+            onClick={handleAddToClass}
+          >
+            Add to Class
+          </Button>
+        </div>
       </Modal>
     </>
   );

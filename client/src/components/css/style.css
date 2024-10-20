@@ -702,12 +702,13 @@
   opacity: 0.9;
 }
 
-.create-button {
+.create-button, .add-button{
   background-color: #28a745;
   padding: 20px 30px;
   font-weight: bold;
   font-family: "Inter", sans-serif;
   margin-top: 15px;
+  color: white;
 }
 
 .no-margin {
@@ -1232,16 +1233,8 @@
 }
 
 /* Add Student */
-#formInput::placeholder {
-  color: var(--blue);
-}
-
-#formInput {
-  background: var(--lightgray);
-}
-
 #formBody {
-  padding: 0 40px 0 40px;
+  padding: 0 40px;
   font-family: "Inter", sans-serif;
   color: var(--blue);
 }

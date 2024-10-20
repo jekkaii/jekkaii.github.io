@@ -9,15 +9,19 @@ import {
   SearchOutlined,
   TagOutlined,
   MoreOutlined,
-  PlusOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
+import AddStudent from "./AddStudent";
+import Notification from "./Notification";
 
-const ManageStudents = ({ sortedData, attendanceData }) => {
+const ManageStudents = ({ sortedData, classCode }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [selectValue, setSelectValue] = useState([]);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationType, setNotificationType] = useState(""); // 'success' or 'error'
+
 
   // State to track selected row keys
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -228,10 +232,21 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
           {/* </Upload> */}
 
           <Flex gap={10}>
-            <Button type="primary" size="medium">
+            {/* <Button type="primary" size="medium">
               <PlusOutlined className="fs-7" />
               Add Student
             </Button>
+             */}
+            <AddStudent 
+              onSuccess={() => {
+                setNotificationMessage("Student added successfully!");
+                setNotificationType("success");
+                window.location.reload();
+              }}
+              classCode={classCode}
+            >
+
+            </AddStudent>
             <Button
               className="m-0 pt-0"
               size="medium"
@@ -265,6 +280,15 @@ const ManageStudents = ({ sortedData, attendanceData }) => {
           ...rowSelection,
         }}
       />
+
+      
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          type={notificationType}
+          onClose={closeNotification}
+        />
+      )}
     </>
   );
 };
