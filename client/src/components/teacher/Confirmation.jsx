@@ -2,32 +2,50 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import "../css/style.css";
-import { Modal, Button } from "react-bootstrap";
-import { useStudentStore } from "../../stores/studentStore";
+import { Modal, Button } from "antd";
 
 const Confirmation = ({ isOpen, onClose, onConfirm, message }) => {
-  const { deleteStudents } = useStudentStore();
-
   return (
-    <Modal show={isOpen} onHide={onClose} centered>
-      <Modal.Header closeButton></Modal.Header>
+    <Modal
+      open={isOpen}
+      onCancel={onClose}
+      footer={null}
+    >
+      <p 
+        style = {{ 
+          margin: "30px",
+          color: "#2a1f7e",
+          fontSize: "17px",
+          textAlign: "center",
+        }}
+      >
+        {message}
+      </p>
 
-      <Modal.Body>
-        <p className="text-center" id="confirmationMessage">
-          {message}
-        </p>
-      </Modal.Body>
       <div className="text-center mb-4">
         <Button
-          className="me-4"
-          id="yes-btn"
-          variant="primary"
+          style = {{ 
+            marginRight: "25px",
+            padding: "18px 35px",
+            fontWeight: "bold",
+            fontSize: "17px",
+          }}
+          color="danger" 
+          variant="solid"
           onClick={onConfirm}
         >
           Yes
         </Button>
-        <Button id="no-btn" variant="secondary" onClick={onClose}>
-          No
+        <Button 
+          style = {{ 
+            padding: "18px 22px",
+            fontWeight: "bold",
+            fontSize: "17px",
+            color: "#2a1f7e",
+          }}
+          onClick={onClose}
+        >
+          Cancel
         </Button>
       </div>
     </Modal>

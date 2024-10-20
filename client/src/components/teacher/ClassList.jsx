@@ -49,7 +49,9 @@ const ClassList = () => {
 
   const handleActionClick = (classCode) => {
     setSelectedClass(classCode);
-    setModalMessage(`Are you sure you want to delete the class with code ${classCode}?`);
+    setModalMessage(
+      <>Are you sure you want to delete class <strong>{classCode}</strong>?</>
+    );
     setIsModalOpen(true);
   };
 

@@ -13,18 +13,20 @@ import {
 } from "@ant-design/icons";
 import AddStudent from "./AddStudent";
 import Notification from "./Notification";
+import EditStudent from "./EditStudent";
 
 const ManageStudents = ({ sortedData, classCode }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [selectValue, setSelectValue] = useState([]);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [notificationType, setNotificationType] = useState(""); // 'success' or 'error'
-
-
+  const [openEditStudent, setOpenEditStudent] = useState(false);
+  const [openDeleteStudent, setOpenDeleteStudent] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState({ idNumber: "", name: "" });
+ 
   // State to track selected row keys
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // const props = {
   //   name: "file",
@@ -68,6 +70,9 @@ const ManageStudents = ({ sortedData, classCode }) => {
         <Dropdown
           menu={{
             items: actionMenu,
+            onClick: (e) => {
+              handleMenuClick(e, Item.idNumber, Item.name);
+            }
           }}
         >
           <a onClick={(e) => e.preventDefault()}>
@@ -133,27 +138,6 @@ const ManageStudents = ({ sortedData, classCode }) => {
     },
   ];
 
-  // Check if all students are selected
-  const isAllSelected =
-    sortedData.length > 0 && selectValue.length === sortedData.length;
-
-  // Handle individual checkbox and select all
-  const handleCheck = (id) => {
-    if (id === "all") {
-      if (isAllSelected) {
-        setSelectValue([]);
-      } else {
-        setSelectValue(sortedData.map((student) => student.idNumber));
-      }
-    } else {
-      if (selectValue.includes(id)) {
-        setSelectValue(selectValue.filter((studentId) => studentId !== id));
-      } else {
-        setSelectValue([...selectValue, id]);
-      }
-    }
-  };
-
   const handleEditStudent = () => {
     // // add here code for edit student
     // handleClose();
@@ -167,29 +151,57 @@ const ManageStudents = ({ sortedData, classCode }) => {
   };
 
   // Handle delete modal confirmation
-  const handleDeleteStudentConfirmation = (data) => {
-    if (isAllSelected) {
+  const handleDeleteModalOpen = () => {
+    const isAllSelected = selectedRowKeys.length === sortedData.length;
+    
+    if (selectedRowKeys.length == 1) {
+      const selectedName = selectedRows[0].name;
+     
       setModalMessage(
-        "Are you sure you want to delete all students from this class?"
+        <>Are you sure you want to delete <strong>{selectedName}</strong>?</>
+      );
+    } else if (isAllSelected) {
+      setModalMessage(
+        <>Are you sure you want to delete <strong>all students</strong> from this class?</>
       );
     } else {
-      const selectedNames = data
-        .filter((student) => selectValue.includes(student.idNumber))
-        .map((student, index) => (
-          <React.Fragment key={student.idNumber}>
-            {index + 1}. {student.name} <br />
-          </React.Fragment>
-        ));
+      const selectedNames = selectedRows.map((student, index) => (
+        <React.Fragment key={student.idNumber}>
+          {index + 1}. {student.name} <br />
+        </React.Fragment>
+      ));
+     
       setModalMessage(
         <React.Fragment>
-          Are you sure you want to delete the following student/s from the
+          Are you sure you want to delete the following students from the
           class?
           <br />
           {selectedNames}
         </React.Fragment>
       );
     }
-    setIsModalOpen(true);
+    setOpenDeleteStudent(true);
+  };
+
+  // Handle the dropdown item selection
+  const handleMenuClick = (e, idNumber, name) => {
+    if (e.key === "1") { // edit class
+      setOpenEditStudent(true);
+      setSelectedStudent({ idNumber, name });
+    } else { // delete class
+      setOpenDeleteStudent(true);
+      setModalMessage(
+        <>Are you sure you want to delete <strong>{name}</strong>?</>
+      );
+    }
+  };
+
+  const handleDeleteModalClose = () => {
+    setOpenDeleteStudent(false);
+  };
+
+  const handleEditModalClose = () => {
+    setOpenEditStudent(false);
   };
 
   // Row selection configuration
@@ -197,6 +209,7 @@ const ManageStudents = ({ sortedData, classCode }) => {
     selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedRowKeys(selectedRowKeys);
+      setSelectedRows(selectedRows);
       console.log(
         `selectedRowKeys: ${selectedRowKeys}`,
         "selectedRows: ",
@@ -232,11 +245,6 @@ const ManageStudents = ({ sortedData, classCode }) => {
           {/* </Upload> */}
 
           <Flex gap={10}>
-            {/* <Button type="primary" size="medium">
-              <PlusOutlined className="fs-7" />
-              Add Student
-            </Button>
-             */}
             <AddStudent 
               onSuccess={() => {
                 setNotificationMessage("Student added successfully!");
@@ -244,9 +252,8 @@ const ManageStudents = ({ sortedData, classCode }) => {
                 window.location.reload();
               }}
               classCode={classCode}
-            >
+            />
 
-            </AddStudent>
             <Button
               className="m-0 pt-0"
               size="medium"
@@ -256,19 +263,13 @@ const ManageStudents = ({ sortedData, classCode }) => {
                 display: selectedRowKeys.length === 0 ? "none" : "block",
                 transition: "display 0.3s ease-in-out",
               }}
+              onClick={handleDeleteModalOpen}
             >
               <DeleteOutlined />
             </Button>
           </Flex>
         </Flex>
       </Flex>
-
-      {/* Confirmation Modal */}
-      <Confirmation
-        isOpen={isModalOpen}
-        // onClose={closeModal}
-        message={modalMessage}
-      />
 
       {/* Students Table */}
       <Table
@@ -280,8 +281,23 @@ const ManageStudents = ({ sortedData, classCode }) => {
           ...rowSelection,
         }}
       />
-
       
+      {/* confirmation modal to delete a student */}
+      <Confirmation
+        isOpen={openDeleteStudent}
+        onClose={handleDeleteModalClose}
+        // onConfirm={handleDeleteStudentConfirmation}
+        message={modalMessage}
+      />
+
+      <EditStudent
+        isOpen={openEditStudent}
+        onClose={handleEditModalClose}
+        // onConfirm={handleEditStudent}
+        idNumber={selectedStudent.idNumber}
+        name={selectedStudent.name}
+      />
+  
       {notificationMessage && (
         <Notification
           message={notificationMessage}

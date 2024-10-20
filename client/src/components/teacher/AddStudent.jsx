@@ -20,6 +20,7 @@ const AddStudent = ({ onSuccess, classCode }) => {
     setTouchedFields({});
     setShow(false);
   };
+  
   const handleShow = () => setShow(true);
 
   const validateField = (name, value) => {
@@ -77,7 +78,6 @@ const AddStudent = ({ onSuccess, classCode }) => {
         onCancel={handleClose}
         footer={null}
         width={550}
-        className="add-student-modal"
       >
         <h2 
           className="attendance-header" 
