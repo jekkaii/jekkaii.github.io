@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import axios from "axios";
-import { unarchiveClass, updateClass } from "../../../server/controller/classController";
 
 const API_URL = "http://localhost:3001/api/teacher";
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "antd";
 import { Form, Row, Col } from "react-bootstrap";
-import { TimePicker } from "antd";
+import { TimePicker, Alert } from "antd";
 import { useClassStore } from "../../stores/classStore";
 import moment from "moment";
 import "../css/style.css";
@@ -10,7 +10,7 @@ const { RangePicker } = TimePicker;
 
 const EditClass = ({ onSuccess, open, close, selectedClass }) => {
   const [timeRange, setTimeRange] = useState([]);
-  const { updateClass, readClasses, classes } = useClassStore();
+  const { updateClass, readClasses, error } = useClassStore();
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
   const [newClass, setNewClass] = useState({
@@ -83,10 +83,10 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
       validationErrors[name] = `${formattedName} is required.`;
     }
 
-    // if (name === "room" && !/^[a-zA-Z]\d{3}$/.test(value)) {
-    //   validationErrors.room =
-    //     "Room must be 1 letter followed by 3 digits (e.g., D515).";
-    // }
+    if (name === "room" && !/^[a-zA-Z]\d{3}$/.test(value)) {
+      validationErrors.room =
+        "Room must be 1 letter followed by 3 digits (e.g., D515).";
+    }
 
     if (name === "days" && newClass.days.length === 0) {
       validationErrors.days = "Days are required.";
@@ -201,6 +201,11 @@ const EditClass = ({ onSuccess, open, close, selectedClass }) => {
         className="create-class-modal"
       >
         <h2 className="attendance-header">Edit Class</h2>
+
+        {/* Error Message from the Server */}
+        {error && (
+          <Alert className="mb-3" message={error} type="error" showIcon />
+        )}
         
         {/* Create Class Form */}
           {/* Create Class Form */}

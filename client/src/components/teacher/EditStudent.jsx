@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
-import { Button, Modal } from "antd";
+import { Button, Modal, Alert} from "antd";
 import "../css/style.css";
 
 const EditStudent = ({ isOpen, onClose, onConfirm, error, idNumber, name }) => {
@@ -19,9 +19,10 @@ const EditStudent = ({ isOpen, onClose, onConfirm, error, idNumber, name }) => {
           Edit Student
         </h2>
 
-          {error &&  (
-            <Alert className="mb-3" message={error} type="error" showIcon />
-          )}
+        {/* Error Message from the Server */}
+        {error && (
+          <Alert className="mb-3" message={error} type="error" showIcon />
+        )}
 
           <Form id="formBody">
             <Form.Group

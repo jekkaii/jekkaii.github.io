@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal } from "antd";
+import { Button, Modal, Alert } from "antd";
 import { Form, Row, Col } from "react-bootstrap";
 import { TimePicker } from "antd";
 import { useClassStore } from "../../stores/classStore";
@@ -10,7 +10,7 @@ const { RangePicker } = TimePicker;
 
 const CreateClass = ({ onSuccess }) => {
   const [timeRange, setTimeRange] = useState([]);
-  const { addClass, readClasses, classes } = useClassStore();
+  const { addClass, readClasses, classes, error } = useClassStore();
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
   const [newClass, setNewClass] = useState({
@@ -216,6 +216,11 @@ const CreateClass = ({ onSuccess }) => {
         className="create-class-modal"
       >
         <h2 className="attendance-header">Create Class</h2>
+
+       {/* Error Message from the Server */}
+        {error && (
+            <Alert className="mb-3" message={error} type="error" showIcon />
+        )}
         
         {/* Create Class Form */}
           <Form className="attendance-form">

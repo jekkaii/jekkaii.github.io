@@ -10,7 +10,7 @@ import {  PlusOutlined } from "@ant-design/icons";
 const AddStudent = ({ onSuccess, classCode }) => {
   const [show, setShow] = useState(false);
   const [newStudent, setNewStudent] = useState({ idNumber: "", name: "" });
-  const { addStudent } = useStudentStore();
+  const { addStudent, error } = useStudentStore();
   const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -20,7 +20,7 @@ const AddStudent = ({ onSuccess, classCode }) => {
     setTouchedFields({});
     setShow(false);
   };
-  
+
   const handleShow = () => setShow(true);
 
   const validateField = (name, value) => {
@@ -85,6 +85,11 @@ const AddStudent = ({ onSuccess, classCode }) => {
         >
           Add Student
         </h2>
+
+        {/* Error Message from the Server */}
+        {error && (
+          <Alert className="mb-3" message={error} type="error" showIcon />
+        )}
 
         <Form id="formBody">
           <Form.Group as={Row} className="mb-2">
