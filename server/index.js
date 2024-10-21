@@ -6,7 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import classRoutes from "./routes/classRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import faceRecognitionRoutes from "./routes/facerecognitionRoutes.js";
+import faceRecognitionRoutes from "./routes/faceRecognitionRoutes.js";
 import attendanceRoutes from "./routes/attendanceRoutes.js";
 import cookieParser from "cookie-parser";
 

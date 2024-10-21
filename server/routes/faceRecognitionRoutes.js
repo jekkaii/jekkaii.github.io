@@ -3,7 +3,7 @@ import { createModel, getModels, deleteModel, setActiveModel } from "../controll
 
  const router = express.Router();
 
- router.post("/create-model/:modelName", createModel);
+ router.post("/create-model", createModel);
  router.get("/get-models", getModels);
  router.delete("/delete-model/:modelName", deleteModel);
  router.post("/set-active-model/:modelName", setActiveModel);

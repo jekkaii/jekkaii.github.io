@@ -6,7 +6,8 @@ const BASE_URL = 'http://0.0.0.0:8888'; // Adjust the host and port accordingly
 const model_encoder_filepath = 'cc_models/'
 
 export const createModel = async (req, res) => {
-    const { modelName } = req.params;
+    const { modelName } = req.body; // Expecting the formatted model name
+    console.log(modelName.body);
 
     try {
         const existingModel = await FaceRecognitionModel.findOne({ model_name: modelName });
@@ -23,7 +24,7 @@ export const createModel = async (req, res) => {
             await FaceRecognitionModel.updateMany({}, { status: "inactive" });
         }
 
-        const response = await axios.post(`${BASE_URL}/create-model/${modelName}`);
+        const response = await axios.post(`${BASE_URL}/create-model/${modelName}`); // This sends the modelName
         console.log('FastAPI Response:', response.data); 
 
         const { model_name, create_model_status, total_test_samples, correct_predictions, accuracy, save_model_status } = response.data;
@@ -95,7 +96,9 @@ export const deleteModel = async (req, res) => {
             data: { model_name: modelName }
         });
 
-        if (response.data.status === 'success') {
+        console.log(response.data);
+
+        if (response.data.status === 'Model deleted') {
             await FaceRecognitionModel.deleteOne({ model_name: modelName });
 
             return res.status(200).json({

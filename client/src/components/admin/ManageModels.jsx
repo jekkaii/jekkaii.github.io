@@ -1,126 +1,139 @@
 import React, { useState, useEffect } from 'react';
-import { fetchModels, removeModel, updateModelStatus, renameModel } from "../../stores/modelStore.js";
+import { Button, Modal, Input, Select, Form } from "antd";
+import { useFaceRecognitionModelStore } from "../../stores/modelStore";
 import "../css/style.css";
 
+const { Option } = Select;
+
 const ManageModel = () => {
-    const [models, setModels] = useState([]);
+    const {
+        models,
+        activeModel,
+        isLoading,
+        getModels,
+        createModel, // Call this to create a model
+        deleteModel,
+        setActiveModel,
+        error
+    } = useFaceRecognitionModelStore();
+
     const [searchTerm, setSearchTerm] = useState('');
-    const [modelUrl, setModelUrl] = useState('');
-    const [editingModel, setEditingModel] = useState(null);
-    const [newName, setNewName] = useState('');
-    const [showModal, setShowModal] = useState(false);
     const [schoolYear, setSchoolYear] = useState('');
     const [semester, setSemester] = useState('');
+    const [showModal, setShowModal] = useState(false);
 
     // Fetch models from the backend on component load
     useEffect(() => {
-        const loadModels = async () => {
-            const data = await fetchModels();
-            setModels(data);
-        };
-        loadModels();
-    }, []);
+        getModels();
+    }, [getModels]);
 
     const filteredModels = models.filter((model) =>
-        model.model_name.toLowerCase().includes(searchTerm.toLowerCase())
+        model?.model_name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    const handleActivateModel = async (id) => {
-        await updateModelStatus(id, 'active');
-        setModels(models.map((model) =>
-            model._id === id ? { ...model, status: 'active' } : { ...model, status: 'inactive' }
-        ));
-    };
-
-    const handleRemoveModel = async (id) => {
-        await removeModel(id);
-        setModels(models.filter((model) => model._id !== id));
-    };
-
-    const handleRenameModel = async (id) => {
-        await renameModel(id, newName);
-        setModels(models.map((model) =>
-            model._id === id ? { ...model, model_name: newName } : model
-        ));
-        setEditingModel(null);
-        setNewName('');
-    };
 
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
 
+    const handleCreateModel = async () => {
+        if (!schoolYear || !semester) {
+            alert("Please fill in all fields");
+            return;
+        }
+    
+        // Construct the model name
+        const modelName = `${schoolYear}_${semester}`; // Correctly format the model name
+    
+        const newModel = {
+            modelName: modelName, // Change this to match your backend expectation
+        };
+    
+        await createModel(newModel); // Call Zustand action to create the model
+        getModels(); // Refresh the models list after creating
+        closeModal(); // Close modal after creation
+    
+        // Clear the form fields
+        setSchoolYear('');
+        setSemester('');
+    };
+    
+
     return (
         <div className="manage-model">
-            <button onClick={openModal} className="create-model-btn">Create Model</button>
+            {/* Button to open modal */}
+            <Button type="primary" onClick={openModal}>
+                Create Model
+            </Button>
 
-            {showModal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Create Model</h2>
-                        <label>School Year:</label>
-                        <select value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)}>
-                            <option value="">Select Year</option>
-                            <option value="2023-2024">2023-2024</option>
-                            <option value="2024-2025">2024-2025</option>
-                        </select>
+            {/* Modal for creating a model */}
+            <Modal
+                title="Create Model"
+                open={showModal}
+                onOk={handleCreateModel} // Call createModel when "OK" is clicked
+                onCancel={closeModal} // Close modal on "Cancel"
+                okText="Create"
+                cancelText="Close"
+            >
+                <Form>
+                    <Form.Item label="School Year" required>
+                        <Select
+                            value={schoolYear}
+                            onChange={(value) => setSchoolYear(value)} 
+                            placeholder="Select Year">
+                            <Option value="2023-2024">2023-2024</Option>
+                            <Option value="2024-2025">2024-2025</Option>
+                        </Select>
+                    </Form.Item>
 
-                        <label>Semester:</label>
-                        <select value={semester} onChange={(e) => setSemester(e.target.value)}>
-                            <option value="">Select Semester</option>
-                            <option value="1st">1st</option>
-                            <option value="2nd">2nd</option>
-                        </select>
-
-                        <button onClick={closeModal}>Close</button>
-                    </div>
-                </div>
-            )}
+                    <Form.Item label="Semester" required>
+                        <Select
+                            value={semester}
+                            onChange={(value) => setSemester(value)} 
+                            placeholder="Select Semester">
+                            <Option value="1st">1st</Option>
+                            <Option value="2nd">2nd</Option>
+                        </Select>
+                    </Form.Item>
+                </Form>
+            </Modal>
 
             <div className="toolbar">
-                <input
-                    type="url"
-                    placeholder="Enter Model URL"
-                    value={modelUrl}
-                    onChange={(e) => setModelUrl(e.target.value)}
+                <Input
+                    placeholder="Search models"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
 
+            {/* Display filtered models */}
             <div className="model-cards">
                 {filteredModels.map((model) => (
                     <div key={model._id} className="model-card">
                         <div className="model-info">
-                            {editingModel === model._id ? (
-                                <input
-                                    type="text"
-                                    value={newName}
-                                    onChange={(e) => setNewName(e.target.value)}
-                                    placeholder="Enter new name"
-                                />
-                            ) : (
-                                <h3>{model.model_name}</h3>
-                            )}
+                            <h3>{model.model_name}</h3>
                             <span>{model.status}</span>
                             <span>Accuracy: {model.accuracy}%</span>
                         </div>
 
                         <div className="model-actions">
-                            <button
-                                onClick={() => handleActivateModel(model._id)}
+                            <Button
+                                onClick={() => setActiveModel(model.model_name)}
                                 disabled={model.status === 'active'}
                             >
                                 Activate
-                            </button>
-                            <button
-                                onClick={() => handleRemoveModel(model._id)}
+                            </Button>
+                            <Button
+                                onClick={() => deleteModel(model.model_name)}
                                 className="delete-btn"
                             >
                                 Delete
-                            </button>
-                            <button onClick={() => setEditingModel(model._id)}>Rename</button>
+                            </Button>
                         </div>
                     </div>
                 ))}
             </div>
+
+            {isLoading && <p>Loading models...</p>}
+            {error && <p>Error: {error}</p>}
         </div>
     );
 };

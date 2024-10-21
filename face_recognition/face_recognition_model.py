@@ -2,10 +2,12 @@ import os
 import numpy as np
 import joblib
 import tensorflow as tf
+import logging
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics.pairwise import cosine_similarity
 from keras_facenet import FaceNet
+tf.get_logger().setLevel(logging.ERROR)
 
 class FaceRecognitionModel:
     def __init__(self):

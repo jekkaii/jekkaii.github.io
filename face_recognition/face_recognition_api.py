@@ -1,5 +1,6 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
 from fastapi import FastAPI, UploadFile, File, HTTPException, Path
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
