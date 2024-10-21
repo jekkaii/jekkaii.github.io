@@ -1,13 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
-/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState, setUser } from "react";
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from "react";
 import "../css/style.css";
+import { useAdminStore } from "../../stores/adminStore";
 import { Button, Table, Form, Modal } from "react-bootstrap";
 import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 
 const initialUsers = [
-
 ];
 
 const ConfirmationModal = ({ isOpen, message, onConfirm, onCancel }) => (
@@ -95,7 +95,7 @@ const AddEditUserModal = ({ isOpen, user, onSave, onCancel, isEditing }) => {
 };
 
 const ManageUsers = () => {
-  const [users, setUsers] = useState(initialUsers);
+  const {users, getUsers} = useAdminStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -104,16 +104,20 @@ const ManageUsers = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [actionType, setActionType] = useState("");
 
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 
   const toggleUserStatus = (id) => {
-    setUsers(
+    getUsers(
       users.map((user) =>
         user.id === id ? { ...user, status: !user.status } : user
       )
     );
   };
-
   const handleToggleChange = (user) => {
     setSelectedUser(user);
     setActionType("toggle");
@@ -124,7 +128,7 @@ const ManageUsers = () => {
     if (actionType === "toggle" && selectedUser) {
       toggleUserStatus(selectedUser.id);
     } else if (actionType === "delete" && selectedUser) {
-      setUsers(users.filter((u) => u.id !== selectedUser.id));
+      getUsers(users.filter((u) => u.id !== selectedUser.id));
     }
     setShowModal(false);
     setSelectedUser(null);
@@ -157,11 +161,11 @@ const ManageUsers = () => {
 
   const handleSaveUser = (updatedUser) => {
     if (isEditing) {
-      setUsers(
+      getUsers(
         users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
       );
     } else {
-      setUsers([...users, { ...updatedUser, id: Date.now(), status: true }]);
+      getUsers([...users, { ...updatedUser, id: Date.now(), status: true }]);
     }
     setIsAddEditModalOpen(false);
   };

@@ -42,6 +42,9 @@ const UserSchema = new mongoose.Schema(
     adminInfo: {
       adminLevel: Number,
     },
+    status: {
+      type: String,
+    }
   },
   { timestamps: true }
 );

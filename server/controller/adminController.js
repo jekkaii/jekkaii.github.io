@@ -74,15 +74,11 @@ export const editUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    validateDeleteUserInput(req);
-    const { id } = req.body;
-    const user = await UserModel.findByIdAndRemove(id);
-    if (!user) {
-      throw new Error("User not found");
-    }
-    return res.status(200).json({ success: true, message: "User deleted successfully" });
+    const userId = req.params.userId;
+    await UserModel.findByIdAndDelete(userId);
+    return res.status(200).json({ success: true, message: "User account deleted" });
   } catch (error) {
-    console.error("Error deleting user:", error);
+    console.log("Error deleting user", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
@@ -137,10 +133,66 @@ export const getUserById = async (req, res) => {
   }
 };
 
+// userController.js
+export const activateUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    user.status = "activated";
+    await user.save();
+    return res.status(200).json({ success: true, message: "User account activated" });
+  } catch (error) {
+    console.log("Error activating user", error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const deactivateUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    user.status = "deactivated";
+    await user.save();
+    return res.status(200).json({ success: true, message: "User account deactivated" });
+  } catch (error) {
+    console.log("Error deactivating user", error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+
+
+// adminController.js
+export const updateUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    const { name, email, role, status } = req.body;
+    user.name = name;
+    user.email = email;
+    user.role = role;
+    user.status = status;
+    await user.save();
+    return res.status(200).json({ success: true, message: "User updated successfully" });
+  } catch (error) {
+    console.log("Error updating user", error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 // validation for addUser
 const validateAddUserInput = (req) => {
-  const { name, email, password, role } = req.body;
-  if (!name || !email || !password || !role) {
+  const { name, email, password, role, status } = req.body;
+  if (!name || !email || !password || !role || status) {
     throw new Error("All fields are required");
   }
 };

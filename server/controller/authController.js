@@ -103,6 +103,7 @@ export const signupAdmin = async (req, res) => {
   }
 };
 
+
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -115,6 +116,12 @@ export const login = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "User credentials invalid" });
+    }
+    // Check if user's status is activated
+    if (user.status !== "activated") {
+      return res
+        .status(401)
+        .json({ success: false, message: "User account is deactivated. Please contact admin to activate your account." });
     }
     const checkPasswordMatch = bcrypt.compareSync(password, user.password);
 
