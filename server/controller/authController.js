@@ -121,7 +121,7 @@ export const login = async (req, res) => {
     if (user.status !== "activated") {
       return res
         .status(401)
-        .json({ success: false, message: "User account is deactivated. Please contact admin to activate your account." });
+        .json({ success: false, message: "User account is gone. Please contact admin to activate your account." });
     }
     const checkPasswordMatch = bcrypt.compareSync(password, user.password);
 
