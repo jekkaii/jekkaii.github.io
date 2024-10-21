@@ -158,23 +158,19 @@ export const updatePassword = async (req, res) => {
 };
 export const updateStudent = async (req, res) => {
   try {
-    const { idNumber, name, courseNyear, email, status } = req.body;
-    if (!idNumber || !name || !courseNyear || !email || !status) {
+    const { idNumber, name } = req.body;
+    if (!idNumber || !name) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
-    const existingUser = await StudentModel.findOne({ email });
+    const existingUser = await StudentModel.findOne({ idNumber });
     if (!existingUser) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    existingUser.idNumber = idNumber;
     existingUser.name = name;
-    existingUser.courseNyear = courseNyear;
-    existingUser.email = email;
-    existingUser.status = status;
     await existingUser.save();
     return res.status(200).json({ success: true, message: "User updated" });
   } catch (error) {
@@ -225,6 +221,12 @@ export const deleteStudents = async (req, res) => {
         .status(404)
         .json({ success: false, message: "No student found" });
     }
+
+    await ClassModel.updateMany(
+      { students: existingStudents._id },
+      { $pull: { students: existingStudents._id } }
+    );
+
     return res.status(200).json({ success: true, message: "Users deleted" });
   } catch (error) {
     console.error("Error deleting users:", error);
