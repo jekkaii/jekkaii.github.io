@@ -38,16 +38,18 @@ const StudentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Pre-hook to handle cascade deletion
 StudentSchema.pre("findOneAndDelete", async function (next) {
   try {
     const student = await this.model.findOne(this.getFilter());
 
-    // If student is found, remove them from all classes they are part of
-    if (student) {
-      await ClassModel.updateMany(
-        { students: student._id }, // Find all classes containing the student
-        { $pull: { students: student._id } } // Remove the student's ObjectId from students array
+    // Assuming you pass the classId as part of the query
+    const { classId } = this.getQuery();
+
+    // If student and classId are provided, remove the student from the specific class
+    if (student && classId) {
+      await ClassModel.updateOne(
+        { _id: classId, students: student._id }, // Find the specific class containing the student
+        { $pull: { students: student._id } } // Remove the student's ObjectId from the students array of the specific class
       );
     }
 

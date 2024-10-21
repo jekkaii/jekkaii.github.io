@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { useState } from "react";
-import { Button, Table, Flex, Input, Skeleton } from "antd";
+import { Button, Table, Flex, Input, Skeleton, Empty, Typography } from "antd";
 import {
   CameraOutlined,
   IdcardOutlined,
@@ -111,47 +111,40 @@ const DailyAttendance = ({ handleManualAttendance, sortedData, isLoading }) => {
 
   return (
     <>
-      {isLoading ? (
-        <>
-          <Skeleton active />
-        </>
-      ) : (
-        <>
-          <Flex gap={10} justify="space-between">
-            <Input
-              placeholder="Input ID Number or Name"
-              allowClear
-              prefix={<SearchOutlined />}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                maxWidth: 450,
-              }}
-            />
+      <Flex gap={10} justify="space-between">
+        <Input
+          placeholder="Input ID Number or Name"
+          allowClear
+          prefix={<SearchOutlined />}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            maxWidth: 450,
+          }}
+        />
 
-            <Flex gap={10}>
-              <Button type="primary">
-                <CameraOutlined className="fs-5" />
-              </Button>
-              <UploadClassPicture
-              // date={formattedDate}
-              // subjectAndCode={
-              //   currentClass.subject + " " + currentClass.classCode
-              // }
-              // schedule={currentClass.schedule}
-              ></UploadClassPicture>
-            </Flex>
-          </Flex>
-          <Table
-            className="rounded"
-            dataSource={items}
-            columns={columns}
-            rowSelection={{
-              type: "checkbox",
-              ...rowSelection,
-            }}
-          />
-        </>
-      )}
+        <Flex gap={10}>
+          <Button type="primary">
+            <CameraOutlined className="fs-5" />
+          </Button>
+          <UploadClassPicture
+          // date={formattedDate}
+          // subjectAndCode={
+          //   currentClass.subject + " " + currentClass.classCode
+          // }
+          // schedule={currentClass.schedule}
+          ></UploadClassPicture>
+        </Flex>
+      </Flex>
+      <Table
+        className="rounded"
+        dataSource={items}
+        columns={columns}
+        rowSelection={{
+          type: "checkbox",
+          ...rowSelection,
+        }}
+        loading={isLoading}
+      />
     </>
   );
 };
