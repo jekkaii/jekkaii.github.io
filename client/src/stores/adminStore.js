@@ -33,14 +33,32 @@ export const useAdminStore = create((set) => ({
       set({ error, success: false });
     }
   },
-  editUser: async (userData) => {
+  editUser: async (formData, username) => {
+    set({ isLoading: true });
+
     try {
-      const response = await axios.put(`${API_URL}/users/${userData.id}`, userData);
+      const response = await axios.put(
+        `${API_URL}/users/${username}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" }, // For file uploads
+        }
+      );
+
       if (response.status === 200) {
-        set({ success: true, message: "User updated successfully" });
+        set({
+          success: true,
+          message: "User updated successfully",
+          error: null,
+          isLoading: false,
+        });
       }
     } catch (error) {
-      set({ error, success: false });
+      set({
+        error: error.response.data.message || error.message,
+        success: false,
+        isLoading: false,
+      });
     }
   },
   deleteUser: async (userId) => {
@@ -55,7 +73,9 @@ export const useAdminStore = create((set) => ({
   },
   updateStatus: async (userId, status) => {
     try {
-      const response = await axios.put(`${API_URL}/users/${userId}/status`, { status });
+      const response = await axios.put(`${API_URL}/users/${userId}/status`, {
+        status,
+      });
       if (response.status === 200) {
         set({ success: true, message: "User status updated successfully" });
       }

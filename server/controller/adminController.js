@@ -7,7 +7,7 @@ export const getUsers = async (req, res) => {
     // Fetch all students from the database
     const users = await UserModel.find();
 
-    // Check if there are any students 
+    // Check if there are any students
     if (!users) {
       return res.status(404).json({
         success: false,
@@ -38,10 +38,17 @@ export const addUser = async (req, res) => {
       throw new Error("Email already exists");
     }
     const hashedPassword = await bcrypt.hash(password, 12);
-    const newUser = new UserModel({ name, email, password: hashedPassword, role });
+    const newUser = new UserModel({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+    });
     await newUser.save();
     generateTokenAndSetCookie(res, newUser._id);
-    return res.status(201).json({ success: true, message: "User created successfully" });
+    return res
+      .status(201)
+      .json({ success: true, message: "User created successfully" });
   } catch (error) {
     console.error("Error creating user:", error);
     return res.status(400).json({ success: false, message: error.message });
@@ -50,22 +57,32 @@ export const addUser = async (req, res) => {
 
 export const editUser = async (req, res) => {
   try {
-    validateEditUserInput(req);
-    const { id, name, email, role } = req.body;
-    const user = await UserModel.findById(id);
+    console.log(req.body);
+
+    validateEditUserInput(req); // Validate input as per your existing logic
+    const { username: id, firstname, lastname, email, department } = req.body; // Extract values from req.body
+    const user = await UserModel.findOne({ username: id });
+
     if (!user) {
       throw new Error("User not found");
     }
-    user.name = name;
-    user.email = email;
-    user.role = role;
-    // if (role === "admin") {
-    //   user.status = true;
-    // } else {
-    //   user.status = false;
-    // }
-    await user.save();
-    return res.status(200).json({ success: true, message: "User updated successfully" });
+
+    // Update user properties
+    user.firstName = firstname;
+    user.lastName = lastname;
+    user.email = email; // Update email
+    user.department = department;
+
+    // Check if a new photo is uploaded and update the photo field
+
+    if (req.file) {
+      user.photo = req.file.path; // Set the user's photo to the uploaded file's path
+    }
+
+    await user.save(); // Save the updated user
+    return res
+      .status(200)
+      .json({ success: true, message: "User updated successfully", user });
   } catch (error) {
     console.error("Error editing user:", error);
     return res.status(400).json({ success: false, message: error.message });
@@ -76,7 +93,9 @@ export const deleteUser = async (req, res) => {
   try {
     const userId = req.params.userId;
     await UserModel.findByIdAndDelete(userId);
-    return res.status(200).json({ success: true, message: "User account deleted" });
+    return res
+      .status(200)
+      .json({ success: true, message: "User account deleted" });
   } catch (error) {
     console.log("Error deleting user", error);
     return res.status(400).json({ success: false, message: error.message });
@@ -99,7 +118,9 @@ export const updateStatus = async (req, res) => {
     }
     user.status = status;
     await user.save();
-    return res.status(200).json({ success: true, message: "User status updated successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "User status updated successfully" });
   } catch (error) {
     console.error("Error updating user status:", error);
     return res.status(400).json({ success: false, message: error.message });
@@ -139,11 +160,15 @@ export const activateUser = async (req, res) => {
     const userId = req.params.userId;
     const user = await UserModel.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     user.status = "activated";
     await user.save();
-    return res.status(200).json({ success: true, message: "User account activated" });
+    return res
+      .status(200)
+      .json({ success: true, message: "User account activated" });
   } catch (error) {
     console.log("Error activating user", error);
     return res.status(400).json({ success: false, message: error.message });
@@ -155,18 +180,20 @@ export const deactivateUser = async (req, res) => {
     const userId = req.params.userId;
     const user = await UserModel.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     user.status = "deactivated";
     await user.save();
-    return res.status(200).json({ success: true, message: "User account deactivated" });
+    return res
+      .status(200)
+      .json({ success: true, message: "User account deactivated" });
   } catch (error) {
     console.log("Error deactivating user", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
-
-
 
 // adminController.js
 export const updateUser = async (req, res) => {
@@ -174,7 +201,9 @@ export const updateUser = async (req, res) => {
     const userId = req.params.userId;
     const user = await UserModel.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     const { name, email, role, status } = req.body;
     user.name = name;
@@ -182,7 +211,9 @@ export const updateUser = async (req, res) => {
     user.role = role;
     user.status = status;
     await user.save();
-    return res.status(200).json({ success: true, message: "User updated successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "User updated successfully" });
   } catch (error) {
     console.log("Error updating user", error);
     return res.status(400).json({ success: false, message: error.message });
@@ -199,8 +230,8 @@ const validateAddUserInput = (req) => {
 
 // validation for editUser
 const validateEditUserInput = (req) => {
-  const { id, name, email, role } = req.body;
-  if (!id || !name || !email || !role) {
+  const { username: id, firstname, lastname, email, role } = req.body;
+  if (!id || !firstname || !lastname || !email || !role) {
     throw new Error("All fields are required");
   }
 };
@@ -216,8 +247,7 @@ const validateDeleteUserInput = (req) => {
 // validation for updateStatus
 const validateUpdateStatusInput = (req) => {
   const { id, status } = req.body;
-  if (!id || !status)
-    {
+  if (!id || !status) {
     throw new Error("User ID and status are required");
   }
 };

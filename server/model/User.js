@@ -44,7 +44,12 @@ const UserSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-    }
+    },
+    photo: {
+      type: String, // The file path of the photo
+      default: "",
+      required: false,
+    },
   },
   { timestamps: true }
 );

@@ -18,8 +18,8 @@ import Sidebar from "./components/Sidebar";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
 import ClassList from "./components/teacher/ClassList";
 import SpinnerLoader from "./components/SpinnerLoader";
-import ProfileDropdown from "./components/teacher/Dropdown";
-import Profile from "./components/teacher/Profile";
+import ProfileDropdown from "./components/Dropdown";
+import Profile from "./components/Profile";
 import { Layout, Switch, ConfigProvider, Flex, Typography } from "antd";
 import Dashboard from "./components/Dashboard";
 const { Content, Header: HeaderLayout } = Layout;
@@ -48,7 +48,8 @@ const RedirectToHome = ({ children }) => {
 
 function App() {
   const { checkAuthentication } = useAuthStore();
-  const { isLoading, setLoading, authenticated, user } = useAuthStore();
+  const { isLoading, setLoading, authenticated, user, isAdmin } =
+    useAuthStore();
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
@@ -124,7 +125,7 @@ function App() {
                         align="center"
                         justify="end"
                       >
-                        <ProfileDropdown />
+                        <ProfileDropdown user={user} />
                       </Flex>
                     </Flex>
                   </HeaderLayout>
@@ -157,7 +158,7 @@ function App() {
                       path="/profile"
                       element={
                         <ProtectedRoute>
-                          <Profile />
+                          <Profile user={user} isAdmin={isAdmin} />
                         </ProtectedRoute>
                       }
                     ></Route>

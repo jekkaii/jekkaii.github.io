@@ -26,6 +26,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/teacher", studentRoutes, classRoutes, attendanceRoutes);
 app.use("/api/admin", userRoutes, faceRecognitionRoutes);
 
+// Serve static files (for uploaded images)
+app.use("/uploads", cors(), express.static("uploads"));
 
 app.listen(process.env.PORT, () => {
   connectToDatabase();

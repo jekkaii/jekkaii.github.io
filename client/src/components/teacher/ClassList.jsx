@@ -147,43 +147,36 @@ const ClassList = () => {
         {classes.length > 0 && (
           <Flex
             style={{
-              padding: 30,
-              backgroundColor: "#fff",
               borderRadius: "10px",
-              boxShadow: "0px 2px 2px 0px rgba(0, 0, 0, 0.1)",
               width: "100%",
+              flexWrap: "wrap",
             }}
           >
             <Row
-              gutter={[24, 24]}
+              gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
               wrap
               justify={"start"}
               style={{
-                flexWrap: "wrap",
                 width: "100%",
                 display: "flex",
-                margin: 0,
               }}
             >
               {filteredClasses.map((cls) => (
                 <Col
                   key={cls.classCode}
-                  xs={{
-                    span: 12,
-                  }}
-                  lg={{
-                    span: 4,
-                  }}
+                  className="gutter-row"
+                  span={6}
                   style={{
                     width: "100%",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    minWidth: "430px",
+                    minWidth: "530px",
+                    padding: "10px",
                   }}
                 >
                   {isLoading ? (
-                    <Skeleton.Node active style={{ width: 160 }} />
+                    <Skeleton.Node active style={{ width: 200 }} />
                   ) : (
                     <Card
                       bordered={true}

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { MDBContainer } from "mdb-react-ui-kit";
 import { useAuthStore } from "../stores/authStore";
 import facelogo from "../components/resources/face.png"; // Update the path to your logo image
 import "../components/css/style.css"; // Import the CSS file
