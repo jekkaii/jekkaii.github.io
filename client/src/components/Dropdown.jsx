@@ -105,7 +105,8 @@ const ProfileDropdown = ({ user }) => {
         />
       </Flex>
       <Flex vertical style={{ padding: 0 }}>
-        <Typography.Text>{user.firstName}</Typography.Text>
+        <Typography.Text className="fw-bold">{user.firstName}</Typography.Text>
+        <Typography.Text style={{ fontSize: 11 }}>{user.role}</Typography.Text>
       </Flex>
       <Dropdown
         autoAdjustOverflow
