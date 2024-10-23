@@ -1,8 +1,10 @@
 import express from "express";
 import {
   addStudent,
-  deleteStudents,
+  deleteStudent,
+  deleteMultipleStudents,
   getStudents,
+  getStudentByID,
   updateStudent,
   updatePassword,
   updateStudentStatus,
@@ -14,8 +16,10 @@ const router = express.Router();
 
 // Student
 router.post("/students/:classCode", verifyToken, addStudent);
-router.delete("/students/:id", deleteStudents);
+router.delete("/students", deleteStudent);
+router.delete("/students/multiple", deleteMultipleStudents);
 router.get("/students/:id", verifyToken, getStudents);
+router.get("/students/id/:idNumber", getStudentByID);
 router.put("/students/:id", updateStudent);
 router.put("/students/:id/password", updatePassword);
 router.put("/students/:id/status", updateStudentStatus);

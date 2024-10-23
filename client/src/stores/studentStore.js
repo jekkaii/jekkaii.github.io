@@ -25,7 +25,21 @@ export const useStudentStore = create((set) => ({
     }
   },
 
-  addStudent: async (classCode,newStudent) => {
+  getStudentByID: async (idNumber) => {
+    set({ isLoading: true });
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await axios.get(`${API_URL}/students/id/${idNumber}`);
+      if (response.status === 200) {
+        const { students } = response.data;
+        set({ students, isLoading: false, error: null });
+      }
+    } catch (error) {
+      set({ error, isLoading: false });
+    }
+  },
+
+  addStudent: async (classCode, newStudent) => {
     set({ isLoading: true });
     try {
       // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -44,17 +58,19 @@ export const useStudentStore = create((set) => ({
     }
   },
 
-  deleteStudents: async (studentIds) => {
+  deleteStudent: async (classCode, studentId) => {
     set({ isLoading: true });
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      
       const response = await axios.delete(`${API_URL}/students`, {
-        data: { studentIds },
+        data: { classCode, idNumber: studentId },
       });
+  
       if (response.status === 200) {
         set({
           success: true,
-          message: "Students deleted successfully",
+          message: "Student deleted successfully",
           isLoading: false,
         });
       }
@@ -63,6 +79,33 @@ export const useStudentStore = create((set) => ({
     }
   },
 
+  deleteMultipleStudents: async (classCode, studentIds) => { 
+    set({ isLoading: true });
+    try {
+      console.log("Class Code:", classCode);
+      console.log("Student IDs to delete:", studentIds);
+  
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      const response = await axios.delete(`${API_URL}/students/multiple`, {
+        data: { classCode, idNumbers: studentIds },
+      });
+  
+      console.log("Response from delete request:", response); // Log the response
+  
+      if (response.status === 200) {
+        set({
+          success: true,
+          message: "Students deleted successfully", 
+          isLoading: false,
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting students:", error.response ? error.response.data : error.message);
+      set({ error, isLoading: false });
+    }
+  },
+  
   updateStudent: async (id, updatedStudent) => {
     set({ isLoading: true });
     try {

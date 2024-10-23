@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { act, useState } from "react";
+import React, { useState } from "react";
 import "../css/style.css";
 import Confirmation from "./Confirmation";
 import { Flex, Table, Button, Input, Dropdown } from "antd";
@@ -14,6 +14,7 @@ import {
 import AddStudent from "./AddStudent";
 import Notification from "./Notification";
 import EditStudent from "./EditStudent";
+import { useStudentStore } from "../../stores/studentStore";
 
 const ManageStudents = ({ sortedData, classCode }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +24,7 @@ const ManageStudents = ({ sortedData, classCode }) => {
   const [openEditStudent, setOpenEditStudent] = useState(false);
   const [openDeleteStudent, setOpenDeleteStudent] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState({ idNumber: "", name: "" });
+  const { deleteStudent, deleteMultipleStudents } = useStudentStore();
  
   // State to track selected row keys
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -138,19 +140,13 @@ const ManageStudents = ({ sortedData, classCode }) => {
     },
   ];
 
-  const handleEditStudent = () => {
-    // // add here code for edit student
-    // handleClose();
-  };
-  // add here code for delete student
-
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
 
     console.log("File uploaded:", file);
   };
 
-  // Handle delete modal confirmation
+  // Handle delete modal
   const handleDeleteModalOpen = () => {
     const isAllSelected = selectedRowKeys.length === sortedData.length;
     
@@ -190,18 +186,58 @@ const ManageStudents = ({ sortedData, classCode }) => {
       setSelectedStudent({ idNumber, name });
     } else { // delete class
       setOpenDeleteStudent(true);
+      setSelectedStudent({ idNumber, name });
       setModalMessage(
         <>Are you sure you want to delete <strong>{name}</strong>?</>
       );
     }
   };
 
+  const handleDeleteStudentConfirmation = async () => {
+    if (selectedStudent.idNumber !== "" && selectedStudent.name !== "") {
+      console.log("Student selected");
+      console.log(selectedStudent.idNumber);
+      
+      try {
+        await deleteStudent(classCode, selectedStudent.idNumber);
+        console.log("Student deleted successfully");
+      } catch (error) {
+        console.error("Error deleting student:", error); // Log any errors
+      }
+    } else if (selectedRowKeys.length === 1) {
+      // Deleting a single student
+      const studentId = selectedRows[0].studentId;
+      console.log("HERE");
+      console.log(studentId);
+  
+      try {
+        await deleteStudent(classCode, studentId);
+        console.log("Student deleted successfully");
+      } catch (error) {
+        console.error("Error deleting student:", error);
+      }
+    } else if (selectedRowKeys.length > 1) {
+      const studentIds = selectedRows.map(row => row.studentId);
+
+      try {
+        await deleteMultipleStudents(classCode, studentIds);
+        console.log("Multiple students deleted successfully.");
+      } catch (error) {
+        console.error("Error deleting multiple students:", error);
+      }
+    }
+  
+    setOpenDeleteStudent(false);
+  };
+  
   const handleDeleteModalClose = () => {
     setOpenDeleteStudent(false);
+    setSelectedStudent({ idNumber: "", name: "" });
   };
 
   const handleEditModalClose = () => {
     setOpenEditStudent(false);
+    setSelectedStudent({ idNumber: "", name: "" });
   };
 
   // Row selection configuration
@@ -286,14 +322,19 @@ const ManageStudents = ({ sortedData, classCode }) => {
       <Confirmation
         isOpen={openDeleteStudent}
         onClose={handleDeleteModalClose}
-        // onConfirm={handleDeleteStudentConfirmation}
+        onConfirm={handleDeleteStudentConfirmation}
         message={modalMessage}
       />
 
       <EditStudent
         isOpen={openEditStudent}
         onClose={handleEditModalClose}
-        // onConfirm={handleEditStudent}
+        onConfirm={() => {
+          // setNotificationMessage("Student edited successfully!");
+          // setNotificationType("success");
+          // window.location.reload();
+          console.log("Student edited successfully!");
+        }}
         idNumber={selectedStudent.idNumber}
         name={selectedStudent.name}
       />

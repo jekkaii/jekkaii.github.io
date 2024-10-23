@@ -69,6 +69,7 @@ export const addStudent = async (req, res) => {
     return res.status(400).json({ success: false, message: error.message });
   }
 };
+
 export const getStudents = async (req, res) => {
   try {
     const classCode = req.params.id;
@@ -104,6 +105,33 @@ export const getStudents = async (req, res) => {
     });
   }
 };
+
+export const getStudentByID = async (req, res) => {
+  const { idNumber } = req.params; 
+
+  try {
+    const student = await StudentModel.findOne({ idNumber });
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: student,
+    });
+  } catch (error) {
+    console.error("Error fetching student by ID:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error: " + error.message,
+    });
+  }
+};
+
 
 export const countStudents = async (req, res) => {
   try {
@@ -168,13 +196,13 @@ export const updateStudent = async (req, res) => {
     if (!existingUser) {
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "Student not found" });
     }
     existingUser.name = name;
     await existingUser.save();
-    return res.status(200).json({ success: true, message: "User updated" });
+    return res.status(200).json({ success: true, message: "Student updated" });
   } catch (error) {
-    console.error("Error updating user:", error);
+    console.error("Error updating student:", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
@@ -202,37 +230,46 @@ export const updateStudentStatus = async (req, res) => {
   }
 };
 
-export const deleteStudents = async (req, res) => {
+export const deleteStudent = async (req, res) => {
   try {
-    const idNumber = req.params.id;
+    const { classCode, idNumber } = req.body;
 
-    if (!idNumber) {
-      return res
-        .status(400)
-        .json({ success: false, message: "All fields are required" });
-    }
+    const classToUpdate = await ClassModel.findOne({ classCode });
 
-    const existingStudents = await StudentModel.findOneAndDelete({
-      idNumber,
-    });
+    const studentToDelete = await StudentModel.findOne({ idNumber });
 
-    if (!existingStudents) {
-      return res
-        .status(404)
-        .json({ success: false, message: "No student found" });
-    }
-
-    await ClassModel.updateMany(
-      { students: existingStudents._id },
-      { $pull: { students: existingStudents._id } }
+    await ClassModel.updateOne(
+      { _id: classToUpdate._id },
+      { $pull: { students: studentToDelete._id } }
     );
 
-    return res.status(200).json({ success: true, message: "Users deleted" });
+    res.status(200).json({ message: "Student removed from class successfully!" });
   } catch (error) {
-    console.error("Error deleting users:", error);
+    console.error("Error deleting student:", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
+
+export const deleteMultipleStudents = async (req, res) => {
+  try {
+    const { classCode, idNumbers } = req.body;
+
+    const classToUpdate = await ClassModel.findOne({ classCode });
+
+    const studentsToDelete = await StudentModel.find({ idNumber: { $in: idNumbers } });
+
+    await ClassModel.updateOne(
+      { _id: classToUpdate._id },
+      { $pull: { students: { $in: studentsToDelete.map(student => student._id) } } } // Extract student IDs
+    );
+
+    res.status(200).json({ message: "Students removed from class successfully!" });
+  } catch (error) {
+    console.error("Error deleting students:", error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 
 export const importFile = async (req, res) => {
   const file = req.files ? req.files.file : undefined;
