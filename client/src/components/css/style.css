@@ -560,7 +560,6 @@
   flex-grow: 1;
 }
 
-
 .model-actions {
   display: flex;
   justify-content: space-between;
@@ -702,7 +701,9 @@
   opacity: 0.9;
 }
 
-.create-button, .add-button, .edit-student-button {
+.create-button,
+.add-button,
+.edit-student-button {
   background-color: #28a745;
   padding: 20px 30px;
   font-weight: bold;

@@ -103,13 +103,13 @@ export const signupAdmin = async (req, res) => {
   }
 };
 
-
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
       throw new Error("All fields are required");
     }
+
     const user = await UserModel.findOne({ username });
     // Check if user exists
     if (!user) {
@@ -119,9 +119,11 @@ export const login = async (req, res) => {
     }
     // Check if user's status is activated
     if (user.status !== "activated") {
-      return res
-        .status(401)
-        .json({ success: false, message: "User account is gone. Please contact admin to activate your account." });
+      return res.status(401).json({
+        success: false,
+        message:
+          "User account is gone. Please contact admin to activate your account.",
+      });
     }
     const checkPasswordMatch = bcrypt.compareSync(password, user.password);
 
@@ -132,7 +134,8 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Password is Incorrect" });
     }
 
-    generateTokenAndSetCookie(res, user._id);
+    const token = generateTokenAndSetCookie(res, user._id);
+
     user.lastLogin = new Date();
     await user.save();
     console.log(`User ${user.username} logged in`);
@@ -140,6 +143,7 @@ export const login = async (req, res) => {
       success: true,
       message: "Login Success",
       user: { ...user._doc, password: undefined },
+      token,
     });
   } catch (error) {
     console.log("Post request failed", error);
@@ -161,6 +165,7 @@ export const checkAuth = async (req, res) => {
     const user = await UserModel.findOne({ _id: req.userId }).select(
       "-password"
     );
+
     if (!user) {
       return res
         .status(404)
@@ -168,7 +173,12 @@ export const checkAuth = async (req, res) => {
     }
     return res
       .status(200)
-      .json({ success: true, message: "Auth Success", user });
+      .json({
+        success: true,
+        message: "Auth Success",
+        user,
+        token: req.cookies.authToken,
+      });
   } catch (error) {
     console.log("Post request failed", error);
     return res.status(400).json({ success: false, message: error.message });

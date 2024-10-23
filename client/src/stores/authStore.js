@@ -22,6 +22,7 @@ export const useAuthStore = create((set) => ({
   // Log the user in
   login: async (username, password) => {
     set({ isLoggingIn: true });
+
     try {
       // Make the login request to the server
       const response = await axios.post(`${API_URL}/`, {
@@ -29,6 +30,7 @@ export const useAuthStore = create((set) => ({
         password,
       });
       const { user, token } = response.data;
+      localStorage.setItem("token", token);
       if (user.role === "Admin") {
         // If the user is an admin, set the corresponding state
         set({
@@ -69,6 +71,8 @@ export const useAuthStore = create((set) => ({
       // This delay is for testing purposes
       await new Promise((resolve) => setTimeout(resolve, 500));
       // Make the logout request to the server
+
+      localStorage.removeItem("token");
       const response = await axios.post(`${API_URL}/logout`);
       if (response.status === 200) {
         // If the logout is successful, reset the state
@@ -101,6 +105,7 @@ export const useAuthStore = create((set) => ({
       const response = await axios.get(`${API_URL}/check-auth`);
       if (response.status === 200) {
         const { user, token } = response.data;
+        localStorage.setItem("token", token);
         if (user.role === "Admin") {
           // If the user is an admin, set the corresponding state
           set({
@@ -133,6 +138,18 @@ export const useAuthStore = create((set) => ({
         success: false,
         error: error.response.data.message,
         isLoading: false,
+      });
+    }
+  },
+
+  restoreAuthentication: () => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      set({
+        token,
+        authenticated: true,
+        error: null,
       });
     }
   },

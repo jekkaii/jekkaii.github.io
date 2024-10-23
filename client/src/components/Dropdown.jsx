@@ -95,18 +95,11 @@ const ProfileDropdown = ({ user }) => {
 
   return (
     <Flex align="center" gap={10}>
-      <Flex>
-        <Avatar
-          src={
-            user.photo ? `http://localhost:3001/${user.photo}` : defaultPhoto
-          }
-          size="large"
-          style={{ border: "1px solid #ccc" }}
-        />
-      </Flex>
       <Flex vertical style={{ padding: 0 }}>
         <Typography.Text className="fw-bold">{user.firstName}</Typography.Text>
-        <Typography.Text style={{ fontSize: 11 }}>{user.role}</Typography.Text>
+        <Typography.Text type="secondary" style={{ fontSize: 11 }}>
+          {user.role}
+        </Typography.Text>
       </Flex>
       <Dropdown
         autoAdjustOverflow
@@ -115,15 +108,14 @@ const ProfileDropdown = ({ user }) => {
         }}
         trigger={["click"]}
       >
-        <Button
-          type="text"
-          style={{
-            alignItems: "center",
-            padding: 5,
-          }}
-        >
-          <DownOutlined />
-        </Button>
+        <Avatar
+          onClick={(e) => e.preventDefault()}
+          src={
+            user.photo ? `http://localhost:3001/${user.photo}` : defaultPhoto
+          }
+          size="large"
+          style={{ border: "1px solid #ccc", cursor: "pointer" }}
+        />
       </Dropdown>
     </Flex>
   );

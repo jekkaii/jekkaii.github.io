@@ -28,6 +28,7 @@ import { Link } from "react-router-dom";
 import { useAdminStore } from "../stores/adminStore";
 import defaultPhoto from "./resources/default.png";
 import ImgCrop from "antd-img-crop";
+import SpinnerLoader from "./SpinnerLoader";
 
 const Profile = ({ user, isAdmin }) => {
   const userData = user;
@@ -48,7 +49,6 @@ const Profile = ({ user, isAdmin }) => {
 
   useEffect(() => {
     if (success) {
-      formRef.current.resetFields();
       setUserPhoto(null);
       setButtonDisabled(true);
     }
@@ -135,13 +135,13 @@ const Profile = ({ user, isAdmin }) => {
     setSaveLoading(true);
 
     try {
-      await editUser(formData, user.username); // Call editUser with the form data
-      formRef.current.resetFields(); // Reset the form
+      await editUser(formData, user.username); // Call editUser with the form data // Reset the form
       setUserPhoto(null); // Reset photo state
-      window.location.reload();
     } catch (err) {
       message.error("Failed to update user.");
     } finally {
+      message.success("User updated successfully.");
+      location.reload();
       setSaveLoading(false);
     }
   };
@@ -170,234 +170,232 @@ const Profile = ({ user, isAdmin }) => {
 
   const items = [
     {
-      key: "grp1",
-      type: "group",
+      key: "1",
+      icon: <UserOutlined />,
       label: (
-        <Typography.Text style={{ margin: 0, padding: 0, color: "gray" }}>
-          Settings
-        </Typography.Text>
+        <Link className="text-decoration-none m-0" to="/profile">
+          Basic Information
+        </Link>
       ),
-      children: [
-        {
-          key: "1",
-          icon: <UserOutlined />,
-          label: (
-            <Link className="text-decoration-none m-0" to="/profile">
-              Basic Information
-            </Link>
-          ),
-        },
-        {
-          key: "2",
-          icon: <LockOutlined />,
-          label: (
-            <Link className="text-decoration-none m-0" to="/profile">
-              Password
-            </Link>
-          ),
-        },
-      ],
+    },
+    {
+      key: "2",
+      icon: <LockOutlined />,
+      label: (
+        <Link className="text-decoration-none m-0" to="/profile">
+          Password
+        </Link>
+      ),
     },
   ];
 
   return (
-    <Flex vertical>
-      <Flex
-        vertical
-        style={{
-          backgroundColor: "#fff",
-          borderRadius: "10px",
-          boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
-          maxWidth: "100%",
-          marginBottom: "20px",
-        }}
-      >
-        <Flex vertical style={{ padding: "20px" }} justify="center">
-          <Typography.Title level={2} style={{ marginBottom: 3 }}>
-            <SettingOutlined style={{ marginRight: "5px" }} />
-            Account Settings
-          </Typography.Title>
-          <Typography.Text type="secondary">
-            Here you can edit your basic information about yourself.
-          </Typography.Text>
-        </Flex>
-        <Divider style={{ margin: 0 }} />
-      </Flex>
-
-      <Flex gap={20} style={{ minHeight: "600px" }}>
-        <Form
-          initialValues={{
-            username: userData.username,
-            firstname: userData.firstName,
-            lastname: userData.lastName,
-            email: userData.email,
-            role: userData.role,
-            department: userData.department,
+    <>
+      {saveLoading && <SpinnerLoader />}
+      <Flex vertical>
+        <Flex
+          vertical
+          style={{
+            backgroundColor: "#fff",
+            borderRadius: "10px",
+            boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
+            maxWidth: "100%",
+            marginBottom: "20px",
           }}
-          labelCol={{ span: 10 }}
-          wrapperCol={{ span: 100 }}
-          style={{ width: "100%", flexGrow: 1 }}
-          layout="vertical"
-          name="edit-profile"
-          onFinish={onFinish}
-          onValuesChange={() => setButtonDisabled(false)} // Enable button based on file size validity
-          validateMessages={validateMessages}
-          colon={false}
-          labelAlign="left"
-          ref={formRef}
         >
-          <Flex gap={20}>
-            <Flex
-              style={{
-                padding: "20px",
-                backgroundColor: "#fff",
-                borderRadius: "10px",
-                boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
-                minWidth: "300px",
-              }}
-              vertical
-              align="center"
-            >
-              <Flex vertical align="center" gap={19} style={{ margin: 0 }}>
-                <Typography.Text className="fs-6">
-                  Profile Picture
-                </Typography.Text>
-                <Avatar
-                  size={180}
-                  style={{ border: "2px solid #f0f0f0" }}
-                  src={
-                    user.photo
-                      ? `http://localhost:3001/${user.photo}`
-                      : defaultPhoto
-                  }
-                />
-              </Flex>
-              <br />
-              <Form.Item>
-                <ImgCrop rotationSlider>
-                  <Upload
-                    fileList={fileList}
-                    beforeUpload={beforeUpload}
-                    customRequest={customRequest}
-                    showUploadList={true}
-                    maxCount={1}
-                    onChange={handleUploadChange}
-                    onPreview={onPreview}
-                    style={{ width: "100%" }}
-                  >
-                    <Button icon={<EditOutlined />}>
-                      Edit Profile Picture
-                    </Button>
-                  </Upload>
-                </ImgCrop>
-              </Form.Item>
-              {wrongFileType && (
-                <Typography.Text className="text-center" type="danger">
-                  You can only upload JPG/PNG file!
-                </Typography.Text>
-              )}
-              {wrongSize && (
-                <Typography.Text className="text-center" type="danger">
-                  File size should be between 80KB and 2MB
-                </Typography.Text>
-              )}
-              <Typography.Text type="secondary">
-                Allowed file types: JPG/PNG
-              </Typography.Text>
-              <Typography.Text type="secondary">
-                Allowed file size: 80KB - 2MB
-              </Typography.Text>
+          <Flex vertical style={{ padding: "20px" }} justify="center">
+            <Typography.Title level={2} style={{ marginBottom: 3 }}>
+              <SettingOutlined style={{ marginRight: "5px" }} />
+              Account Settings
+            </Typography.Title>
+            <Typography.Text type="secondary">
+              Here you can edit your basic information about yourself.
+            </Typography.Text>
+          </Flex>
+          <Divider style={{ margin: 0 }} />
+        </Flex>
 
-              <Divider style={{ margin: "10px 0" }} />
-              <Menu
-                defaultSelectedKeys={["1"]}
-                defaultOpenKeys={["sub1"]}
-                items={items}
-                style={{ width: "100%", border: "none" }}
-              />
-            </Flex>
-            <Flex
-              vertical
+        <Flex gap={20}>
+          <Form
+            initialValues={{
+              username: userData.username,
+              firstname: userData.firstName,
+              lastname: userData.lastName,
+              email: userData.email,
+              role: userData.role,
+              department: userData.department,
+            }}
+            disabled={saveLoading}
+            labelCol={{ span: 10 }}
+            wrapperCol={{ span: 100 }}
+            layout="vertical"
+            name="edit-profile"
+            onFinish={onFinish}
+            onValuesChange={() => setButtonDisabled(false)} // Enable button based on file size validity
+            validateMessages={validateMessages}
+            colon={false}
+            labelAlign="left"
+            ref={formRef}
+            style={{
+              padding: "30px",
+              backgroundColor: "#fff",
+              borderRadius: "10px",
+              boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
+              width: "100%",
+            }}
+          >
+            <Menu
+              mode="horizontal"
+              defaultSelectedKeys={["1"]}
+              defaultOpenKeys={["sub1"]}
+              items={items}
               style={{
-                padding: "30px",
-                backgroundColor: "#fff",
-                borderRadius: "10px",
-                boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
-                width: "100%",
+                // width: "100%",
+                border: "none",
+                // maxWidth: "250px",
+                // padding: "20px",
+                // backgroundColor: "#fff",
+                // borderRadius: "10px",
+                // boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
               }}
-            >
-              <Form.Item
-                name="username"
-                label="Username"
-                tooltip="Username cannot be changed."
-              >
-                <Input disabled style={{ maxWidth: "200px" }} />
-              </Form.Item>
-              <Typography.Text className="mb-2">Name</Typography.Text>
-              <Form.Item className="mb-2">
-                <Row gutter={8}>
+            />
+            <Divider style={{ marginbottom: 10, marginTop: 0 }} />
+            <Row gutter={50} justify="center">
+              <Col className="mb-4">
+                <Flex vertical align="center" gap={19} style={{ margin: 0 }}>
+                  <Typography.Text className="fs-6">
+                    Profile Picture
+                  </Typography.Text>
+                  <Avatar
+                    size={180}
+                    style={{ border: "2px solid #f0f0f0" }}
+                    src={
+                      user.photo
+                        ? `http://localhost:3001/${user.photo}`
+                        : defaultPhoto
+                    }
+                  />
+                </Flex>
+                <br />
+                <Flex
+                  vertical
+                  align="center"
+                  style={{ margin: 0, width: "100%" }}
+                >
+                  <Form.Item>
+                    <ImgCrop rotationSlider>
+                      <Upload
+                        fileList={fileList}
+                        beforeUpload={beforeUpload}
+                        customRequest={customRequest}
+                        showUploadList={true}
+                        maxCount={1}
+                        onChange={handleUploadChange}
+                        onPreview={onPreview}
+                        style={{ width: "100%" }}
+                      >
+                        <Button icon={<EditOutlined />}>
+                          Edit Profile Picture
+                        </Button>
+                      </Upload>
+                    </ImgCrop>
+                  </Form.Item>
+                  {wrongFileType && (
+                    <Typography.Text className="text-center" type="danger">
+                      You can only upload JPG/PNG file!
+                    </Typography.Text>
+                  )}
+                  {wrongSize && (
+                    <Typography.Text className="text-center" type="danger">
+                      File size should be between 80KB and 2MB
+                    </Typography.Text>
+                  )}
+                  <Typography.Text type="secondary">
+                    Allowed file types: JPG/PNG
+                  </Typography.Text>
+                  <Typography.Text type="secondary">
+                    Allowed file size: 80KB - 2MB
+                  </Typography.Text>
+                </Flex>
+              </Col>
+              <Col>
+                <Form.Item
+                  name="username"
+                  label="Username"
+                  tooltip="Username cannot be changed."
+                >
+                  <Input disabled style={{ maxWidth: "200px" }} />
+                </Form.Item>
+                <Row gutter={10}>
                   <Col>
                     <Form.Item
+                      label="Firstname"
                       className="mb-2"
                       name="firstname"
-                      rules={[{ required: true }]}
                     >
                       <Input placeholder="Firstname" aria-label="Firstname" />
                     </Form.Item>
                   </Col>
                   <Col>
-                    <Form.Item
-                      noStyle
-                      name="lastname"
-                      rules={[{ required: true }]}
-                    >
+                    <Form.Item label="Lastname" name="lastname">
                       <Input placeholder="Lastname" aria-label="Lastname" />
                     </Form.Item>
                   </Col>
                 </Row>
-              </Form.Item>
-              <Form.Item name="email" label="Email" rules={[{ type: "email" }]}>
-                <Input style={{ maxWidth: "375px" }} />
-              </Form.Item>
-              <Form.Item name="role" label="Role" tooltip="Admin only">
-                <Select style={{ maxWidth: "200px" }} disabled />
-              </Form.Item>
-              {!isAdmin && (
-                <Form.Item name="department" label="Department">
-                  <Input style={{ maxWidth: "200px" }} />
+                <Form.Item
+                  name="email"
+                  label="Email"
+                  rules={[{ type: "email" }]}
+                >
+                  <Input />
                 </Form.Item>
-              )}
-              <Form.Item style={{ marginTop: "50px" }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  disabled={buttonDisabled}
-                  /******  64e05f4f-a4ae-4025-9953-ff25f2426a50  *******/
-                  loading={saveLoading}
-                >
-                  Update Profile
-                </Button>
-                <Button
-                  disabled={buttonDisabled}
-                  type="default"
-                  style={{
-                    display: buttonDisabled ? "none" : undefined,
-                    marginLeft: "10px",
-                  }}
-                  onClick={() => {
-                    // Reset form fields to initial values
-                    formRef.current?.resetFields();
-                    setButtonDisabled(true);
-                  }}
-                >
-                  Discard Changes
-                </Button>
-              </Form.Item>
-            </Flex>
-          </Flex>
-        </Form>
+                {!isAdmin && (
+                  <>
+                    <Form.Item name="department" label="Department">
+                      <Input style={{ maxWidth: "200px" }} />
+                    </Form.Item>
+                    <Form.Item
+                      name="role"
+                      label="Role"
+                      tooltip="You don't have admin privileges."
+                    >
+                      <Select style={{ maxWidth: "100px" }} disabled />
+                    </Form.Item>
+                  </>
+                )}
+
+                <Form.Item style={{ marginTop: "50px" }}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    disabled={buttonDisabled}
+                    loading={saveLoading}
+                  >
+                    Update Profile
+                  </Button>
+                  <Button
+                    disabled={buttonDisabled}
+                    type="default"
+                    style={{
+                      display: buttonDisabled ? "none" : undefined,
+                      marginLeft: "10px",
+                    }}
+                    onClick={() => {
+                      // Reset form fields to initial values
+                      setFileList([]);
+                      formRef.current?.resetFields();
+                      setButtonDisabled(true);
+                    }}
+                  >
+                    Discard Changes
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
 

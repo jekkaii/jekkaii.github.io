@@ -18,47 +18,34 @@ import Sidebar from "./components/Sidebar";
 import AttendanceTabs from "./components/teacher/AttendanceTabs";
 import ClassList from "./components/teacher/ClassList";
 import SpinnerLoader from "./components/SpinnerLoader";
-import ProfileDropdown from "./components/Dropdown";
 import Profile from "./components/Profile";
-import { Layout, Switch, ConfigProvider, Flex, Typography } from "antd";
+import { Layout, ConfigProvider, Flex, Typography } from "antd";
 import Dashboard from "./components/Dashboard";
-const { Content, Header: HeaderLayout } = Layout;
-
-const ProtectedRoute = ({ children }) => {
-  const { authenticated } = useAuthStore();
-  if (!authenticated) {
-    return <Navigate to="/" />;
-  }
-  return children;
-};
-const RedirectToHome = ({ children }) => {
-  const { authenticated, isAdmin, isTeacher } = useAuthStore();
-
-  if (authenticated) {
-    if (isAdmin) {
-      return <Navigate to="/home" />;
-    }
-    if (isTeacher) {
-      return <Navigate to="/home" />;
-    }
-  }
-
-  return children;
-};
+import { ProtectedRoute } from "./ProtectedRoute";
+import { RedirectToHome } from "./RedirectToHome";
+import Header from "./components/Header";
+const { Content } = Layout;
 
 function App() {
-  const { checkAuthentication } = useAuthStore();
+  const { checkAuthentication, restoreAuthentication } = useAuthStore();
   const { isLoading, setLoading, authenticated, user, isAdmin } =
     useAuthStore();
+
   const [theme, setTheme] = useState("light");
+
+  // useEffect(() => {
+  //   if (user) {
+  //     setLoading(false);
+  //   }
+  // }, [user, setLoading]);
+
+  // useEffect(() => {
+  //   restoreAuthentication(); // Check for token on load
+  // }, [restoreAuthentication]);
 
   useEffect(() => {
     checkAuthentication();
   }, [checkAuthentication]);
-
-  if (isLoading) {
-    return <SpinnerLoader />;
-  }
 
   return (
     <>
@@ -80,157 +67,133 @@ function App() {
         }}
       >
         <Router>
-          <Layout>
+          {isLoading ? (
+            <SpinnerLoader />
+          ) : (
             <Layout>
-              {/* Sidebar Component */}
-              {authenticated && (
-                <Sidebar
-                  onChangeTheme={(value) => setTheme(value ? "dark" : "light")}
-                />
-              )}
-
               <Layout>
+                {/* Sidebar Component */}
                 {authenticated && (
-                  <HeaderLayout
+                  <Sidebar
+                    onChangeTheme={(value) =>
+                      setTheme(value ? "dark" : "light")
+                    }
+                  />
+                )}
+
+                <Layout>
+                  {/* Header */}
+                  {authenticated && (
+                    <Header
+                      user={user}
+                      isAdmin={isAdmin}
+                      onChangeTheme={(value) =>
+                        setTheme(value ? "dark" : "light")
+                      }
+                    />
+                  )}
+                  {/* Main Content */}
+                  <Content
                     style={{
-                      backgroundColor: "#ffffff",
-                      minHeight: "110px",
-                      padding: 0,
+                      margin: authenticated ? "30px 30px 0" : 0,
+                      justifyContent: "center",
+                      display: authenticated ? "block" : "flex",
+                      background: !authenticated ? "white" : "none",
+                      overflow: "initial",
+                      // borderRadius: "30px",
+                      // boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
                     }}
                   >
-                    <Flex
-                      justify="space-between"
-                      align="center"
-                      style={{ height: "100%" }}
-                    >
-                      <Flex vertical style={{ padding: "20px" }}>
-                        <Typography.Title
-                          type="primary"
-                          level={3}
-                          style={{ margin: 0 }}
-                        >
-                          <small>Welcome,</small>
-                          <span className="fw-bold"> {user.firstName}</span>
-                        </Typography.Title>
-                        <Typography.Text
-                          type="secondary"
-                          level={3}
-                          style={{ margin: 0 }}
-                        >
-                          Lets take a look at your activity today
-                        </Typography.Text>
-                      </Flex>
-                      <Flex
-                        style={{ padding: "20px" }}
-                        align="center"
-                        justify="end"
-                      >
-                        <ProfileDropdown user={user} />
-                      </Flex>
-                    </Flex>
-                  </HeaderLayout>
-                )}
-                {/* Main Content */}
-                <Content
-                  style={{
-                    margin: authenticated ? "30px 30px 0" : 0,
-                    justifyContent: "center",
-                    display: authenticated ? "block" : "flex",
-                    background: !authenticated ? "white" : "none",
-                    overflow: "initial",
-                    // borderRadius: "30px",
-                    // boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
-                  }}
-                >
-                  <Routes>
-                    {/* Login Route */}
-                    <Route
-                      path="/"
-                      element={
-                        <RedirectToHome>
-                          <LoginForm />
-                        </RedirectToHome>
-                      }
-                    ></Route>
+                    <Routes>
+                      {/* Login Route */}
+                      <Route
+                        path="/"
+                        element={
+                          <RedirectToHome>
+                            <LoginForm />
+                          </RedirectToHome>
+                        }
+                      ></Route>
 
-                    {/* Profile Route */}
-                    <Route
-                      path="/profile"
-                      element={
-                        <ProtectedRoute>
-                          <Profile user={user} isAdmin={isAdmin} />
-                        </ProtectedRoute>
-                      }
-                    ></Route>
+                      {/* Profile Route */}
+                      <Route
+                        path="/profile"
+                        element={
+                          <ProtectedRoute>
+                            <Profile user={user} isAdmin={isAdmin} />
+                          </ProtectedRoute>
+                        }
+                      ></Route>
 
-                    {/* Dashboard Route */}
-                    <Route
-                      path="/home"
-                      element={
-                        <ProtectedRoute>
-                          <Dashboard />
-                        </ProtectedRoute>
-                      }
-                    ></Route>
+                      {/* Dashboard Route */}
+                      <Route
+                        path="/home"
+                        element={
+                          <ProtectedRoute>
+                            <Dashboard />
+                          </ProtectedRoute>
+                        }
+                      ></Route>
 
-                    {/* Teacher Routes */}
-                    <Route
-                      path="/teacher"
-                      element={
-                        <ProtectedRoute>
-                          <ClassList />
-                        </ProtectedRoute>
-                      }
-                    ></Route>
+                      {/* Teacher Routes */}
+                      <Route
+                        path="/teacher"
+                        element={
+                          <ProtectedRoute>
+                            <ClassList />
+                          </ProtectedRoute>
+                        }
+                      ></Route>
 
-                    <Route
-                      path="/teacher/attendance/:classcode"
-                      element={
-                        <ProtectedRoute>
-                          <AttendanceTabs />
-                        </ProtectedRoute>
-                      }
-                    ></Route>
+                      <Route
+                        path="/teacher/attendance/:classcode"
+                        element={
+                          <ProtectedRoute>
+                            <AttendanceTabs />
+                          </ProtectedRoute>
+                        }
+                      ></Route>
 
-                    {/* Logout Route */}
-                    <Route
-                      path="/"
-                      element={
-                        <RedirectToHome>
-                          <LoginForm />
-                        </RedirectToHome>
-                      }
-                    ></Route>
+                      {/* Logout Route */}
+                      <Route
+                        path="/"
+                        element={
+                          <RedirectToHome>
+                            <LoginForm />
+                          </RedirectToHome>
+                        }
+                      ></Route>
 
-                    {/* Admin Routes */}
-                    <Route
-                      path="/admin"
-                      element={
-                        <ProtectedRoute>
-                          <ManageUsers />
-                        </ProtectedRoute>
-                      }
-                    ></Route>
+                      {/* Admin Routes */}
+                      <Route
+                        path="/admin"
+                        element={
+                          <ProtectedRoute>
+                            <ManageUsers />
+                          </ProtectedRoute>
+                        }
+                      ></Route>
 
-                    {/* Model Routes */}
-                    <Route
-                      path="/models"
-                      element={
-                        <ProtectedRoute>
-                          <ManageModels />
-                        </ProtectedRoute>
-                      }
-                    ></Route>
-                    <Route
-                      path="*"
-                      element={<Navigate to="/" replace />}
-                    ></Route>
-                  </Routes>
-                </Content>
-                {authenticated && <Footer />}
+                      {/* Model Routes */}
+                      <Route
+                        path="/models"
+                        element={
+                          <ProtectedRoute>
+                            <ManageModels />
+                          </ProtectedRoute>
+                        }
+                      ></Route>
+                      <Route
+                        path="*"
+                        element={<Navigate to="/" replace />}
+                      ></Route>
+                    </Routes>
+                  </Content>
+                  {authenticated && <Footer />}
+                </Layout>
               </Layout>
             </Layout>
-          </Layout>
+          )}
         </Router>
       </ConfigProvider>
     </>

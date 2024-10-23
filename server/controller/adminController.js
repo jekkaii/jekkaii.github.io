@@ -57,8 +57,6 @@ export const addUser = async (req, res) => {
 
 export const editUser = async (req, res) => {
   try {
-    console.log(req.body);
-
     validateEditUserInput(req); // Validate input as per your existing logic
     const { username: id, firstname, lastname, email, department } = req.body; // Extract values from req.body
     const user = await UserModel.findOne({ username: id });
