@@ -1,27 +1,31 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
-import { Dropdown, Avatar, Button, Typography, Flex, Switch } from "antd";
+import React from "react";
+import { Dropdown, Avatar, theme, Typography, Flex, Switch } from "antd";
 import {
-  UserOutlined,
-  DownOutlined,
   SettingOutlined,
   LogoutOutlined,
   MoonOutlined,
-  CheckOutlined,
-  CloseOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../stores/authStore";
 import defaultPhoto from "./resources/default.png";
+import { useThemeStore } from "../stores/themeStore";
 
 const ProfileDropdown = ({ user }) => {
-  const [userAvatar, setUserAvatar] = useState(null); // Placeholder for user image URL
   const { logout } = useAuthStore();
+  const { theme: themeData, toggleTheme } = useThemeStore();
 
   const handleLogout = () => {
+    if (themeData === "dark") {
+      toggleTheme();
+    }
     logout();
   };
+
+  const {
+    token: { colorTextBase },
+  } = theme.useToken();
 
   const items = [
     {
@@ -73,18 +77,19 @@ const ProfileDropdown = ({ user }) => {
           <Typography.Text>Dark Mode</Typography.Text>
           <Switch
             size="small"
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
+            defaultChecked
+            checked={themeData === "dark"} // Check based on current theme
+            onChange={toggleTheme} // Toggle theme on change
           />
         </Flex>
       ),
-      icon: <MoonOutlined style={{ color: "black" }} />,
+      icon: <MoonOutlined style={{ color: colorTextBase }} />,
       key: "3",
       disabled: true,
     },
     {
       label: (
-        <Link to="/" className="text-decoration-none" onClick={handleLogout}>
+        <Link className="text-decoration-none" to="/" onClick={handleLogout}>
           Logout
         </Link>
       ),

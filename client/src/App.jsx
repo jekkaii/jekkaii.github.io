@@ -24,20 +24,15 @@ import Dashboard from "./components/Dashboard";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { RedirectToHome } from "./RedirectToHome";
 import Header from "./components/Header";
-const { Content } = Layout;
+import { useThemeStore } from "./stores/themeStore";
+const { Content, Header: HeaderAntd } = Layout;
 
 function App() {
-  const { checkAuthentication, restoreAuthentication } = useAuthStore();
+  const { checkAuthentication } = useAuthStore();
   const { isLoading, setLoading, authenticated, user, isAdmin } =
     useAuthStore();
 
-  const [theme, setTheme] = useState("light");
-
-  // useEffect(() => {
-  //   if (user) {
-  //     setLoading(false);
-  //   }
-  // }, [user, setLoading]);
+  const { theme } = useThemeStore(); // Get current theme from Zustand
 
   // useEffect(() => {
   //   restoreAuthentication(); // Check for token on load
@@ -47,23 +42,38 @@ function App() {
     checkAuthentication();
   }, [checkAuthentication]);
 
+  const lightTheme = {
+    colorPrimary: "#2a1f7e", // Primary Color
+    colorBgBase: "#ffffff", // Base Background Color
+
+    colorPrimaryBg: "#e2e0e5", // Primary Background Color
+    colorLink: "#2a1f7e",
+    colorLinkActive: "#2a1f7e",
+    colorLinkHover: "#2a1f7e",
+    colorTextBase: "#18124a", //Text Color
+    colorBgContainer: "#ffffff",
+  };
+
+  const darkTheme = {
+    colorPrimary: "#40347e",
+    colorBgBase: "#010103",
+    colorLink: "#e2e0e5",
+    colorLinkActive: "#e2e0e5",
+    colorLinkHover: "#e2e0e5",
+    colorTextBase: "#e2e0e5",
+    colorBgContainer: "#141414",
+    colorBgElevated: "#141414",
+    colorSplit: "#7b7a7a",
+
+    // Change sidebar Color
+    // colorPrimaryBg: "#2a1f7e",
+  };
+
   return (
     <>
       <ConfigProvider
         theme={{
-          token: {
-            // Seed Token
-            colorPrimary: "#2a1f7e",
-            colorPrimaryBg: "#e2e0e5",
-            colorLink: "#2a1f7e",
-            colorLinkActive: "#2a1f7e",
-            colorLinkHover: "#2a1f7e",
-            colorText: "#010103",
-            colorTextSecondary: "gray",
-
-            // Alias Token
-            colorBgContainer: "#ffffff",
-          },
+          token: theme === "dark" ? darkTheme : lightTheme,
         }}
       >
         <Router>
@@ -73,32 +83,18 @@ function App() {
             <Layout>
               <Layout>
                 {/* Sidebar Component */}
-                {authenticated && (
-                  <Sidebar
-                    onChangeTheme={(value) =>
-                      setTheme(value ? "dark" : "light")
-                    }
-                  />
-                )}
+                {authenticated && <Sidebar />}
 
                 <Layout>
                   {/* Header */}
-                  {authenticated && (
-                    <Header
-                      user={user}
-                      isAdmin={isAdmin}
-                      onChangeTheme={(value) =>
-                        setTheme(value ? "dark" : "light")
-                      }
-                    />
-                  )}
+                  {authenticated && <Header user={user} isAdmin={isAdmin} />}
                   {/* Main Content */}
                   <Content
                     style={{
                       margin: authenticated ? "30px 30px 0" : 0,
                       justifyContent: "center",
                       display: authenticated ? "block" : "flex",
-                      background: !authenticated ? "white" : "none",
+                      // background: !authenticated ? "white" : "none",
                       overflow: "initial",
                       // borderRadius: "30px",
                       // boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",

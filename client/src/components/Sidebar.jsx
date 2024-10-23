@@ -7,7 +7,7 @@ import faceImage from "../components/resources/face.png";
 import faceImageInverted from "../components/resources/face-inverted.png";
 import { useAuthStore } from "../stores/authStore";
 import { useClassStore } from "../stores/classStore";
-import { useStudentStore } from "../stores/studentStore";
+import { useThemeStore } from "../stores/themeStore";
 import faceLogo from "../components/resources/face-logo-inverted.png";
 import {
   Layout,
@@ -17,7 +17,7 @@ import {
   ConfigProvider,
   Divider,
   Typography,
-  Switch,
+  theme,
 } from "antd";
 const { Sider } = Layout;
 import {
@@ -32,23 +32,19 @@ import {
 function Sidebar() {
   const { isAdmin, isTeacher } = useAuthStore();
   const { readClasses, classes } = useClassStore();
-  const [selectedClass, setSelectedClass] = useState(null);
+  const { theme: themeData } = useThemeStore();
 
-  const handleClick = (item) => {
-    setSelectedClass(item.subject); // Update the state when the button is clicked
-  };
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
   // Include logout from authStore
   const [collapsed, setCollapsed] = useState(false);
-  const [theme, setTheme] = useState("light");
-
-  const changeTheme = (value) => {
-    setTheme(value ? "dark" : "light");
-  };
 
   const items = classes.map((item) => ({
     label: (
       <Link
-        className="text-decoration-none font-weight-bold h6 m-0"
+        className="text-decoration-none font-weight-bold m-0"
         to={`/teacher/attendance/${item.classCode}`}
       >
         {item.classCode}
@@ -70,19 +66,20 @@ function Sidebar() {
               iconSize: 20,
               collapsedIconSize: 25,
               itemHeight: collapsed ? 50 : 45,
-              itemMarginInline: 15,
+              itemMarginInline: 10,
               itemMarginBlock: 5,
+              colorSplit: 0,
             },
           },
         }}
       >
         <Sider
-          width={240}
-          collapsedWidth={90}
+          width={230}
+          collapsedWidth={80}
           trigger={null}
-          theme={theme}
           style={{
             boxShadow: "2px 0 1px 0 rgba(0, 0, 0, 0.05)",
+            background: colorBgContainer,
           }}
           collapsible
           collapsed={collapsed}
@@ -93,7 +90,7 @@ function Sidebar() {
               gap={10}
               justify="space-between"
               align="middle"
-              style={{ margin: "17px 17px 0 17px" }}
+              style={{ margin: "15px 15px 0 15px" }}
             >
               <Flex align="middle" gap={10}>
                 <Button
@@ -126,7 +123,7 @@ function Sidebar() {
 
                 <Flex
                   style={{
-                    width: 90,
+                    width: 100,
                     overflow: "hidden",
                     alignItems: "center",
                     justifyContent: "center",
@@ -134,10 +131,9 @@ function Sidebar() {
                   }}
                 >
                   <img
-                    src={faceImage}
+                    src={themeData === "light" ? faceImage : faceImageInverted}
                     style={{
                       transition: "width 0.5s ease-out, display 0.5s ease-out",
-
                       display: collapsed ? "none" : "block",
                       width: "100%",
                       height: "100%",
@@ -158,18 +154,11 @@ function Sidebar() {
               )}
             </Flex>
 
-            <Flex
-              style={{
-                margin: collapsed ? "10px 0px 0px 0px" : "10px 10px 20px 10px",
-              }}
-            >
-              <Divider style={{ margin: 0 }} />
-            </Flex>
+            <Divider className="mb-0" />
 
             {/* Menu Items */}
             <Menu
-              // style={{ padding: "0px 14px 0px 20px" }}
-              theme={theme}
+              theme="light"
               mode="inline"
               defaultSelectedKeys={["1"]}
               items={[
@@ -200,7 +189,7 @@ function Sidebar() {
                       ),
                       label: (
                         <Link
-                          className="text-decoration-none font-weight-bold h6 m-0"
+                          className="text-decoration-none font-weight-bold m-0"
                           to="/dashboard"
                         >
                           Dashboard
@@ -223,7 +212,7 @@ function Sidebar() {
                       ),
                       label: (
                         <Link
-                          className="text-decoration-none font-weight-bold h6 m-0"
+                          className="text-decoration-none font-weight-bold m-0"
                           to="/teacher"
                         >
                           Classes
@@ -246,7 +235,7 @@ function Sidebar() {
                       ),
                       label: (
                         <Link
-                          className="text-decoration-none font-weight-bold h6 m-0"
+                          className="text-decoration-none font-weight-bold m-0"
                           to="/admin"
                         >
                           Manage Users
@@ -269,7 +258,7 @@ function Sidebar() {
                       ),
                       label: (
                         <Link
-                          className="text-decoration-none font-weight-bold h6 m-0"
+                          className="text-decoration-none font-weight-bold m-0"
                           to="/models"
                         >
                           Manage Models
@@ -294,12 +283,6 @@ function Sidebar() {
               ].filter(Boolean)}
             />
           </Flex>
-          {/* <Switch
-            checked={theme === "dark"}
-            onChange={changeTheme}
-            checkedChildren="Dark"
-            unCheckedChildren="Light"
-          /> */}
         </Sider>
       </ConfigProvider>
     </>

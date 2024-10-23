@@ -17,6 +17,7 @@ import {
   message,
   Upload,
   Avatar,
+  Card,
 } from "antd";
 import {
   EditOutlined,
@@ -193,17 +194,16 @@ const Profile = ({ user, isAdmin }) => {
     <>
       {saveLoading && <SpinnerLoader />}
       <Flex vertical>
-        <Flex
-          vertical
+        <Card
           style={{
-            backgroundColor: "#fff",
+            padding: "10px",
             borderRadius: "10px",
             boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
             maxWidth: "100%",
             marginBottom: "20px",
           }}
         >
-          <Flex vertical style={{ padding: "20px" }} justify="center">
+          <Flex vertical justify="center">
             <Typography.Title level={2} style={{ marginBottom: 3 }}>
               <SettingOutlined style={{ marginRight: "5px" }} />
               Account Settings
@@ -212,10 +212,9 @@ const Profile = ({ user, isAdmin }) => {
               Here you can edit your basic information about yourself.
             </Typography.Text>
           </Flex>
-          <Divider style={{ margin: 0 }} />
-        </Flex>
+        </Card>
 
-        <Flex gap={20}>
+        <Card gap={20} style={{ boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)" }}>
           <Form
             initialValues={{
               username: userData.username,
@@ -237,10 +236,7 @@ const Profile = ({ user, isAdmin }) => {
             labelAlign="left"
             ref={formRef}
             style={{
-              padding: "30px",
-              backgroundColor: "#fff",
               borderRadius: "10px",
-              boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
               width: "100%",
             }}
           >
@@ -393,7 +389,7 @@ const Profile = ({ user, isAdmin }) => {
               </Col>
             </Row>
           </Form>
-        </Flex>
+        </Card>
       </Flex>
     </>
   );

@@ -7,6 +7,7 @@ axios.defaults.withCredentials = true; // set withCredentials to true
 
 // This store manages the authentication state of the user
 export const useAuthStore = create((set) => ({
+  themeDefault: "light",
   user: null, // The user object obtained from the server
   token: null, // The authentication token obtained from the server
   error: null, // Any error messages that occur during authentication
@@ -73,10 +74,13 @@ export const useAuthStore = create((set) => ({
       // Make the logout request to the server
 
       localStorage.removeItem("token");
+      localStorage.removeItem("theme");
+
       const response = await axios.post(`${API_URL}/logout`);
       if (response.status === 200) {
         // If the logout is successful, reset the state
         set({
+          themeDefault: "light",
           user: null,
           token: null,
           authenticated: false,
@@ -101,11 +105,9 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true });
     try {
       // This delay is for testing purposes
-      await new Promise((resolve) => setTimeout(resolve, 500));
       const response = await axios.get(`${API_URL}/check-auth`);
       if (response.status === 200) {
         const { user, token } = response.data;
-        localStorage.setItem("token", token);
         if (user.role === "Admin") {
           // If the user is an admin, set the corresponding state
           set({

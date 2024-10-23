@@ -10,7 +10,16 @@ import ManageStudents from "./ManageStudents";
 import UploadClassPicture from "./UploadClassPicture";
 import { useStudentStore } from "../../stores/studentStore";
 import { useClassStore } from "../../stores/classStore";
-import { Skeleton, Flex, Breadcrumb, Tabs, Input, Button } from "antd";
+import {
+  Skeleton,
+  Flex,
+  Breadcrumb,
+  Tabs,
+  Input,
+  Button,
+  Card,
+  Typography,
+} from "antd";
 import moment from "moment";
 
 import { Link, useParams } from "react-router-dom";
@@ -224,43 +233,41 @@ const AttendanceTabs = () => {
       />
       <br />
       <Flex vertical gap={23}>
-        <Flex
+        <Card
           justify="space-between"
           gap={23}
           align="center"
           style={{
             padding: 30,
-            backgroundColor: "#fff",
             borderRadius: "10px",
             boxShadow: "0px 2px 2px 0px rgba(0, 0, 0, 0.1)",
             width: "100%",
           }}
         >
           <Flex vertical>
-            <p className="mb-2 fw-bold fs-3 text-center">
+            <Typography.Title level={2}>
               {existingClass.classCode + " " + existingClass.subject}
-            </p>
-            <p className="mb-0 text-center">
+            </Typography.Title>
+            <Typography.Text>
               {existingClass.startTime} - {existingClass.endTime}
-            </p>
-            <p className="mb-0 text-center">{existingClass.days}</p>
+            </Typography.Text>
+            <Typography.Text className="mb-0 text-center">
+              {existingClass.days}
+            </Typography.Text>
           </Flex>
           <Flex></Flex>
-        </Flex>
+        </Card>
         {/* Tabs */}
-        <Flex
-          vertical
+        <Card
           style={{
-            // margin: "30px 30px 0",
-            padding: 24,
-            backgroundColor: "#fff",
             borderRadius: "10px",
             boxShadow: "0px 2px 10px 0px rgba(0, 0, 0, 0.1)",
             width: "100%",
+            border: "none",
           }}
         >
           <Tabs defaultActiveKey="1" addIcon items={items} />
-        </Flex>
+        </Card>
       </Flex>
     </>
   );

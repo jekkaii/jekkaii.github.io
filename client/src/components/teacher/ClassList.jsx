@@ -93,50 +93,44 @@ const ClassList = () => {
 
   return (
     <Flex vertical gap={23}>
-      <Flex
-        justify="space-between"
-        gap={23}
-        align="center"
+      <Card
         style={{
-          padding: 30,
-          backgroundColor: "#fff",
-          borderRadius: "10px",
-          boxShadow: "0px 2px 2px 0px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
           width: "100%",
+          border: "none",
         }}
       >
-        <Flex vertical>
-          <Typography.Title level={2} style={{ marginBottom: 0 }}>
-            Class List
-          </Typography.Title>
-          <Typography.Text>
-            Here are the list of the classes you handle
-          </Typography.Text>
+        <Flex justify="space-between" gap={23} align="center">
+          <Flex vertical>
+            <Typography.Title level={2} style={{ marginBottom: 0 }}>
+              Class List
+            </Typography.Title>
+            <Typography.Text>
+              Here are the list of the classes you handle
+            </Typography.Text>
+          </Flex>
+          <Flex gap={23}>
+            {/* Search Input in the Middle */}
+            <Search
+              placeholder="input search text"
+              onSearch
+              enterButton
+              value={searchQuery}
+              style={{ width: 500 }}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <CreateClass
+              onSuccess={() => {
+                setNotificationMessage("Class created successfully!");
+                setNotificationType("success");
+                // setTimeout(() => {
+                window.location.reload();
+                // }, 2000); // Reload the page after 2 seconds
+              }}
+            />
+          </Flex>
         </Flex>
-
-        <Flex gap={23}>
-          {/* Search Input in the Middle */}
-          <Search
-            placeholder="input search text"
-            onSearch
-            enterButton
-            value={searchQuery}
-            style={{ width: 500 }}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-
-          <CreateClass
-            onSuccess={() => {
-              setNotificationMessage("Class created successfully!");
-              setNotificationType("success");
-
-              // setTimeout(() => {
-              window.location.reload();
-              // }, 2000); // Reload the page after 2 seconds
-            }}
-          />
-        </Flex>
-      </Flex>
+      </Card>
 
       <>
         {classes.length === 0 && (
@@ -187,6 +181,7 @@ const ClassList = () => {
                           style={{
                             gap: "10px",
                             padding: "0 10px",
+                            border: "none",
                           }}
                         >
                           {/* Hamburger Icon */}
@@ -217,13 +212,14 @@ const ClassList = () => {
                           </div>
 
                           {/* Class Title */}
-                          <Typography.Title level={4} strong>
+                          <Typography.Title level={3} strong>
                             {cls.subject}
                           </Typography.Title>
                         </Flex>
                       }
                       style={{
-                        boxShadow: "0px 1px 4px 0px rgba(0, 0, 0, 0.1)",
+                        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.05)",
+
                         padding: "10px",
                         width: "100%",
                       }}
@@ -234,24 +230,24 @@ const ClassList = () => {
                         style={{ position: "relative" }}
                       >
                         <div className="class-info">
-                          <p>
+                          <Typography.Title level={4}>
                             <strong>Class Code:</strong> {cls.classCode}
-                          </p>
-                          <p>
+                          </Typography.Title>
+                          <Typography.Title className="m-1" level={5}>
                             <strong>Room:</strong> {cls.room}
-                          </p>
-                          <p>
+                          </Typography.Title>
+                          <Typography.Title className="m-1" level={5}>
                             <strong>Academic Year:</strong> {cls.academicYear}
-                          </p>
-                          <p>
+                          </Typography.Title>
+                          <Typography.Title className="m-1" level={5}>
                             <strong>Term:</strong> {cls.term}
-                          </p>
-                          <p>
+                          </Typography.Title>
+                          <Typography.Title className="m-1 mb-3" level={5}>
                             <strong>Schedule:</strong> {cls.days.join(", ")}{" "}
                             {cls.startTime} - {cls.endTime}
-                          </p>
+                          </Typography.Title>
                         </div>
-                        <Flex justify="space-between">
+                        <Flex>
                           <Link to={`/teacher/attendance/${cls.classCode}`}>
                             <Button type="primary" icon={<EyeOutlined />}>
                               View Class
