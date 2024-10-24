@@ -65,14 +65,20 @@ export const editUser = async (req, res) => {
       throw new Error("User not found");
     }
 
+    const checkUserDepartment = await UserModel.findOne({
+      department: department,
+    });
+
     // Update user properties
     user.firstName = firstname;
     user.lastName = lastname;
     user.email = email; // Update email
-    user.department = department;
+   
+    if (checkUserDepartment) {
+      user.department = department;
+    }
 
     // Check if a new photo is uploaded and update the photo field
-
     if (req.file) {
       user.photo = req.file.path; // Set the user's photo to the uploaded file's path
     }
@@ -228,8 +234,8 @@ const validateAddUserInput = (req) => {
 
 // validation for editUser
 const validateEditUserInput = (req) => {
-  const { username: id, firstname, lastname, email, role } = req.body;
-  if (!id || !firstname || !lastname || !email || !role) {
+  const { username: id, firstname, lastname, email } = req.body;
+  if (!id || !firstname || !lastname || !email) {
     throw new Error("All fields are required");
   }
 };
