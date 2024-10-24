@@ -29,16 +29,25 @@ export const useStudentStore = create((set) => ({
     set({ isLoading: true });
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
+    
       const response = await axios.get(`${API_URL}/students/id/${idNumber}`);
-      if (response.status === 200) {
-        const { students } = response.data;
-        set({ students, isLoading: false, error: null });
-      }
+  
+      if (response.status === 200 && response.data.data) {
+        const student = response.data.data;
+        set({ student, isLoading: false, error: null });
+  
+        return student;
+      } else {
+        set({ isLoading: false });
+        return null; // Student not found, return null
+      }      
     } catch (error) {
-      set({ error, isLoading: false });
+      console.log("Student does not exist");
+      set({ isLoading: false });
+      return null;
     }
   },
-
+  
   addStudent: async (classCode, newStudent) => {
     set({ isLoading: true });
     try {

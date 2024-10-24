@@ -283,9 +283,10 @@ const ManageStudents = ({ sortedData, classCode }) => {
           <Flex gap={10}>
             <AddStudent 
               onSuccess={() => {
-                setNotificationMessage("Student added successfully!");
-                setNotificationType("success");
-                window.location.reload();
+                // setNotificationMessage("Student added successfully!");
+                // setNotificationType("success");
+                // window.location.reload();
+                console.log("Student added successfully!");
               }}
               classCode={classCode}
             />
