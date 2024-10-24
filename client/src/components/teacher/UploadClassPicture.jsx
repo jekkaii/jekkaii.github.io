@@ -6,22 +6,52 @@ import "../css/style.css";
 import uploadIcon from "../resources/Upload.png";
 import { Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { useAttendanceStore } from "../../stores/attendanceStore"; 
 
 const UploadClassPicture = ({ date, subjectAndCode, schedule }) => {
   const [show, setShow] = useState(false);
   const [file, setFile] = useState();
+  
+  const { checkAttendance, isLoading, error } = useAttendanceStore();
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleClose = () => {
     setShow(false);
-    setFile(undefined); // Reset the file state
+    setFile(undefined); 
   };
 
   const handleShow = () => setShow(true);
 
   const getFile = (event) => {
-    setFile(URL.createObjectURL(event.target.files[0]));
+    const selectedFile = event.target.files[0]; 
+    if (selectedFile) {
+      setFile(selectedFile); 
+    }
   };
 
+  const handleSubmit = async () => {
+    if (file && !isSubmitting) { 
+      setIsSubmitting(true); 
+      try {
+        const result = await checkAttendance(file); 
+        
+        if (result === "Failed to check attendance.") {
+          window.alert(result); 
+        } else {
+          console.log("Attendance data received:", result);
+        }
+      } catch (err) {
+        console.error("Error in handleSubmit:", err); 
+      } finally {
+        setIsSubmitting(false); 
+        handleClose(); 
+      }
+    } else {
+      console.warn("No file selected or already submitting"); 
+    }
+  };
+  
   return (
     <>
       <Button type="primary" onClick={handleShow}>
@@ -83,7 +113,7 @@ const UploadClassPicture = ({ date, subjectAndCode, schedule }) => {
 
               {file && (
                 <img
-                  src={file}
+                  src={URL.createObjectURL(file)} // Use the file object directly for preview
                   alt="Preview"
                   style={{
                     maxWidth: "100%",
@@ -98,7 +128,9 @@ const UploadClassPicture = ({ date, subjectAndCode, schedule }) => {
               id="submitButton"
               className="me-5 mb-4 fw-bold"
               variant="primary"
-              onClick={handleClose}
+              onClick={handleSubmit} 
+              loading={isLoading || isSubmitting} // Disable when loading or submitting
+              disabled={isLoading || isSubmitting} // Disable button during loading or submitting
             >
               Submit
             </Button>

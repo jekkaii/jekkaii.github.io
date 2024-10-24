@@ -70,7 +70,8 @@ export const useFaceRecognitionModelStore = create((set) => ({
       const response = await axios.post(`${API_URL}/set-active-model/${modelName}`);
       if (response.status === 200) {
         set({ activeModel: modelName, isLoading: false, error: null });
-        alert(response.data.message);  
+        console.log(response);
+        alert(response.data.status.message);  
       }
     } catch (error) {
       set({ error: error.message, isLoading: false });

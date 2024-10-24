@@ -79,8 +79,8 @@ const ManageModel = () => {
                             value={schoolYear}
                             onChange={(value) => setSchoolYear(value)} 
                             placeholder="Select Year">
-                            <Option value="2023-2024">2023-2024</Option>
                             <Option value="2024-2025">2024-2025</Option>
+                            <Option value="2025-2026">2025-2026</Option>
                         </Select>
                     </Form.Item>
 
@@ -91,6 +91,7 @@ const ManageModel = () => {
                             placeholder="Select Semester">
                             <Option value="1st">1st</Option>
                             <Option value="2nd">2nd</Option>
+                            <Option value="Short">Short</Option>
                         </Select>
                     </Form.Item>
                 </Form>
@@ -110,8 +111,12 @@ const ManageModel = () => {
                     <div key={model._id} className="model-card">
                         <div className="model-info">
                             <h3>{model.model_name}</h3>
+                            {/* <div>
                             <span>{model.status}</span>
+                            </div> */}
+                            <div>
                             <span>Accuracy: {model.accuracy}%</span>
+                            </div>
                         </div>
 
                         <div className="model-actions">

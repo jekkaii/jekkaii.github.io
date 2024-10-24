@@ -119,6 +119,9 @@ async def check_attendance(group_photo: UploadFile):
 
         result = service.validate(group_photo.filename)
 
+        if isinstance(result, dict) and result.get("error"):
+            return {"error": result.get("error")}
+
         return result
 
     except FileNotFoundError:
