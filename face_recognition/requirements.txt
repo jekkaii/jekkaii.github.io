@@ -1,8 +1,0 @@
-opencv-python-headless
-tensorflow
-numpy
-keras-facenet
-scikit-learn
-mtcnn
-pickle
-fastapi
