@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Input, Select, Form } from "antd";
+import { Button, Modal, Input, Select, Form, Alert } from "antd";
 import { useFaceRecognitionModelStore } from "../../stores/modelStore";
 import "../css/style.css";
 
@@ -11,7 +11,7 @@ const ManageModel = () => {
         activeModel,
         isLoading,
         getModels,
-        createModel, // Call this to create a model
+        createModel,
         deleteModel,
         setActiveModel,
         error
@@ -41,26 +41,24 @@ const ManageModel = () => {
         }
     
         // Construct the model name
-        const modelName = `${schoolYear}_${semester}`; // Correctly format the model name
+        const modelName = `${schoolYear}_${semester}`; 
     
         const newModel = {
-            modelName: modelName, // Change this to match your backend expectation
+            modelName: modelName,
         };
     
-        await createModel(newModel); // Call Zustand action to create the model
-        getModels(); // Refresh the models list after creating
-        closeModal(); // Close modal after creation
+        await createModel(newModel);
+        getModels();
+        closeModal();
     
-        // Clear the form fields
         setSchoolYear('');
         setSemester('');
     };
-    
 
     return (
         <div className="manage-model">
             {/* Button to open modal */}
-            <Button type="primary" onClick={openModal}>
+            <Button type="primary" onClick={openModal} className='create-model-btn'>
                 Create Model
             </Button>
 
@@ -68,8 +66,8 @@ const ManageModel = () => {
             <Modal
                 title="Create Model"
                 open={showModal}
-                onOk={handleCreateModel} // Call createModel when "OK" is clicked
-                onCancel={closeModal} // Close modal on "Cancel"
+                onOk={handleCreateModel}
+                onCancel={closeModal}
                 okText="Create"
                 cancelText="Close"
             >
@@ -105,24 +103,35 @@ const ManageModel = () => {
                 />
             </div>
 
-            {/* Display filtered models */}
+            {/* Display models or error messages */}
             <div className="model-cards">
+                {!isLoading && !error && models.length === 0 && (
+                    <Alert message="No models found." type="info" showIcon />
+                )}
+
+                {error && (
+                    <Alert
+                    message="Face Recognition Service Unavailable"
+                    description="There was an issue connecting to the face recognition service."
+                    type="error"
+                    showIcon
+                    />
+                )}
+
                 {filteredModels.map((model) => (
                     <div key={model._id} className="model-card">
                         <div className="model-info">
                             <h3>{model.model_name}</h3>
-                            {/* <div>
-                            <span>{model.status}</span>
-                            </div> */}
                             <div>
-                            <span>Accuracy: {model.accuracy}%</span>
+                                <span>Accuracy: {model.accuracy}%</span>
                             </div>
                         </div>
 
                         <div className="model-actions">
-                            <Button
+                            <Button 
                                 onClick={() => setActiveModel(model.model_name)}
                                 disabled={model.status === 'active'}
+                                className='activate-btn'
                             >
                                 Activate
                             </Button>
@@ -138,7 +147,6 @@ const ManageModel = () => {
             </div>
 
             {isLoading && <p>Loading models...</p>}
-            {error && <p>Error: {error}</p>}
         </div>
     );
 };

@@ -3,11 +3,9 @@ import { FaceRecognitionModel } from '../model/FaceRecognitionModel.js';
 
 // Set the base URL for the FastAPI server
 const BASE_URL = 'http://0.0.0.0:8888'; // Adjust the host and port accordingly
-const model_encoder_filepath = 'cc_models/'
 
 export const createModel = async (req, res) => {
     const { modelName } = req.body; // Expecting the formatted model name
-    console.log(modelName.body);
 
     try {
         const existingModel = await FaceRecognitionModel.findOne({ model_name: modelName });
@@ -76,7 +74,12 @@ export const getModels = async (req, res) => {
         return res.status(200).json({ success: true, models: combinedModels });
     } catch (error) {
         console.error('Error getting models:', error.response ? error.response.data : error.message);
-        return res.status(500).json({ success: false, message: error.response.data });
+
+        const errorMessage = error.response && error.response.data 
+            ? error.response.data 
+            : 'An error occurred while fetching models';
+        
+        return res.status(500).json({ success: false, message: errorMessage });
     }
 };
 

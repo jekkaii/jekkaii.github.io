@@ -566,6 +566,10 @@
   margin-top: 10px;
 }
 
+.model-actions .activate-btn{
+  margin-right: 5px;
+}
+
 .model-actions button {
   padding: 6px 12px;
   border: none; /* Removed borders */
